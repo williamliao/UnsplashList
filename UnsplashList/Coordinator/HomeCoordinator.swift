@@ -46,36 +46,39 @@ struct HomeCoordinatorView: View {
     @State var navigationPath: [Route] = []
     @ObservedObject var coordinator: HomeCoordinator
    
-    @Binding var currentIndex: Int
+    
     @State private var columnVisibility =
         NavigationSplitViewVisibility.automatic
     
+    var rowText = ["List", "Search", "Favorite"]
+    @State var showingSection1 = false
+    @State var showingSection2 = false
+    
+    let sideBarItem: [SideBarItem] = [.unsplash, .yande]
+    @State private var selectedItem: SideBarItem?
+    @State var currentItem: SideBarItem?
+ 
     // MARK: Views
 
     var body: some View {
         
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            List(1..<3) { i in
-                Button {
-                    
-                    if navigationPath.count > 0 {
-                        navigationPath.removeLast()
-                    }
-              
-                    currentIndex = i
-                
-                } label: {
-                    Text("Data Source \(i)")
-                        .frame(maxWidth: .infinity)
+            
+            List(sideBarItem, children: \.items, selection: $selectedItem) { row in
+                HStack {
+                    SideBarRow(title: row, selectedTitle: self.$selectedItem)
                 }
-                .buttonStyle(.plain)
             }
-            .navigationSplitViewColumnWidth(150)
-            .onChange(of: currentIndex) { oldValue, newValue in
-                currentIndex = newValue
+            .navigationSplitViewColumnWidth(200)
+            .onChange(of: selectedItem) { oldValue, newValue in
+                currentItem = newValue
                 
-                if currentIndex != 1 {
-                    coordinator.gridCoordinator.gridViewModel.change(currentIndex)
+                if navigationPath.count > 0 {
+                    navigationPath.removeLast()
+                }
+                
+                if currentItem!.id != 1 {
+                    coordinator.gridCoordinator.gridViewModel.change(currentItem!)
                 }
             }
             
@@ -109,6 +112,14 @@ struct HomeCoordinatorView: View {
             
         }
         
+    }
+    
+    func chageSection(_ i: Int) {
+        if navigationPath.count > 0 {
+            navigationPath.removeLast()
+        }
+
+       // currentIndex = i
     }
 
     func close() {

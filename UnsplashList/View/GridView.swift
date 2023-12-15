@@ -11,8 +11,7 @@ struct GridView: View {
     
     @ObservedObject var viewModel: GridViewModel
     @Binding var navigationPath: [Route]
-    @Namespace private var namespace
-   
+
     var body: some View {
         
         ScrollView {

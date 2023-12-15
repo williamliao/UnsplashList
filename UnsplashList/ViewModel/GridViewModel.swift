@@ -25,7 +25,7 @@ class GridViewModel: ObservableObject {
         coordinator.open(model)
     }
     
-    func change(_ index: Int) {
+    func change(_ index: SideBarItem) {
         coordinator.changeDataSource()
     }
     
