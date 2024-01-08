@@ -14,15 +14,13 @@ struct SideBarItem: Equatable, Identifiable {
     let icon: String
     var items: [SideBarItem]?
 
-    static let unsplash = SideBarItem(id: 0, name: "Unsplash", icon: "photo", items: [SideBarItem.list, SideBarItem.search, SideBarItem.favorite])
-    static let yande = SideBarItem(id: 1, name: "Yande", icon: "photo", items: [SideBarItem.list2, SideBarItem.search2, SideBarItem.favorite2])
+    static let unsplash = SideBarItem(id: 0, name: "Unsplash", icon: "photo", items: [SideBarItem.list, SideBarItem.favorite])
+    static let yande = SideBarItem(id: 1, name: "Yande", icon: "photo", items: [SideBarItem.list2, SideBarItem.favorite2])
     
     static let list = SideBarItem(id: 2, name: "List", icon: "list.bullet")
-    static let search = SideBarItem(id: 3, name: "Search", icon: "magnifyingglass")
     static let favorite = SideBarItem(id: 4, name: "Favorite", icon: "heart.fill")
     
     static let list2 = SideBarItem(id: 5, name: "List", icon: "list.bullet")
-    static let search2 = SideBarItem(id: 6, name: "Search", icon: "magnifyingglass")
     static let favorite2 = SideBarItem(id: 7, name: "Favorite", icon: "heart.fill")
 }
 
