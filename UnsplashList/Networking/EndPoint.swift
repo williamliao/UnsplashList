@@ -79,7 +79,7 @@ enum EndpointKinds {
     }
 }
 
-extension Endpoint where Kind == EndpointKinds.Key, Response == UnsplashModel {
+extension Endpoint where Kind == EndpointKinds.Key, Response == RandomResponse {
     static func random(with count: String) -> Self {
         Endpoint(path: "photos/random", queryItems: [
             URLQueryItem(name: "count", value: count),
@@ -89,10 +89,14 @@ extension Endpoint where Kind == EndpointKinds.Key, Response == UnsplashModel {
 }
 
 extension Endpoint where Kind == EndpointKinds.Key,
-    Response == SearchResults {
-    static func search(for query: String) -> Self {
-        Endpoint(path: "search", queryItems: [
-            URLQueryItem(name: "q", value: query),
+    Response == SearchRespone {
+    static func search(for query: String, perPage: String, page: String) -> Self {
+        Endpoint(path: "search/photos", queryItems: [
+            URLQueryItem(name: "query", value: query),
+            URLQueryItem(name: "per_page", value: String(perPage)),
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "client_id", value: UnsplashAPI.accessKey),
+            //URLQueryItem(name: "orientation", value: "landscape"),
         ])
     }
 }
