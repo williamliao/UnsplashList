@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C8103CB22B4BFB160060939A /* Yande.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CB12B4BFB160060939A /* Yande.swift */; };
 		C87E8F742B2A8CF300A9C604 /* XCTestCase+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */; };
 		C87E8F762B2A925900A9C604 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F752B2A925900A9C604 /* SafariWebView.swift */; };
 		C8A04F462B2835CF00E49408 /* UnsplashListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A04F452B2835CF00E49408 /* UnsplashListApp.swift */; };
@@ -156,6 +157,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C8103CB12B4BFB160060939A /* Yande.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Yande.swift; sourceTree = "<group>"; };
 		C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Async.swift"; sourceTree = "<group>"; };
 		C87E8F752B2A925900A9C604 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
 		C8A04F422B2835CF00E49408 /* UnsplashList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnsplashList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -423,6 +425,7 @@
 				C8A04FA12B28507E00E49408 /* UserCollectionRespone.swift */,
 				C8A04FA82B28507E00E49408 /* UserProfileInfo.swift */,
 				C8A04F832B28395800E49408 /* UnsplashModel.swift */,
+				C8103CB12B4BFB160060939A /* Yande.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -734,6 +737,7 @@
 				C8A04F732B28366500E49408 /* GridView.swift in Sources */,
 				C8A04FAD2B28507F00E49408 /* Exif.swift in Sources */,
 				C8A04FBD2B28507F00E49408 /* PhotoInfo.swift in Sources */,
+				C8103CB22B4BFB160060939A /* Yande.swift in Sources */,
 				C8A04FB42B28507F00E49408 /* Cover_photo.swift in Sources */,
 				C8A04FD72B2850ED00E49408 /* NetworkManager.swift in Sources */,
 				C8A04FCB2B28507F00E49408 /* Owners.swift in Sources */,
