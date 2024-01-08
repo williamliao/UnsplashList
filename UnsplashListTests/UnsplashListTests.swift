@@ -76,24 +76,17 @@ final class UnsplashListTests: XCTestCase {
         let expectation = expectation(description: "testGridViewModelData")
         
         networking.result = .success(try JSONEncoder().encode(unsplashModels))
+
+        viewModel.loadData()
         
-        Task {
-            _ = try await withCheckedThrowingContinuation { continuation in
+        cancellable = viewModel.$items.sink(receiveValue: {
+            
+            if $0.count > 0 {
+                XCTAssertNotNil($0)
                 
-                viewModel.loadData { result in
-                    
-                    switch result {
-                        case .success(_):
-                            continuation.resume(returning: result)
-                             expectation.fulfill()
-                        case .failure(let error):
-                            continuation.resume(throwing: error)
-                             expectation.fulfill()
-                            
-                    }
-                }
+                expectation.fulfill()
             }
-        }
+        })
         
         waitForExpectations(timeout: 3)
 
@@ -118,25 +111,19 @@ final class UnsplashListTests: XCTestCase {
         networking.nextResponse = fakeResponse
         
         let expectation = expectation(description: "testGridViewModelLoadDataFailed")
-        
-        Task {
-           
-            _ = try await withCheckedThrowingContinuation { continuation in
-                
-                viewModel.loadData { result in
-                    
-                    switch result {
-                        case .success(_):
-                            continuation.resume(returning: result)
-                            
-                        case .failure(let error):
-                            continuation.resume(throwing: error)
-                            expectation.fulfill()
-                    }
-                }
-            }
 
-        }
+        viewModel.loadData()
+        
+        cancellable = viewModel.$error.sink(receiveValue: {
+            
+            if $0 != nil {
+                XCTAssertNotNil($0)
+                
+                expectation.fulfill()
+            }
+            
+            
+        })
         
         waitForExpectations(timeout: 3)
     
