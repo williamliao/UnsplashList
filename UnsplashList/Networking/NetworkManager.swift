@@ -381,6 +381,18 @@ extension NetworkManager {
                 let models = try decoder.decode(decodingType.self, from: data)
                 return .success(models)
                 
+            } catch DecodingError.dataCorrupted(let context) {
+                print(context.debugDescription)
+                return .failure(ServerError.jsonDecodeFailed)
+            } catch DecodingError.keyNotFound(let key, let context) {
+                print("\(key.stringValue) was not found, \(context.debugDescription)")
+                return .failure(ServerError.jsonDecodeFailed)
+            } catch DecodingError.typeMismatch(let type, let context) {
+                print("\(type) was expected, \(context.debugDescription)")
+                return .failure(ServerError.jsonDecodeFailed)
+            } catch DecodingError.valueNotFound(let type, let context) {
+                print("no value was found for \(type), \(context.debugDescription)")
+                return .failure(ServerError.jsonDecodeFailed)
             } catch {
                 return .failure(ServerError.encounteredError(error))
             }
