@@ -11,11 +11,10 @@ import SwiftUI
 struct UnsplashListApp: App {
     
     @StateObject var coordinator = HomeCoordinator(imagesService: ImagesService(endPoint: .random))
-    @State var index = 0
-    
+
     var body: some Scene {
         WindowGroup {
-            HomeCoordinatorView(coordinator: coordinator, currentIndex: $index)
+            HomeCoordinatorView(coordinator: coordinator)
         }
     }
 }
