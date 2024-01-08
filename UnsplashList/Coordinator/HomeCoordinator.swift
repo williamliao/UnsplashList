@@ -54,6 +54,9 @@ struct HomeCoordinatorView: View {
     @State var showingSection1 = false
     @State var showingSection2 = false
     
+    
+    @State private var searchText = ""
+
     let sideBarItem: [SideBarItem] = [.unsplash, .yande]
     @State private var selectedItem: SideBarItem?
     @State var currentItem: SideBarItem?
@@ -76,10 +79,11 @@ struct HomeCoordinatorView: View {
                 if navigationPath.count > 0 {
                     navigationPath.removeLast()
                 }
-                
+            
                 if currentItem!.id != 1 {
                     coordinator.gridCoordinator.gridViewModel.change(currentItem!)
                 }
+                
             }
             
         } detail: {
@@ -89,6 +93,11 @@ struct HomeCoordinatorView: View {
                     .transition(AnyTransition.move(edge: .leading))
                     .animation(.default, value: navigationPath)
                     .navigationTitle("GridView")
+                    .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search...")
+                    .onSubmit(of: .search) {
+                        coordinator.gridCoordinator.gridViewModel.items.removeAll()
+                        coordinator.gridCoordinator.gridViewModel.loadSearchData(searchText, "10", "1")
+                    }
                    // .navigationSplitViewColumnWidth(min: 200, ideal: 300, max: 400)
                 
                     .navigationDestination(for: Route.self) { route in
@@ -109,6 +118,7 @@ struct HomeCoordinatorView: View {
                         }
                     }
             }
+            
             
         }
         
