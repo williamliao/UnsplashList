@@ -9,15 +9,16 @@ import SwiftUI
 
 class GridViewModel: ObservableObject {
     @Published var items = [UnsplashModel]()
+    @Published var error: ServerError?
+    @Published var isSearch: Bool = false
     //@Binding var navigationPath: [Route]
 
     private unowned let coordinator: GridViewCoordinator
     private let imagesService: ImagesService
-    var error: ServerError?
+
     
-    init(imagesService: ImagesService, items: [UnsplashModel] = [UnsplashModel](), coordinator: GridViewCoordinator) {
+    init(imagesService: ImagesService, coordinator: GridViewCoordinator) {
         self.imagesService = imagesService
-        self.items = items
         self.coordinator = coordinator
     }
     
@@ -25,28 +26,63 @@ class GridViewModel: ObservableObject {
         coordinator.open(model)
     }
     
-    func change(_ index: SideBarItem) {
+    func change(_ item: SideBarItem) {
         coordinator.changeDataSource()
+        
+        if item.id == 2 {
+            loadData()
+        } else if item.id == 5 {
+            loadYandeData()
+        }
     }
     
-    func loadData(onComplete: @escaping (Result<[UnsplashModel], Error>) -> Void) {
-
-        self.imagesService.fetchUnsplash { result in
+    func loadData() {
+  
+        self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ()) { result in
             
             switch result {
             case .success(let models):
                 
                 DispatchQueue.main.async {
-                    self.items.append(contentsOf: models)
+                    if let models = models as? [UnsplashModel] {
+                        self.items.append(contentsOf: models)
+                    }
                 }
                 
-                onComplete(.success(models))
-               
             case .failure(let error):
-                //print(error)
                 self.error = error
-                onComplete(.failure(error))
             }
         }
+    }
+    
+    func loadYandeData() {
+        print("loadYandeData")
+    }
+    
+    @MainActor func loadSearchData(_ query: String, _ perPage: String, _ page: String) {
+        
+        if query.count == 0 {
+            return
+        }
+        
+        self.imagesService.fetchUnsplash(for: .search(for: query, perPage: "10", page: "1"), using: ()) { result in
+            
+            switch result {
+            case .success(let models):
+                
+                DispatchQueue.main.async {
+                    if let models = models as? [UnsplashModel] {
+                        self.items.append(contentsOf: models)
+                    }
+                }
+                
+            case .failure(let error):
+                self.error = error
+            }
+        }
+    }
+    
+    func performSearch() {
+        isSearch = true
     }
 }
