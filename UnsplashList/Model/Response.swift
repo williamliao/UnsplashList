@@ -12,7 +12,7 @@ import UIKit
 import Cocoa
 #endif
 
-struct Response: Codable, Identifiable {
+struct RandomResponse: Codable, Identifiable {
     let sponsorship: String?
     let id: String
     let created_at: String?
@@ -102,14 +102,14 @@ struct Response: Codable, Identifiable {
     }
 }
 
-extension Response: Hashable {
+extension RandomResponse: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
 }
 
-extension Response: Equatable {
-    static func == (lhs: Response, rhs: Response) -> Bool {
+extension RandomResponse: Equatable {
+    static func == (lhs: RandomResponse, rhs: RandomResponse) -> Bool {
         return lhs.id == rhs.id
     }
 }
