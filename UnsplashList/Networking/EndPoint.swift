@@ -14,6 +14,11 @@ struct UnsplashAPI {
     static let secretKey = "eae916cc369517321edc9bfe58ed024af98753fc3d03e080b0593c7912a7fdf2"
 }
 
+struct YandeAPI {
+    static let scheme = "https"
+    static let host = "yande.re"
+}
+
 protocol EndpointKind {
     associatedtype RequestData
 
@@ -26,7 +31,15 @@ struct AccessToken {
     let accesscode: String
 }
 
+enum ImageDataSource {
+    case unsplash
+    case unsplashSearch
+    case yande
+    case yandeSearch
+}
+
 struct Endpoint<Kind: EndpointKind, Response: Decodable> {
+    var dataSource: ImageDataSource = .unsplash
     var path: String
     var queryItems = [URLQueryItem]()
     var method: RequestType = .get
@@ -81,7 +94,7 @@ enum EndpointKinds {
 
 extension Endpoint where Kind == EndpointKinds.Key, Response == RandomResponse {
     static func random(with count: String) -> Self {
-        Endpoint(path: "photos/random", queryItems: [
+        Endpoint(dataSource:.unsplash ,path: "photos/random", queryItems: [
             URLQueryItem(name: "count", value: count),
             URLQueryItem(name: "client_id", value: UnsplashAPI.accessKey),
         ])
@@ -91,7 +104,7 @@ extension Endpoint where Kind == EndpointKinds.Key, Response == RandomResponse {
 extension Endpoint where Kind == EndpointKinds.Key,
     Response == SearchRespone {
     static func search(for query: String, perPage: String, page: String) -> Self {
-        Endpoint(path: "search/photos", queryItems: [
+        Endpoint(dataSource:.unsplashSearch ,path: "search/photos", queryItems: [
             URLQueryItem(name: "query", value: query),
             URLQueryItem(name: "per_page", value: String(perPage)),
             URLQueryItem(name: "page", value: String(page)),
@@ -101,11 +114,28 @@ extension Endpoint where Kind == EndpointKinds.Key,
     }
 }
 
+extension Endpoint where Kind == EndpointKinds.Key, Response == [Yande] {
+    static func yande(with limit: String) -> Self {
+        Endpoint(dataSource:.yande, path: "post.json", queryItems: [
+            URLQueryItem(name: "limit", value: limit),
+        ])
+    }
+}
+
 extension Endpoint {
     func makeRequest(with data: Kind.RequestData) -> URLRequest? {
+        
         var components = URLComponents()
-        components.scheme = UnsplashAPI.scheme
-        components.host = UnsplashAPI.host
+        
+        switch dataSource {
+            case .unsplash, .unsplashSearch:
+                components.scheme = UnsplashAPI.scheme
+                components.host = UnsplashAPI.host
+            case .yande, .yandeSearch:
+                components.scheme = YandeAPI.scheme
+                components.host = YandeAPI.host
+        }
+        
         components.path = "/" + path
         components.queryItems = queryItems.isEmpty ? nil : queryItems
 

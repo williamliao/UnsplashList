@@ -9,6 +9,7 @@ import SwiftUI
 
 class GridViewModel: ObservableObject {
     @Published var items = [UnsplashModel]()
+    @Published var items2 = [Yande]()
     @Published var error: ServerError?
     @Published var isSearch: Bool = false
     //@Binding var navigationPath: [Route]
@@ -57,6 +58,21 @@ class GridViewModel: ObservableObject {
     
     func loadYandeData() {
         print("loadYandeData")
+        
+        self.imagesService.fetchYande(for: .yande(with: "10"), using: ()) { result in
+            switch result {
+            case .success(let models):
+                
+                DispatchQueue.main.async {
+                    if let models = models as? [Yande] {
+                        self.items2.append(contentsOf: models)
+                    }
+                }
+                
+            case .failure(let error):
+                self.error = error
+            }
+        }
     }
     
     @MainActor func loadSearchData(_ query: String, _ perPage: String, _ page: String) {
