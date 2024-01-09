@@ -12,7 +12,7 @@ class GridViewModel: ObservableObject {
     @Published var items2 = [Yande]()
     @Published var error: ServerError?
     @Published var isSearch: Bool = false
-    //@Binding var navigationPath: [Route]
+    @Published var currentDataItem: SideBarItem = .list
 
     private unowned let coordinator: GridViewCoordinator
     private let imagesService: ImagesService
@@ -31,8 +31,10 @@ class GridViewModel: ObservableObject {
         coordinator.changeDataSource()
         
         if item.id == 2 {
+            currentDataItem = .list
             loadData()
         } else if item.id == 5 {
+            currentDataItem = .list2
             loadYandeData()
         }
     }
@@ -57,8 +59,7 @@ class GridViewModel: ObservableObject {
     }
     
     func loadYandeData() {
-        print("loadYandeData")
-        
+
         self.imagesService.fetchYande(for: .yande(with: "10"), using: ()) { result in
             switch result {
             case .success(let models):

@@ -17,17 +17,21 @@ struct GridView: View {
         ScrollView {
             LazyVGrid(columns: [.init(.adaptive(minimum: 200, maximum: .infinity), spacing: 3)], spacing: 3) {
                 
-                showGridView(viewModel.items)
+                if viewModel.currentDataItem == .list {
+                    showGridView(viewModel.items)
+                } else {
+                    showGridView(viewModel.items2)
+                }
                 
             }
             .padding(.all, 10)
-            .task {
-                await MainActor.run {
-                    if viewModel.items.count == 0 {
-                        viewModel.loadData()
-                    }
-                }
-            }
+//            .task {
+//                await MainActor.run {
+//                    if viewModel.items.count == 0 {
+//                        viewModel.loadData()
+//                    }
+//                }
+//            }
         }
     }
     
@@ -35,9 +39,7 @@ struct GridView: View {
         
         return ForEach(0 ..< array.count, id: \.self) { i in
             
-            let url = viewModel.items[i].urls?.small
-            
-            AsyncImage(url: URL(string: url!)) { phase in
+            AsyncImage(url: URL(string: getURL(index: i)!)) { phase in
                 switch phase {
                 case .empty:
                     ProgressView()
@@ -63,6 +65,18 @@ struct GridView: View {
             
         }
         .animation(.interactiveSpring(), value: 3)
+    }
+    
+    func getURL(index: Int) -> String? {
+        var url: String?
+        
+        if viewModel.currentDataItem == .list {
+            url = viewModel.items[index].urls?.small
+        } else {
+            url = viewModel.items2[index].preview_url
+        }
+        
+        return url
     }
 }
 
