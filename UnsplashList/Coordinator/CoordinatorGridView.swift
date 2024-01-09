@@ -41,8 +41,4 @@ class GridViewCoordinator: ObservableObject {
         self.detailViewModel = DetailViewModel(item: item, coordinator: self)
         self.detailViewCoordinator = DetailViewCoordinator(imagesService: imagesService, detailViewModel: detailViewModel!)
     }
-    
-    func changeDataSource() {
-        gridViewModel.removeAll()
-    }
 }

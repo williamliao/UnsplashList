@@ -43,7 +43,7 @@ class GridViewModel: ObservableObject {
         Task {
             await MainActor.run {
                 
-                coordinator.changeDataSource()
+                self.removeAll()
                 
                 currentDataItem = item
                 
