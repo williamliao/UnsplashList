@@ -28,7 +28,8 @@ struct FavoriteIconView: View {
     private func updateFavorite() {
         favoriteVM.updateFavorite(item: item)
         
-        if currentSideBarItem.id == 4 || currentSideBarItem.id == 5 {
+        if currentSideBarItem.id == SideBarItemType.yandeList.rawValue ||
+            currentSideBarItem.id == SideBarItemType.yandeFavorite.rawValue {
             if item.isFavorite {
                 favoriteItems2.append(item)
             } else {
@@ -36,7 +37,8 @@ struct FavoriteIconView: View {
                     model.id == item.id
                 }
             }
-        } else if currentSideBarItem.id == 2 || currentSideBarItem.id == 3 {
+        } else if currentSideBarItem.id == SideBarItemType.unsplashList.rawValue ||
+                    currentSideBarItem.id == SideBarItemType.unsplashFavorite.rawValue {
             if item.isFavorite {
                 favoriteItems.append(item)
             } else {

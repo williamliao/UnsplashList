@@ -47,13 +47,13 @@ class GridViewModel: ObservableObject {
                 
                 currentDataItem = item
                 
-                if item.id == 2 {
+                if item.id == SideBarItemType.unsplashList.rawValue {
                     loadData()
-                } else if item.id == 3  {
+                } else if item.id == SideBarItemType.unsplashFavorite.rawValue  {
                     loadSaveUnsplashData()
-                } else if item.id == 4 {
+                } else if item.id == SideBarItemType.yandeList.rawValue {
                     loadYandeData()
-                } else if item.id == 5 {
+                } else if item.id == SideBarItemType.yandeFavorite.rawValue {
                     loadSaveYandeData()
                 }
             }

@@ -8,6 +8,13 @@
 import Foundation
 import SwiftUI
 
+enum SideBarItemType:Int {
+    case unsplashList = 2
+    case unsplashFavorite = 3
+    case yandeList = 4
+    case yandeFavorite = 5
+}
+
 struct SideBarItem: Equatable, Identifiable {
     let id: Int
     let name: String

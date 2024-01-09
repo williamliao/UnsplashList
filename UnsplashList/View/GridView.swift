@@ -50,7 +50,8 @@ struct GridView: View {
                                     UIPasteboard.general.setValue(viewModel.indexOfModel(index: i).raw ?? "", forPasteboardType: UTType.url.identifier)
                                 }
                                 
-                                if currentItem.id == 4 || currentItem.id == 5 {
+                                if currentItem.id == SideBarItemType.yandeList.rawValue ||
+                                    currentItem.id == SideBarItemType.yandeFavorite.rawValue {
                                    
                                     Button("Copy Tags") {
                                         UIPasteboard.general.string = ""
