@@ -11,8 +11,7 @@ class GridViewModel: ObservableObject {
     @Published var items = [UnsplashModel]()
     @Published var error: ServerError?
     @Published var isSearch: Bool = false
-    @State var currentDataItem: SideBarItem
-    @State var isYande: Bool = false
+    @Published var currentDataItem: SideBarItem
 
     private unowned let coordinator: GridViewCoordinator
     private let imagesService: ImagesService
