@@ -21,21 +21,23 @@ struct DetailView: View {
             AsyncImage(url: url) { phase in
                 switch phase {
                 case .empty:
-                    EmptyView()
+                    ProgressView()
                 case .success(let image):
                     image
                         .resizable()
-                            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-                            .aspectRatio(1, contentMode: .fit)
-                            .onTapGesture {
-                                navigationPath.append(.url(url: url!))
-                            }
+                        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+                        .aspectRatio(1, contentMode: .fit)
+                        .onTapGesture {
+                            navigationPath.append(.url(url: url!))
+                        }
                 case .failure(_):
-                    Image(systemName: "exclamationmark.icloud")
+                    Image(systemName: "wifi.exclamationmark")
                         .resizable()
                         .scaledToFit()
                 @unknown default:
-                    EmptyView()
+                    Image(systemName: "wifi.exclamationmark")
+                        .resizable()
+                        .scaledToFit()
                 }
             }
         }
