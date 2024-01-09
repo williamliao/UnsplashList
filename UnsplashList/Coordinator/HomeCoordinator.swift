@@ -107,7 +107,7 @@ struct HomeCoordinatorView: View {
                         switch route {
                             
                             case let .url(url):
-                                    WebView(navigationPath: $navigationPath, url: url)
+                                WebDisPlayView(navigationPath: $navigationPath, url: url)
                                     .transition(AnyTransition.move(edge: .leading))
                                     .animation(.default, value: navigationPath)
                                     .navigationTitle("WebView")

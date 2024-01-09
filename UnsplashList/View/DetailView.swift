@@ -41,6 +41,18 @@ struct DetailView: View {
                 }
             }
         }
+        .toolbar {
+            ToolbarItem {
+                Button("Open in WebView") {
+                    
+                    guard let path = viewModel.item.full, let url = URL(string: path) else {
+                        return
+                    }
+                    
+                    navigationPath.append(.url(url: url))
+                }
+            }
+        }
         .navigationBarBackButtonHidden(true)
         
         #if canImport(UIKit)

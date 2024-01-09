@@ -7,19 +7,28 @@
 
 import SwiftUI
 
-struct WebView: View {
+struct WebDisPlayView: View {
     
     @Binding var navigationPath: [Route]
-    var url: URL
+    @State private var isLoading = true
+    @State private var error: Error? = nil
+    let url: URL?
     
     var body: some View {
-        VStack {
-            
-            #if canImport(UIKit)
-                SafariWebView(url: url)
-            #endif
-            
-            //Text("WebView")
+        ZStack {
+            if let error = error {
+                Text(error.localizedDescription)
+                    .foregroundColor(.pink)
+            } else if let url = url {
+                WebView(url: url,
+                         isLoading: $isLoading,
+                         error: $error)
+                if isLoading {
+                    ProgressView()
+                }
+            } else {
+                Text("Sorry, we could not load this url.")
+            }
         }
         .navigationBarBackButtonHidden(true)
         #if canImport(UIKit)
@@ -33,5 +42,5 @@ struct WebView: View {
 }
 
 #Preview {
-    StatefulPreviewWrapper([.url(url: URL(string: "")!)]) { WebView(navigationPath: $0, url: URL(string: "")!) }
+    StatefulPreviewWrapper([.url(url: URL(string: "")!)]) { WebDisPlayView(navigationPath: $0, url: URL(string: "")!) }
 }
