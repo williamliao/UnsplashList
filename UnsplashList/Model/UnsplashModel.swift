@@ -13,13 +13,15 @@ class UnsplashModel: Identifiable, Codable {
     let user: User?
     let exif: Exif?
     let location: Location?
+    var isFavorite: Bool
     
-    init(id: String, urls: Urls?, user: User?, exif: Exif?, location: Location?) {
+    init(id: String, urls: Urls?, user: User?, exif: Exif?, location: Location?, isFavorite: Bool = false) {
         self.id = id
         self.urls = urls
         self.user = user
         self.exif = exif
         self.location = location
+        self.isFavorite = isFavorite
     }
 }
 

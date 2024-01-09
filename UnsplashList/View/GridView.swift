@@ -11,6 +11,7 @@ struct GridView: View {
     
     @ObservedObject var viewModel: GridViewModel
     @Binding var navigationPath: [Route]
+    @Binding var isYande: Bool
     
     var body: some View {
         
@@ -25,13 +26,6 @@ struct GridView: View {
                 
             }
             .padding(.all, 10)
-//            .task {
-//                await MainActor.run {
-//                    if viewModel.items.count == 0 {
-//                        viewModel.loadData()
-//                    }
-//                }
-//            }
         }
     }
     
@@ -52,6 +46,29 @@ struct GridView: View {
                                 viewModel.open(model: viewModel.isSearch ? viewModel.items[i] : viewModel.items[i])
                                 navigationPath.append(.detail)
                             }
+                            .contextMenu {
+                                
+                                if isYande {
+                                    Button("Copy URL") {
+                                        UIPasteboard.general.string = ""
+                                        UIPasteboard.general.setValue(viewModel.items2[i].file_url, forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
+                                    }
+                                    Button("Copy Tags") {
+                                        UIPasteboard.general.string = ""
+                                        UIPasteboard.general.setValue(viewModel.items2[i].tags, forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
+                                    }
+                                } else {
+                                    Button("Copy URL") {
+                                        UIPasteboard.general.string = ""
+                                        UIPasteboard.general.setValue(viewModel.items[i].urls?.full ?? "", forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
+                                    }
+                                }
+                            }
+                            .overlay(alignment: .bottomTrailing, content: {
+                                
+                                FavoriteView(item: viewModel.items[i])
+                                
+                            })
                 case .failure(_):
                     Image(systemName: "wifi.exclamationmark")
                         .resizable()
@@ -67,6 +84,18 @@ struct GridView: View {
         .animation(.interactiveSpring(), value: 3)
     }
     
+    func getItems(index: Int) -> Any {
+        var item: Any
+        
+        if viewModel.currentDataItem == .list {
+            item = viewModel.items[index]
+        } else {
+            item = viewModel.items2[index]
+        }
+        
+        return item
+    }
+    
     func getURL(index: Int) -> String? {
         var url: String?
         
@@ -77,6 +106,42 @@ struct GridView: View {
         }
         
         return url
+    }
+}
+
+struct FavoriteView: View {
+
+    @State var item: UnsplashModel
+    @StateObject private var favoriteVM = FavoriteViewModel()
+    @AppStorage("favoriteItems") var favoriteItems: [UnsplashModel] = []
+    
+    var body: some View {
+        Image(systemName: item.isFavorite ? "heart.fill" : "heart")
+            .background(.ultraThinMaterial)
+            .font(.system(size: 20))
+            .onTapGesture {
+                updateFavorite()
+            }
+    }
+    
+    private func updateFavorite() {
+        favoriteVM.updateFavorite(item: item)
+        
+        if item.isFavorite {
+            favoriteItems.append(item)
+        } else {
+            favoriteItems.removeAll { model in
+                model.id == item.id
+            }
+        }
+    }
+}
+
+class FavoriteViewModel : ObservableObject {
+ 
+    func updateFavorite(item: UnsplashModel) {
+        item.isFavorite = !item.isFavorite
+        self.objectWillChange.send()
     }
 }
 

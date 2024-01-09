@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C8103CB22B4BFB160060939A /* Yande.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CB12B4BFB160060939A /* Yande.swift */; };
+		C8103CB42B4CE22A0060939A /* Extenstion+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CB32B4CE22A0060939A /* Extenstion+Array.swift */; };
 		C87E8F742B2A8CF300A9C604 /* XCTestCase+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */; };
 		C87E8F762B2A925900A9C604 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F752B2A925900A9C604 /* SafariWebView.swift */; };
 		C8A04F462B2835CF00E49408 /* UnsplashListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A04F452B2835CF00E49408 /* UnsplashListApp.swift */; };
@@ -158,6 +159,7 @@
 
 /* Begin PBXFileReference section */
 		C8103CB12B4BFB160060939A /* Yande.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Yande.swift; sourceTree = "<group>"; };
+		C8103CB32B4CE22A0060939A /* Extenstion+Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extenstion+Array.swift"; sourceTree = "<group>"; };
 		C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Async.swift"; sourceTree = "<group>"; };
 		C87E8F752B2A925900A9C604 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
 		C8A04F422B2835CF00E49408 /* UnsplashList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnsplashList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -376,6 +378,7 @@
 				C8A04F872B284DB800E49408 /* ViewModifiers */,
 				C8A04F792B28379700E49408 /* PreviewHelper.swift */,
 				C87E8F752B2A925900A9C604 /* SafariWebView.swift */,
+				C8103CB32B4CE22A0060939A /* Extenstion+Array.swift */,
 			);
 			path = Share;
 			sourceTree = "<group>";
@@ -720,6 +723,7 @@
 				C8A04F7C2B28387E00E49408 /* CoordinatorGridView.swift in Sources */,
 				C8A04FB22B28507F00E49408 /* Results.swift in Sources */,
 				C8A04F812B28392B00E49408 /* DetailViewModel.swift in Sources */,
+				C8103CB42B4CE22A0060939A /* Extenstion+Array.swift in Sources */,
 				C8A04FB52B28507F00E49408 /* AlbumItem.swift in Sources */,
 				C8A04FC02B28507F00E49408 /* Preview_Photos.swift in Sources */,
 				C8DC69562B2AF1E6006CE5D2 /* DetailViewCoordinator.swift in Sources */,

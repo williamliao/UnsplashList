@@ -13,6 +13,7 @@ class GridViewModel: ObservableObject {
     @Published var error: ServerError?
     @Published var isSearch: Bool = false
     @Published var currentDataItem: SideBarItem = .list
+    @State var isYande: Bool = false
 
     private unowned let coordinator: GridViewCoordinator
     private let imagesService: ImagesService
@@ -30,12 +31,18 @@ class GridViewModel: ObservableObject {
     func change(_ item: SideBarItem) {
         coordinator.changeDataSource()
         
-        if item.id == 2 {
-            currentDataItem = .list
-            loadData()
-        } else if item.id == 5 {
-            currentDataItem = .list2
-            loadYandeData()
+        Task {
+            await MainActor.run {
+                if item.id == 2 {
+                    isYande = false
+                    currentDataItem = .list
+                    loadData()
+                } else if item.id == 5 {
+                    isYande = true
+                    currentDataItem = .list2
+                    loadYandeData()
+                }
+            }
         }
     }
     

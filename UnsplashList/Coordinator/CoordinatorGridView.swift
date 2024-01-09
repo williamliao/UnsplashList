@@ -12,9 +12,10 @@ struct GridCoordinatorView: View {
     // MARK: Stored Properties
     @ObservedObject var coordinator: GridViewCoordinator
     @Binding var navigationPath: [Route]
+    
 
     var body: some View {
-        GridView(viewModel: coordinator.gridViewModel, navigationPath: $navigationPath)
+        GridView(viewModel: coordinator.gridViewModel, navigationPath: $navigationPath, isYande: coordinator.gridViewModel.$isYande)
             .navigation(item: $coordinator.detailViewModel) { DetailView(viewModel: $0, navigationPath: $navigationPath) }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
     }
