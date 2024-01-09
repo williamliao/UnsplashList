@@ -18,7 +18,7 @@ struct GridView: View {
         ScrollView {
             LazyVGrid(columns: [.init(.adaptive(minimum: 200, maximum: .infinity), spacing: 3)], spacing: 3) {
                 
-                showGridView(viewModel.items)
+                showGridView(viewModel.getItems())
 
             }
             .padding(.all, 10)
@@ -29,7 +29,7 @@ struct GridView: View {
         
         return ForEach(0 ..< array.count, id: \.self) { i in
             
-            AsyncImage(url: URL(string: viewModel.items[i].thumb!)) { phase in
+            AsyncImage(url: URL(string: viewModel.indexOfModel(index: i).thumb!)) { phase in
                 switch phase {
                 case .empty:
                     ProgressView()
@@ -39,28 +39,28 @@ struct GridView: View {
                             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
                             .aspectRatio(1, contentMode: .fit)
                             .onTapGesture {
-                                viewModel.open(model: viewModel.isSearch ? viewModel.items[i] : viewModel.items[i])
+                                viewModel.open(model: viewModel.indexOfModel(index: i))
                                 navigationPath.append(.detail)
                             }
                             .contextMenu {
                                 
                                 Button("Copy URL") {
                                     UIPasteboard.general.string = ""
-                                    UIPasteboard.general.setValue(viewModel.items[i].raw ?? "", forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
+                                    UIPasteboard.general.setValue(viewModel.indexOfModel(index: i).raw ?? "", forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
                                 }
                                 
                                 if currentItem.id == 4 || currentItem.id == 5 {
                                    
                                     Button("Copy Tags") {
                                         UIPasteboard.general.string = ""
-                                        UIPasteboard.general.setValue(viewModel.items[i].tags ?? "", forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
+                                        UIPasteboard.general.setValue(viewModel.indexOfModel(index: i).tags ?? "", forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
                                     }
                                 }
                                 
                             }
                             .overlay(alignment: .bottomTrailing, content: {
                                 
-                                FavoriteIconView(currentSideBarItem: $currentItem, item: viewModel.items[i])
+                                FavoriteIconView(currentSideBarItem: $currentItem, item: viewModel.indexOfModel(index: i))
                                 
                             })
                 case .failure(_):

@@ -97,7 +97,7 @@ struct HomeCoordinatorView: View {
                     .navigationTitle("GridView")
                     .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search...")
                     .onSubmit(of: .search) {
-                        coordinator.gridCoordinator.gridViewModel.items.removeAll()
+                        coordinator.gridCoordinator.gridViewModel.removeAll()
                         coordinator.gridCoordinator.gridViewModel.loadSearchData(searchText, "10", "1")
                     }
                    // .navigationSplitViewColumnWidth(min: 200, ideal: 300, max: 400)

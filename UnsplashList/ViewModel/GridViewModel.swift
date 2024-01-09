@@ -9,7 +9,6 @@ import SwiftUI
 
 class GridViewModel: ObservableObject {
     @Published var items = [UnsplashModel]()
-    @Published var items2 = [UnsplashModel]()
     @Published var error: ServerError?
     @Published var isSearch: Bool = false
     @State var currentDataItem: SideBarItem
@@ -32,13 +31,23 @@ class GridViewModel: ObservableObject {
         coordinator.open(model)
     }
     
+    func indexOfModel(index: Int) -> UnsplashModel {
+        return items[index]
+    }
+    
+    func getItems() -> [UnsplashModel] {
+        return items
+    }
+    
     func change(_ item: SideBarItem) {
-        coordinator.changeDataSource()
-        
-        currentDataItem = item
         
         Task {
             await MainActor.run {
+                
+                coordinator.changeDataSource()
+                
+                currentDataItem = item
+                
                 if item.id == 2 {
                     loadData()
                 } else if item.id == 3  {
@@ -122,5 +131,9 @@ class GridViewModel: ObservableObject {
     
     func performSearch() {
         isSearch = true
+    }
+    
+    func removeAll() {
+        items.removeAll()
     }
 }

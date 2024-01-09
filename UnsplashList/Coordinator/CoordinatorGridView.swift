@@ -43,6 +43,6 @@ class GridViewCoordinator: ObservableObject {
     }
     
     func changeDataSource() {
-        gridViewModel.items.removeAll()
+        gridViewModel.removeAll()
     }
 }
