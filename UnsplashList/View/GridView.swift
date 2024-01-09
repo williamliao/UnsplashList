@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct GridView: View {
     
@@ -46,14 +47,14 @@ struct GridView: View {
                                 
                                 Button("Copy URL") {
                                     UIPasteboard.general.string = ""
-                                    UIPasteboard.general.setValue(viewModel.indexOfModel(index: i).raw ?? "", forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
+                                    UIPasteboard.general.setValue(viewModel.indexOfModel(index: i).raw ?? "", forPasteboardType: UTType.url.identifier)
                                 }
                                 
                                 if currentItem.id == 4 || currentItem.id == 5 {
                                    
                                     Button("Copy Tags") {
                                         UIPasteboard.general.string = ""
-                                        UIPasteboard.general.setValue(viewModel.indexOfModel(index: i).tags ?? "", forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
+                                        UIPasteboard.general.setValue(viewModel.indexOfModel(index: i).tags ?? "", forPasteboardType: UTType.url.identifier)
                                     }
                                 }
                                 
