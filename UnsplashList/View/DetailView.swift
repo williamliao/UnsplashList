@@ -16,7 +16,7 @@ struct DetailView: View {
        
         VStack {
             
-            let url = URL(string: viewModel.item.urls?.full ?? "")
+            let url = URL(string: viewModel.item.full ?? "")
             
             AsyncImage(url: url) { phase in
                 switch phase {

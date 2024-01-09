@@ -15,7 +15,7 @@ struct GridCoordinatorView: View {
     
 
     var body: some View {
-        GridView(viewModel: coordinator.gridViewModel, navigationPath: $navigationPath, isYande: coordinator.gridViewModel.$isYande)
+        GridView(viewModel: coordinator.gridViewModel, navigationPath: $navigationPath, currentItem: coordinator.gridViewModel.$currentDataItem)
             .navigation(item: $coordinator.detailViewModel) { DetailView(viewModel: $0, navigationPath: $navigationPath) }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
     }

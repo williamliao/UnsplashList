@@ -18,10 +18,10 @@ struct SideBarItem: Equatable, Identifiable {
     static let yande = SideBarItem(id: 1, name: "Yande", icon: "photo", items: [SideBarItem.list2, SideBarItem.favorite2])
     
     static let list = SideBarItem(id: 2, name: "List", icon: "list.bullet")
-    static let favorite = SideBarItem(id: 4, name: "Favorite", icon: "heart.fill")
+    static let favorite = SideBarItem(id: 3, name: "Favorite", icon: "heart.fill")
     
-    static let list2 = SideBarItem(id: 5, name: "List", icon: "list.bullet")
-    static let favorite2 = SideBarItem(id: 7, name: "Favorite", icon: "heart.fill")
+    static let list2 = SideBarItem(id: 4, name: "List", icon: "list.bullet")
+    static let favorite2 = SideBarItem(id: 5, name: "Favorite", icon: "heart.fill")
 }
 
 extension SideBarItem {

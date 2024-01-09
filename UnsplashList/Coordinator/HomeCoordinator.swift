@@ -76,6 +76,8 @@ struct HomeCoordinatorView: View {
             .onChange(of: selectedItem) { oldValue, newValue in
                 currentItem = newValue
                 
+                coordinator.gridCoordinator.gridViewModel.currentDataItem = newValue!
+                
                 if navigationPath.count > 0 {
                     navigationPath.removeLast()
                 }

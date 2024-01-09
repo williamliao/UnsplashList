@@ -11,19 +11,15 @@ struct GridView: View {
     
     @ObservedObject var viewModel: GridViewModel
     @Binding var navigationPath: [Route]
-    @Binding var isYande: Bool
+    @Binding var currentItem: SideBarItem
     
     var body: some View {
         
         ScrollView {
             LazyVGrid(columns: [.init(.adaptive(minimum: 200, maximum: .infinity), spacing: 3)], spacing: 3) {
                 
-                if viewModel.currentDataItem == .list {
-                    showGridView(viewModel.items)
-                } else {
-                    showGridView(viewModel.items2)
-                }
-                
+                showGridView(viewModel.items)
+
             }
             .padding(.all, 10)
         }
@@ -33,7 +29,7 @@ struct GridView: View {
         
         return ForEach(0 ..< array.count, id: \.self) { i in
             
-            AsyncImage(url: URL(string: getURL(index: i)!)) { phase in
+            AsyncImage(url: URL(string: viewModel.items[i].thumb!)) { phase in
                 switch phase {
                 case .empty:
                     ProgressView()
@@ -48,25 +44,23 @@ struct GridView: View {
                             }
                             .contextMenu {
                                 
-                                if isYande {
-                                    Button("Copy URL") {
-                                        UIPasteboard.general.string = ""
-                                        UIPasteboard.general.setValue(viewModel.items2[i].file_url, forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
-                                    }
+                                Button("Copy URL") {
+                                    UIPasteboard.general.string = ""
+                                    UIPasteboard.general.setValue(viewModel.items[i].raw ?? "", forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
+                                }
+                                
+                                if currentItem.id == 4 || currentItem.id == 5 {
+                                   
                                     Button("Copy Tags") {
                                         UIPasteboard.general.string = ""
-                                        UIPasteboard.general.setValue(viewModel.items2[i].tags, forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
-                                    }
-                                } else {
-                                    Button("Copy URL") {
-                                        UIPasteboard.general.string = ""
-                                        UIPasteboard.general.setValue(viewModel.items[i].urls?.full ?? "", forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
+                                        UIPasteboard.general.setValue(viewModel.items[i].tags ?? "", forPasteboardType: UIPasteboard.general.url?.absoluteString ?? "")
                                     }
                                 }
+                                
                             }
                             .overlay(alignment: .bottomTrailing, content: {
                                 
-                                FavoriteView(item: viewModel.items[i])
+                                FavoriteIconView(currentSideBarItem: $currentItem, item: viewModel.items[i])
                                 
                             })
                 case .failure(_):
@@ -82,66 +76,6 @@ struct GridView: View {
             
         }
         .animation(.interactiveSpring(), value: 3)
-    }
-    
-    func getItems(index: Int) -> Any {
-        var item: Any
-        
-        if viewModel.currentDataItem == .list {
-            item = viewModel.items[index]
-        } else {
-            item = viewModel.items2[index]
-        }
-        
-        return item
-    }
-    
-    func getURL(index: Int) -> String? {
-        var url: String?
-        
-        if viewModel.currentDataItem == .list {
-            url = viewModel.items[index].urls?.small
-        } else {
-            url = viewModel.items2[index].preview_url
-        }
-        
-        return url
-    }
-}
-
-struct FavoriteView: View {
-
-    @State var item: UnsplashModel
-    @StateObject private var favoriteVM = FavoriteViewModel()
-    @AppStorage("favoriteItems") var favoriteItems: [UnsplashModel] = []
-    
-    var body: some View {
-        Image(systemName: item.isFavorite ? "heart.fill" : "heart")
-            .background(.ultraThinMaterial)
-            .font(.system(size: 20))
-            .onTapGesture {
-                updateFavorite()
-            }
-    }
-    
-    private func updateFavorite() {
-        favoriteVM.updateFavorite(item: item)
-        
-        if item.isFavorite {
-            favoriteItems.append(item)
-        } else {
-            favoriteItems.removeAll { model in
-                model.id == item.id
-            }
-        }
-    }
-}
-
-class FavoriteViewModel : ObservableObject {
- 
-    func updateFavorite(item: UnsplashModel) {
-        item.isFavorite = !item.isFavorite
-        self.objectWillChange.send()
     }
 }
 

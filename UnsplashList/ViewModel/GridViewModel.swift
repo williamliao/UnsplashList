@@ -9,19 +9,23 @@ import SwiftUI
 
 class GridViewModel: ObservableObject {
     @Published var items = [UnsplashModel]()
-    @Published var items2 = [Yande]()
+    @Published var items2 = [UnsplashModel]()
     @Published var error: ServerError?
     @Published var isSearch: Bool = false
-    @Published var currentDataItem: SideBarItem = .list
+    @State var currentDataItem: SideBarItem
     @State var isYande: Bool = false
 
     private unowned let coordinator: GridViewCoordinator
     private let imagesService: ImagesService
+    
+    @AppStorage("favoriteItems") var favoriteItems: [UnsplashModel] = []
+    @AppStorage("favoriteItems2") var favoriteItems2: [UnsplashModel] = []
 
     
     init(imagesService: ImagesService, coordinator: GridViewCoordinator) {
         self.imagesService = imagesService
         self.coordinator = coordinator
+        currentDataItem = .list
     }
     
     func open(model:UnsplashModel) {
@@ -31,16 +35,18 @@ class GridViewModel: ObservableObject {
     func change(_ item: SideBarItem) {
         coordinator.changeDataSource()
         
+        currentDataItem = item
+        
         Task {
             await MainActor.run {
                 if item.id == 2 {
-                    isYande = false
-                    currentDataItem = .list
                     loadData()
-                } else if item.id == 5 {
-                    isYande = true
-                    currentDataItem = .list2
+                } else if item.id == 3  {
+                    loadSaveUnsplashData()
+                } else if item.id == 4 {
                     loadYandeData()
+                } else if item.id == 5 {
+                    loadSaveYandeData()
                 }
             }
         }
@@ -65,6 +71,14 @@ class GridViewModel: ObservableObject {
         }
     }
     
+    func loadSaveUnsplashData() {
+        self.items.append(contentsOf: favoriteItems)
+    }
+    
+    func loadSaveYandeData() {
+        self.items.append(contentsOf: favoriteItems2)
+    }
+    
     func loadYandeData() {
 
         self.imagesService.fetchYande(for: .yande(with: "10"), using: ()) { result in
@@ -72,8 +86,8 @@ class GridViewModel: ObservableObject {
             case .success(let models):
                 
                 DispatchQueue.main.async {
-                    if let models = models as? [Yande] {
-                        self.items2.append(contentsOf: models)
+                    if let models = models as? [UnsplashModel] {
+                        self.items.append(contentsOf: models)
                     }
                 }
                 
