@@ -14,8 +14,19 @@ struct SideBarRow: View {
 
     var body: some View {
         HStack {
-            Image(systemName: title.icon)
-            Text(title.name)
+            Button(action: {
+                
+                self.selectedTitle = self.title
+                
+            }) {
+                HStack {
+                    Image(systemName: title.icon)
+                    Text(title.name)
+                            .font(Font.system(size: 17))
+                }
+            }
+            .padding(.top, 8)
+            .padding(.bottom, 8)
             Spacer()
            
             if title == selectedTitle {
@@ -36,9 +47,6 @@ struct SideBarRow: View {
                 }
 
             }
-        }
-        .onTapGesture {
-            self.selectedTitle = self.title
         }
     }
 }
