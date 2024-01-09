@@ -50,16 +50,12 @@ struct HomeCoordinatorView: View {
     @State private var columnVisibility =
         NavigationSplitViewVisibility.automatic
     
-    var rowText = ["List", "Search", "Favorite"]
-    @State var showingSection1 = false
-    @State var showingSection2 = false
-    
-    
     @State private var searchText = ""
 
     let sideBarItem: [SideBarItem] = [.unsplash, .yande]
     @State private var selectedItem: SideBarItem?
     @State var currentItem: SideBarItem?
+    @State private var flags: [Bool] = [true, true]
  
     // MARK: Views
 
@@ -67,27 +63,49 @@ struct HomeCoordinatorView: View {
         
         NavigationSplitView(columnVisibility: $columnVisibility) {
             
-            List(sideBarItem, children: \.items, selection: $selectedItem) { row in
-                HStack {
-                    SideBarRow(title: row, selectedTitle: self.$selectedItem)
+            List {
+                ForEach(Array(sideBarItem.enumerated()), id: \.1.id) { i, group in
+                    DisclosureGroup(isExpanded: $flags[i]) {
+                        VStack {
+                            ForEach(group.items ?? []) { item in
+                                
+                                Button(action: {
+                                    
+                                    currentItem = item
+                                    
+                                    coordinator.gridCoordinator.gridViewModel.currentDataItem = item
+                                    
+                                    if navigationPath.count > 0 {
+                                        navigationPath.removeLast()
+                                    }
+                                
+                                    if currentItem!.id != 1 {
+                                        coordinator.gridCoordinator.gridViewModel.change(currentItem!)
+                                    }
+                                    
+                                }) {
+                                    HStack {
+                                        Image(systemName: item.icon)
+                                        Text(item.name)
+                                    }
+                                    .frame(minWidth: 0, maxWidth: .infinity)
+                                }
+                                
+                            }
+                        }
+                        
+                    } label: {
+                        Label(group.name, systemImage: group.icon)
+                            .onTapGesture {
+                                withAnimation {
+                                    self.flags[i].toggle()
+                                }
+                            }
+                    }
                 }
+
             }
-            .navigationSplitViewColumnWidth(200)
-            .onChange(of: selectedItem) { oldValue, newValue in
-                currentItem = newValue
-                
-                coordinator.gridCoordinator.gridViewModel.currentDataItem = newValue!
-                
-                if navigationPath.count > 0 {
-                    navigationPath.removeLast()
-                }
-            
-                if currentItem!.id != 1 {
-                    coordinator.gridCoordinator.gridViewModel.change(currentItem!)
-                }
-                
-            }
-            
+
         } detail: {
             
             NavigationStack(path: $navigationPath) {
