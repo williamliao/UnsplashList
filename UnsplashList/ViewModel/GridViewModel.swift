@@ -19,6 +19,14 @@ class GridViewModel: ObservableObject {
     @AppStorage("favoriteItems") var favoriteItems: [UnsplashModel] = []
     @AppStorage("favoriteItems2") var favoriteItems2: [UnsplashModel] = []
 
+    // MARK: 1 Configuration
+    private let itemsFromEndThreshold = 10
+        
+    // MARK: 2 API Pagination data
+    private var totalItemsAvailable: Int? = 1000
+    private var itemsLoadedCount: Int?
+    @Published var dataIsLoading = false
+    private var canLoadMorePages = true
     
     init(imagesService: ImagesService, coordinator: GridViewCoordinator) {
         self.imagesService = imagesService
@@ -40,12 +48,12 @@ class GridViewModel: ObservableObject {
     
     func change(_ item: SideBarItem) {
         
+        self.removeAll()
+        
+        currentDataItem = item
+        
         Task {
             await MainActor.run {
-                
-                self.removeAll()
-                
-                currentDataItem = item
                 
                 if item.id == SideBarItemType.unsplashList.rawValue {
                     loadData()
@@ -61,8 +69,8 @@ class GridViewModel: ObservableObject {
     }
     
     func loadData() {
-  
-        self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ()) { result in
+
+        self.imagesService.fetchUnsplash(for: .random(with: "50"), using: ()) { result in
             
             switch result {
             case .success(let models):
@@ -70,6 +78,9 @@ class GridViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     if let models = models as? [UnsplashModel] {
                         self.items.append(contentsOf: models)
+                        
+                        self.itemsLoadedCount = self.items.count
+                        self.dataIsLoading = false
                     }
                 }
                 
@@ -88,6 +99,12 @@ class GridViewModel: ObservableObject {
     }
     
     func loadYandeData() {
+        
+//        if dataIsLoading {
+//            return
+//        }
+        
+        dataIsLoading = true
 
         self.imagesService.fetchYande(for: .yande(with: "10"), using: ()) { result in
             switch result {
@@ -96,6 +113,9 @@ class GridViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     if let models = models as? [UnsplashModel] {
                         self.items.append(contentsOf: models)
+                        
+                        self.itemsLoadedCount = self.items.count
+                        self.dataIsLoading = false
                     }
                 }
                 
@@ -119,6 +139,9 @@ class GridViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     if let models = models as? [UnsplashModel] {
                         self.items.append(contentsOf: models)
+                        
+                        self.itemsLoadedCount = self.items.count
+                        self.dataIsLoading = false
                     }
                 }
                 
@@ -134,5 +157,31 @@ class GridViewModel: ObservableObject {
     
     func removeAll() {
         items.removeAll()
+    }
+    
+    func shouldLoadData(item: UnsplashModel) -> Bool {
+        let lastImage = items[items.count - 1]
+        return lastImage.id == item.id
+    }
+    
+    func requestMoreItemsIfNeeded(index: Int) {
+        guard let itemsLoadedCount = itemsLoadedCount,
+              let totalItemsAvailable = totalItemsAvailable else {
+            return
+        }
+        
+        if thresholdMeet(itemsLoadedCount, index) &&
+            moreItemsRemaining(itemsLoadedCount, totalItemsAvailable) {
+            // Request next page
+            loadYandeData()
+        }
+    }
+
+    private func thresholdMeet(_ itemsLoadedCount: Int, _ index: Int) -> Bool {
+        return (itemsLoadedCount - index) == itemsFromEndThreshold
+    }
+
+    private func moreItemsRemaining(_ itemsLoadedCount: Int, _ totalItemsAvailable: Int) -> Bool {
+        return itemsLoadedCount < totalItemsAvailable
     }
 }

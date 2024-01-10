@@ -13,19 +13,23 @@ struct GridView: View {
     @ObservedObject var viewModel: GridViewModel
     @Binding var navigationPath: [Route]
     @Binding var currentItem: SideBarItem
-    
-    var body: some View {
-        
-        ScrollView {
-            LazyVGrid(columns: [.init(.adaptive(minimum: 200, maximum: .infinity), spacing: 3)], spacing: 3) {
-                
-                showGridView(viewModel.getItems())
 
+    var body: some View {
+
+        GeometryReader { geometry in
+            ScrollView {
+                ScrollViewReader { scrollViewProxy in
+                    LazyVGrid(columns: [.init(.adaptive(minimum: 200, maximum: .infinity), spacing: 3)], spacing: 3) {
+                        
+                        showGridView(viewModel.getItems())
+
+                    }
+                    .padding(.all, 10)
+                }
             }
-            .padding(.all, 10)
         }
     }
-    
+
     func showGridView(_ array: Array<Any>) -> some View {
         
         return ForEach(0 ..< array.count, id: \.self) { i in
@@ -65,14 +69,25 @@ struct GridView: View {
                                 FavoriteIconView(currentSideBarItem: $currentItem, item: viewModel.indexOfModel(index: i))
                                 
                             })
+                            .onAppear {
+                                viewModel.requestMoreItemsIfNeeded(index: i)
+                            }
+                    
+                           
                 case .failure(_):
                     Image(systemName: "wifi.exclamationmark")
                         .resizable()
                         .scaledToFit()
+                        .onAppear {
+                            viewModel.requestMoreItemsIfNeeded(index: i)
+                        }
                 @unknown default:
                     Image(systemName: "wifi.exclamationmark")
                         .resizable()
                         .scaledToFit()
+                        .onAppear {
+                            viewModel.requestMoreItemsIfNeeded(index: i)
+                        }
                 }
             }
             
