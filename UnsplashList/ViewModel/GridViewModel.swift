@@ -187,8 +187,18 @@ class GridViewModel: ObservableObject {
         
         if thresholdMeet(itemsLoadedCount, index) &&
             moreItemsRemaining(itemsLoadedCount, totalItemsAvailable) {
+            
             // Request next page
-            loadYandeData()
+            if currentDataItem.id == SideBarItemType.unsplashList.rawValue {
+                loadData()
+            } else if currentDataItem.id == SideBarItemType.unsplashFavorite.rawValue  {
+                loadSaveUnsplashData()
+            } else if currentDataItem.id == SideBarItemType.yandeList.rawValue {
+                loadYandeData()
+            } else if currentDataItem.id == SideBarItemType.yandeFavorite.rawValue {
+                loadSaveYandeData()
+            }
+        
         }
     }
 

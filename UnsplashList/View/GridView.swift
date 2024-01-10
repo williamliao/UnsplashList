@@ -53,7 +53,6 @@ struct GridView: View {
                     
                         
                         DownloadButton(item: viewModel.indexOfModel(index: i))
-                            .environmentObject(downloadManager)
                             .padding(.top)
                             .padding(.bottom)
                     }

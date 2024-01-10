@@ -8,24 +8,23 @@
 import SwiftUI
 
 struct DownloadButton: View {
-    @EnvironmentObject var downloadManager: DownloadManager
+    @ObservedObject var downloadManager: DownloadManager = DownloadManager()
     @Environment(\.colorScheme) var colorScheme
     let item: UnsplashModel
     
+    @State var isDownloaded = false
+    
     var body: some View {
-        let colors: Array<Color> = downloadManager.isDownloaded ? (colorScheme == .dark ? [Color(#colorLiteral(red: 0.6196078431, green: 0.6784313725, blue: 1, alpha: 1)), Color(#colorLiteral(red: 1, green: 0.5607843137, blue: 0.9803921569, alpha: 1))] : [Color(#colorLiteral(red: 0.262745098, green: 0.0862745098, blue: 0.8588235294, alpha: 1))]) : [Color.primary]
-        
-        let url = URL(string: item.raw!)!
-        let fileExtension = item.fileExtension
-
+        let colors: Array<Color> = isDownloaded ? (colorScheme == .dark ? [Color(#colorLiteral(red: 0.6196078431, green: 0.6784313725, blue: 1, alpha: 1)), Color(#colorLiteral(red: 1, green: 0.5607843137, blue: 0.9803921569, alpha: 1))] : [Color(#colorLiteral(red: 0.262745098, green: 0.0862745098, blue: 0.8588235294, alpha: 1))]) : [Color.primary]
+  
         return HStack(spacing: 8) {
             VStack(alignment: .leading, spacing: 4) {
                 LinearGradient(gradient: Gradient(colors: colors), startPoint: .leading, endPoint: .trailing)
-                    .mask(Text(downloadManager.isDownloaded ? "Downloaded" : "Download").fontWeight(.semibold).textCase(.uppercase).font(.footnote).frame(maxWidth: .infinity, alignment: .leading))
+                    .mask(Text(isDownloaded ? "Downloaded" : "Download").fontWeight(.semibold).textCase(.uppercase).font(.footnote).frame(maxWidth: .infinity, alignment: .leading))
                     .frame(maxHeight: 30)
 
                 VStack(alignment: .leading, spacing: 0) {
-                    Text(downloadManager.isDownloaded ? "Delete the downloaded file" : "Watch Offline")
+                    Text(isDownloaded ? "Delete the downloaded file" : "Watch Offline")
                         .font(.caption2)
                         .foregroundColor(Color.primary)
                         .opacity(0.7)
@@ -52,9 +51,14 @@ struct DownloadButton: View {
         .background(colorScheme == .dark ? Color(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)).opacity(0.2) : Color(#colorLiteral(red: 0.9568627451, green: 0.9450980392, blue: 1, alpha: 1)))
         .cornerRadius(20)
         .onTapGesture {
-            downloadManager.isDownloaded ? downloadManager.deleteFile(for: item) : downloadManager.downloadFile(for: item)
+            isDownloaded ? downloadManager.deleteFile(for: item) : downloadManager.downloadFile(for: item)
         }
-
+        .onAppear(perform: {
+            isDownloaded = downloadManager.checkFileExists(for: item)
+        })
+        .onChange(of: downloadManager.isDownloading) { oldValue, newValue in
+            isDownloaded = downloadManager.checkFileExists(for: item)
+        }
     }
 }
 
