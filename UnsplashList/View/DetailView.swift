@@ -18,28 +18,39 @@ struct DetailView: View {
             
             let url = URL(string: viewModel.item.full ?? "")
             
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .empty:
-                    ProgressView()
-                case .success(let image):
-                    image
-                        .resizable()
-                        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-                        .aspectRatio(1, contentMode: .fit)
-                        .onTapGesture {
-                            navigationPath.append(.url(url: url!))
-                        }
-                case .failure(_):
-                    Image(systemName: "wifi.exclamationmark")
-                        .resizable()
-                        .scaledToFit()
-                @unknown default:
-                    Image(systemName: "wifi.exclamationmark")
-                        .resizable()
-                        .scaledToFit()
+            if viewModel.downloadManager.checkFileExists(at: url!) {
+                
+                Image(uiImage: viewModel.downloadManager.getImage(at: url!))
+                    .resizable()
+                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+                    .aspectRatio(1, contentMode: .fit)
+                
+            } else {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+                            .aspectRatio(1, contentMode: .fit)
+                            .onTapGesture {
+                                navigationPath.append(.url(url: url!))
+                            }
+                    case .failure(_):
+                        Image(systemName: "wifi.exclamationmark")
+                            .resizable()
+                            .scaledToFit()
+                    @unknown default:
+                        Image(systemName: "wifi.exclamationmark")
+                            .resizable()
+                            .scaledToFit()
+                    }
                 }
             }
+            
+            
         }
         .toolbar {
             ToolbarItem {

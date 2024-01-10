@@ -18,6 +18,7 @@ class ImagesService: NetworkManager {
 
     deinit {
         loadingTask?.cancel()
+        loadingTask2?.cancel()
     }
 }
 

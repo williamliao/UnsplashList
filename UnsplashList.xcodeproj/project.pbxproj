@@ -11,6 +11,7 @@
 		C8103CB42B4CE22A0060939A /* Extenstion+Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CB32B4CE22A0060939A /* Extenstion+Array.swift */; };
 		C8103CB62B4CEEDF0060939A /* FavoriteIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CB52B4CEEDF0060939A /* FavoriteIconView.swift */; };
 		C8103CB82B4CEF040060939A /* FavoriteIconViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CB72B4CEF040060939A /* FavoriteIconViewModel.swift */; };
+		C8103CBC2B4E754C0060939A /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CBB2B4E754C0060939A /* DownloadManager.swift */; };
 		C87E8F742B2A8CF300A9C604 /* XCTestCase+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */; };
 		C87E8F762B2A925900A9C604 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F752B2A925900A9C604 /* SafariWebView.swift */; };
 		C8A04F462B2835CF00E49408 /* UnsplashListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A04F452B2835CF00E49408 /* UnsplashListApp.swift */; };
@@ -164,6 +165,7 @@
 		C8103CB32B4CE22A0060939A /* Extenstion+Array.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extenstion+Array.swift"; sourceTree = "<group>"; };
 		C8103CB52B4CEEDF0060939A /* FavoriteIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteIconView.swift; sourceTree = "<group>"; };
 		C8103CB72B4CEF040060939A /* FavoriteIconViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteIconViewModel.swift; sourceTree = "<group>"; };
+		C8103CBB2B4E754C0060939A /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Async.swift"; sourceTree = "<group>"; };
 		C87E8F752B2A925900A9C604 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
 		C8A04F422B2835CF00E49408 /* UnsplashList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnsplashList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -454,6 +456,7 @@
 				C8A04FD12B2850ED00E49408 /* NetworkManager.swift */,
 				C8A04F8B2B284F8E00E49408 /* ImagesService.swift */,
 				C8A04FDB2B29825D00E49408 /* NetworkManager+Mock.swift */,
+				C8103CBB2B4E754C0060939A /* DownloadManager.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -742,6 +745,7 @@
 				C8A04FCA2B28507F00E49408 /* User.swift in Sources */,
 				C8E580CE2B2BE2D500C0EAD0 /* SideBarItem.swift in Sources */,
 				C8A04FDC2B29825D00E49408 /* NetworkManager+Mock.swift in Sources */,
+				C8103CBC2B4E754C0060939A /* DownloadManager.swift in Sources */,
 				C8A04F752B28367000E49408 /* WebView.swift in Sources */,
 				C8A04FC92B28507F00E49408 /* Categories.swift in Sources */,
 				C8A04FC22B28507F00E49408 /* SearchResults.swift in Sources */,

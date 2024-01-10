@@ -401,6 +401,33 @@ extension NetworkManager {
         }
     }
     
+    func data(
+        for request: URLRequest
+    ) async throws -> APIResult<Data, Error > {
+        
+        guard let url = request.url else {
+            return .failure(ServerError.badRequest)
+        }
+
+        let (data, response) = try await session.data(from: url)
+        
+        guard let httpResponse = response as? HTTPURLResponse else {
+            return .failure(ServerError.noHTTPResponse)
+        }
+        
+        if data.count == 0 {
+            return .failure(ServerError.badData)
+        }
+        
+        if self.successCodes.contains(httpResponse.statusCode) {
+            
+            return .success(data)
+            
+        } else {
+            return .failure(self.handleHTTPResponse(statusCode: httpResponse.statusCode))
+        }
+    }
+    
 }
 
 // MARK: - URLSessionTaskDelegate

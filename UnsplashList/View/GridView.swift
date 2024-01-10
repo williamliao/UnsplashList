@@ -13,6 +13,7 @@ struct GridView: View {
     @ObservedObject var viewModel: GridViewModel
     @Binding var navigationPath: [Route]
     @Binding var currentItem: SideBarItem
+    @ObservedObject var downloadManager: DownloadManager
 
     var body: some View {
 
@@ -61,6 +62,11 @@ struct GridView: View {
                                         UIPasteboard.general.string = ""
                                         UIPasteboard.general.setValue(viewModel.indexOfModel(index: i).tags ?? "", forPasteboardType: UTType.url.identifier)
                                     }
+                                }
+                                
+                                Button("Download") {
+                                    let url = URL(string: viewModel.indexOfModel(index: i).raw!)!
+                                    downloadManager.downloadFile(at: url)
                                 }
                                 
                             }
