@@ -91,14 +91,14 @@ extension ImagesService {
             switch endpoint.dataSource {
                 
             case .yande:
-                let result = try await self.data(for: endpoint, using: requestData, decodingType: [Yande].self)
+                let result = try await self.data(for: endpoint, using: requestData, decodingType: YandePost.self)
                 
                 switch result {
                 case .success(let models):
                     
                     var newModels = [UnsplashModel]()
                     
-                    for res in models {
+                    for res in models.posts {
                         let model = UnsplashModel(id: String(res.id), user: nil, exif: nil, location: nil, raw: res.file_url, full: res.file_url, regular: res.jpeg_url, small: res.jpeg_url, thumb: res.preview_url, tags: "")
                         newModels.append(model)
                     }

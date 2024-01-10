@@ -65,3 +65,7 @@ struct Yande:Identifiable, Codable {
     let last_noted_at: Int
     let last_commented_at: Int
 }
+
+struct YandePost: Codable {
+    let posts: [Yande]
+}

@@ -114,10 +114,11 @@ extension Endpoint where Kind == EndpointKinds.Key,
     }
 }
 
-extension Endpoint where Kind == EndpointKinds.Key, Response == [Yande] {
+extension Endpoint where Kind == EndpointKinds.Key, Response == YandePost {
     static func yande(with limit: String) -> Self {
         Endpoint(dataSource:.yande, path: "post.json", queryItems: [
             URLQueryItem(name: "limit", value: limit),
+            URLQueryItem(name: "api_version", value: "2"),
         ])
     }
 }
