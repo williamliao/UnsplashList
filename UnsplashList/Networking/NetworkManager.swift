@@ -218,11 +218,6 @@ class NetworkManager {
                 components.host = UnsplashAPI.host
                 components.path = "/photos/random"
                 
-                components.queryItems = [
-                    URLQueryItem(name: "count", value: "10"),
-                    URLQueryItem(name: "client_id", value: UnsplashAPI.accessKey),
-                ]
-                
                 return components
 
             case .mock(let url):
@@ -238,7 +233,6 @@ class NetworkManager {
 
     func prepareHeaders() -> [String: String]? {
         var headers = [String: String]()
-        headers["Authorization"] = "Client-ID \(UnsplashAPI.accessKey)"
         return headers
     }
     

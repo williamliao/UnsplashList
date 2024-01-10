@@ -10,13 +10,16 @@ import Foundation
 struct UnsplashAPI {
     static let scheme = "https"
     static let host = "api.unsplash.com"
-    static let accessKey = "d0bd0d66796be14d38b9f5e45852397c35457a7479978ff4db3eea2fcd7e2383"
-    static let secretKey = "eae916cc369517321edc9bfe58ed024af98753fc3d03e080b0593c7912a7fdf2"
 }
 
 struct YandeAPI {
     static let scheme = "https"
     static let host = "yande.re"
+}
+
+struct DanbooruAPI {
+    static let scheme = "https"
+    static let host = "danbooru.donmai.us"
 }
 
 protocol EndpointKind {
@@ -36,6 +39,13 @@ enum ImageDataSource {
     case unsplashSearch
     case yande
     case yandeSearch
+    case danbooru
+}
+
+struct APIData: Codable {
+    var accessKey: String
+    var api_key: String
+    var login: String
 }
 
 struct Endpoint<Kind: EndpointKind, Response: Decodable> {
@@ -45,6 +55,33 @@ struct Endpoint<Kind: EndpointKind, Response: Decodable> {
     var method: RequestType = .get
     var format: QueryFormat = .json
     var type: QueryType = .body
+    
+    static func readApiData() -> APIData? {
+        
+        do {
+            let location = NSString(string: "~/api.plist").expandingTildeInPath
+            let data: Data? = try Data(contentsOf: URL(fileURLWithPath: location))
+            
+            if let fileData = data {
+                guard let plist = try PropertyListSerialization.propertyList(from: fileData, options: .mutableContainers, format: nil) as? Dictionary<String, Any> else {return nil}
+              
+                let dict = plist.compactMapValues { $0 }
+                
+                let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+                let decoder = JSONDecoder()
+                let result = try decoder.decode(APIData.self, from: jsonData)
+                
+                return result
+                
+            } else {
+                return nil
+            }
+            
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
 }
 
 //enum Endpoint {
@@ -94,9 +131,12 @@ enum EndpointKinds {
 
 extension Endpoint where Kind == EndpointKinds.Key, Response == RandomResponse {
     static func random(with count: String) -> Self {
-        Endpoint(dataSource:.unsplash ,path: "photos/random", queryItems: [
+        
+        let data = Endpoint.readApiData()
+        
+        return Endpoint(dataSource:.unsplash ,path: "photos/random", queryItems: [
             URLQueryItem(name: "count", value: count),
-            URLQueryItem(name: "client_id", value: UnsplashAPI.accessKey),
+            URLQueryItem(name: "client_id", value: data?.accessKey),
         ])
     }
 }
@@ -104,11 +144,12 @@ extension Endpoint where Kind == EndpointKinds.Key, Response == RandomResponse {
 extension Endpoint where Kind == EndpointKinds.Key,
     Response == SearchRespone {
     static func search(for query: String, perPage: String, page: String) -> Self {
-        Endpoint(dataSource:.unsplashSearch ,path: "search/photos", queryItems: [
+        let data = Endpoint.readApiData()
+        return Endpoint(dataSource:.unsplashSearch ,path: "search/photos", queryItems: [
             URLQueryItem(name: "query", value: query),
             URLQueryItem(name: "per_page", value: String(perPage)),
             URLQueryItem(name: "page", value: String(page)),
-            URLQueryItem(name: "client_id", value: UnsplashAPI.accessKey),
+            URLQueryItem(name: "client_id", value: data?.accessKey),
             //URLQueryItem(name: "orientation", value: "landscape"),
         ])
     }
@@ -119,6 +160,18 @@ extension Endpoint where Kind == EndpointKinds.Key, Response == YandePost {
         Endpoint(dataSource:.yande, path: "post.json", queryItems: [
             URLQueryItem(name: "limit", value: limit),
             URLQueryItem(name: "api_version", value: "2"),
+        ])
+    }
+}
+
+extension Endpoint where Kind == EndpointKinds.Key, Response == YandePost {
+    static func danbooru(with page: String) -> Self {
+        
+        let data = Endpoint.readApiData()
+        
+        return Endpoint(dataSource:.danbooru, path: "posts/\(page).json", queryItems: [
+            URLQueryItem(name: "api_key", value: data?.api_key),
+            URLQueryItem(name: "login", value: data?.login),
         ])
     }
 }
@@ -135,6 +188,9 @@ extension Endpoint {
             case .yande, .yandeSearch:
                 components.scheme = YandeAPI.scheme
                 components.host = YandeAPI.host
+            case .danbooru:
+                components.scheme = DanbooruAPI.scheme
+                components.host = DanbooruAPI.host
         }
         
         components.path = "/" + path
