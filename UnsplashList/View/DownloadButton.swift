@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DownloadButton: View {
-    @ObservedObject var downloadManager: DownloadManager = DownloadManager()
+    @EnvironmentObject var downloadManager: DownloadManager
     @Environment(\.colorScheme) var colorScheme
     let item: UnsplashModel
     

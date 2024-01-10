@@ -13,7 +13,6 @@ struct GridView: View {
     @ObservedObject var viewModel: GridViewModel
     @Binding var navigationPath: [Route]
     @Binding var currentItem: SideBarItem
-    @ObservedObject var downloadManager: DownloadManager
 
     var body: some View {
 
@@ -40,6 +39,8 @@ struct GridView: View {
                 case .empty:
                     ProgressView()
                 case .success(let image):
+                    
+                    let downloadManager = DownloadManager()
                         
                     VStack {
                         image
@@ -47,12 +48,13 @@ struct GridView: View {
                             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
                             .aspectRatio(1, contentMode: .fit)
                             .onTapGesture {
-                                viewModel.open(model: viewModel.indexOfModel(index: i))
+                                viewModel.open(model: viewModel.indexOfModel(index: i), downloadManager: downloadManager)
                                 navigationPath.append(.detail)
                             }
                     
                         
                         DownloadButton(item: viewModel.indexOfModel(index: i))
+                            .environmentObject(downloadManager)
                             .padding(.top)
                             .padding(.bottom)
                     }
@@ -71,10 +73,6 @@ struct GridView: View {
                                         UIPasteboard.general.string = ""
                                         UIPasteboard.general.setValue(viewModel.indexOfModel(index: i).tags ?? "", forPasteboardType: UTType.url.identifier)
                                     }
-                                }
-                                
-                                Button("Download") {
-                                    downloadManager.downloadFile(for: viewModel.indexOfModel(index: i))
                                 }
                                 
                             }

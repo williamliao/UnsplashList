@@ -15,7 +15,7 @@ struct GridCoordinatorView: View {
     
 
     var body: some View {
-        GridView(viewModel: coordinator.gridViewModel, navigationPath: $navigationPath, currentItem: $coordinator.gridViewModel.currentDataItem, downloadManager: coordinator.downloadManager)
+        GridView(viewModel: coordinator.gridViewModel, navigationPath: $navigationPath, currentItem: $coordinator.gridViewModel.currentDataItem)
             .navigation(item: $coordinator.detailViewModel) { DetailView(viewModel: $0, navigationPath: $navigationPath) }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
     }
@@ -25,7 +25,6 @@ struct GridCoordinatorView: View {
 class GridViewCoordinator: ObservableObject {
 
     @Published var gridViewModel: GridViewModel!
-    @Published var downloadManager: DownloadManager!
     @Published var detailViewModel: DetailViewModel?
     @Published var detailViewCoordinator: DetailViewCoordinator?
     
@@ -36,10 +35,9 @@ class GridViewCoordinator: ObservableObject {
         self.imagesService = imagesService
         self.parent = parent
         self.gridViewModel = GridViewModel(imagesService: imagesService, coordinator: self)
-        self.downloadManager = DownloadManager()
     }
 
-    func open(_ item: UnsplashModel) {
+    func open(_ item: UnsplashModel, downloadManager: DownloadManager) {
         self.detailViewModel = DetailViewModel(item: item, downloadManager: downloadManager, coordinator: self)
         self.detailViewCoordinator = DetailViewCoordinator(imagesService: imagesService, detailViewModel: detailViewModel!)
     }

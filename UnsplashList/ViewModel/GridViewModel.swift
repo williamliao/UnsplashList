@@ -34,8 +34,8 @@ class GridViewModel: ObservableObject {
         currentDataItem = .list
     }
     
-    func open(model:UnsplashModel) {
-        coordinator.open(model)
+    func open(model:UnsplashModel, downloadManager: DownloadManager) {
+        coordinator.open(model, downloadManager: downloadManager)
     }
     
     func indexOfModel(index: Int) -> UnsplashModel {
