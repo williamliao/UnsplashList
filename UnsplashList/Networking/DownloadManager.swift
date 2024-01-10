@@ -21,67 +21,83 @@ final class DownloadManager: NetworkManager, ObservableObject  {
         loadingTask?.cancel()
     }
     
-    func downloadFile(at url: URL) {
+    func downloadFile(for item: UnsplashModel) {
         isDownloading = true
         
+        guard let url = URL(string: item.raw!) else {
+            isDownloading = false
+            return
+        }
+        
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let fileExtension = url.pathExtension
+        let fileExtension = item.fileExtension
         let fileName = url.lastPathComponent
 
-        let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension)")
+        let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension ?? "jpg")")
         
         if let destinationUrl = destinationUrl {
             if FileManager().fileExists(atPath: destinationUrl.path) {
                 print("File already exists")
                 isDownloading = false
+            } else {
+                startDownload(at: url, destinationUrl: destinationUrl)
             }
        } else {
            
-           guard let destinationUrl = destinationUrl else {
-               return
-           }
-           
-           let urlRequest = URLRequest(url: url)
-           
-           guard loadingTask == nil else {
-               return
-           }
-           
-           loadingTask = Task {
-               
-               do {
-                   let result = try await self.data(for: urlRequest)
-                   
-                   switch result {
-                   case .success(let imageData):
-                       
-                       try imageData.write(to: destinationUrl, options: Data.WritingOptions.atomic)
-                       DispatchQueue.main.async {
-                           self.isDownloading = false
-                       }
-                       
-                   case .failure(let error):
-                       print("Error decoding: ", error)
-                       self.isDownloading = false
-                   }
-                   
-               } catch {
-                   print("Error decoding: ", error)
-                   isDownloading = false
-               }
-               
-           }
-               
-           loadingTask = nil
+           startDownload(at: url, destinationUrl: destinationUrl)
        }
     }
     
-    func deleteFile(at url: URL) {
+    func startDownload(at url: URL, destinationUrl: URL?) {
+        guard let destinationUrl = destinationUrl else {
+            return
+        }
+        
+        let urlRequest = URLRequest(url: url)
+        
+        guard loadingTask == nil else {
+            return
+        }
+        
+        loadingTask = Task {
+            
+            do {
+                let result = try await self.data(for: urlRequest)
+                
+                switch result {
+                case .success(let imageData):
+                    
+                    try imageData.write(to: destinationUrl, options: Data.WritingOptions.atomic)
+                    DispatchQueue.main.async {
+                        self.isDownloading = false
+                    }
+                    
+                case .failure(let error):
+                    print("Error decoding: ", error)
+                    self.isDownloading = false
+                }
+                
+            } catch {
+                print("Error decoding: ", error)
+                isDownloading = false
+            }
+            
+        }
+            
+        loadingTask = nil
+    }
+    
+    func deleteFile(for item: UnsplashModel) {
+        
+        guard let url = URL(string: item.raw!) else {
+            return
+        }
+        
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let fileExtension = url.pathExtension
+        let fileExtension = item.fileExtension
         let fileName = url.lastPathComponent
 
-        let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension)")
+        let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension ?? "jpg")")
         if let destinationUrl = destinationUrl {
             guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
             do {
@@ -94,12 +110,16 @@ final class DownloadManager: NetworkManager, ObservableObject  {
         }
     }
     
-    func checkFileExists(at url: URL) -> Bool {
+    func checkFileExists(for item: UnsplashModel) -> Bool {
+        guard let url = URL(string: item.raw!) else {
+            isDownloaded = false
+            return isDownloaded
+        }
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let fileExtension = url.pathExtension
+        let fileExtension = item.fileExtension
         let fileName = url.lastPathComponent
 
-        let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension)")
+        let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension ?? "jpg")")
         if let destinationUrl = destinationUrl {
             if (FileManager().fileExists(atPath: destinationUrl.path)) {
                 isDownloaded = true
@@ -114,12 +134,15 @@ final class DownloadManager: NetworkManager, ObservableObject  {
         }
     }
     
-    func getImage(at url: URL) -> UIImage  {
+    func getImage(for item: UnsplashModel) -> UIImage {
+        guard let url = URL(string: item.raw!) else {
+            return UIImage(systemName: "photo")!
+        }
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
-        let fileExtension = url.pathExtension
+        let fileExtension = item.fileExtension
         let fileName = url.lastPathComponent
 
-        let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension)")
+        let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension ?? "jpg")")
         
         if let destinationUrl = destinationUrl {
             if (FileManager().fileExists(atPath: destinationUrl.path)) {

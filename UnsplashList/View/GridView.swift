@@ -40,7 +40,9 @@ struct GridView: View {
                 case .empty:
                     ProgressView()
                 case .success(let image):
-                    image
+                        
+                    VStack {
+                        image
                             .resizable()
                             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
                             .aspectRatio(1, contentMode: .fit)
@@ -48,6 +50,14 @@ struct GridView: View {
                                 viewModel.open(model: viewModel.indexOfModel(index: i))
                                 navigationPath.append(.detail)
                             }
+                    
+                        
+                        DownloadButton(item: viewModel.indexOfModel(index: i))
+                            .environmentObject(downloadManager)
+                            .padding(.top)
+                            .padding(.bottom)
+                    }
+                    
                             .contextMenu {
                                 
                                 Button("Copy URL") {
@@ -65,14 +75,17 @@ struct GridView: View {
                                 }
                                 
                                 Button("Download") {
-                                    let url = URL(string: viewModel.indexOfModel(index: i).raw!)!
-                                    downloadManager.downloadFile(at: url)
+                                    downloadManager.downloadFile(for: viewModel.indexOfModel(index: i))
                                 }
                                 
                             }
-                            .overlay(alignment: .bottomTrailing, content: {
+                            .overlay(alignment: .topTrailing, content: {
                                 
-                                FavoriteIconView(currentSideBarItem: $currentItem, item: viewModel.indexOfModel(index: i))
+                                HStack(alignment: .top) {
+                               
+                                    FavoriteIconView(currentSideBarItem: $currentItem, item: viewModel.indexOfModel(index: i))
+                                    
+                                }
                                 
                             })
                             .onAppear {

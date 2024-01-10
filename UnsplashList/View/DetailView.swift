@@ -18,9 +18,9 @@ struct DetailView: View {
             
             let url = URL(string: viewModel.item.full ?? "")
             
-            if viewModel.downloadManager.checkFileExists(at: url!) {
+            if viewModel.downloadManager.checkFileExists(for: viewModel.item) {
                 
-                Image(uiImage: viewModel.downloadManager.getImage(at: url!))
+                Image(uiImage: viewModel.downloadManager.getImage(for: viewModel.item))
                     .resizable()
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
                     .aspectRatio(1, contentMode: .fit)

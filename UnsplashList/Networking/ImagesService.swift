@@ -44,7 +44,7 @@ extension ImagesService {
                         var newModels = [UnsplashModel]()
                         
                         for res in models {
-                            let model = UnsplashModel(id: res.id, user: res.user, exif: res.exif, location: res.location, raw: res.urls.raw, full: res.urls.full, regular: res.urls.regular, small: res.urls.small, thumb: res.urls.thumb, tags: "")
+                            let model = UnsplashModel(id: res.id, user: res.user, exif: res.exif, location: res.location, raw: res.urls.raw, full: res.urls.full, regular: res.urls.regular, small: res.urls.small, thumb: res.urls.thumb, tags: "", fileExtension: "jpg")
                             newModels.append(model)
                         }
                         
@@ -63,7 +63,7 @@ extension ImagesService {
                         var newModels = [UnsplashModel]()
                         
                         for res in models.results {
-                            let model = UnsplashModel(id: res.id, user: res.user, exif: nil, location: nil, raw: res.urls?.raw, full: res.urls?.full, regular: res.urls?.regular, small: res.urls?.small, thumb: res.urls?.thumb, tags: "")
+                            let model = UnsplashModel(id: res.id, user: res.user, exif: nil, location: nil, raw: res.urls?.raw, full: res.urls?.full, regular: res.urls?.regular, small: res.urls?.small, thumb: res.urls?.thumb, tags: "", fileExtension: "jpg")
                             newModels.append(model)
                         }
                         
@@ -100,7 +100,7 @@ extension ImagesService {
                     var newModels = [UnsplashModel]()
                     
                     for res in models.posts {
-                        let model = UnsplashModel(id: String(res.id), user: nil, exif: nil, location: nil, raw: res.file_url, full: res.file_url, regular: res.jpeg_url, small: res.jpeg_url, thumb: res.preview_url, tags: "")
+                        let model = UnsplashModel(id: String(res.id), user: nil, exif: nil, location: nil, raw: res.file_url, full: res.file_url, regular: res.jpeg_url, small: res.jpeg_url, thumb: res.preview_url, tags: "", fileExtension: res.file_ext)
                         newModels.append(model)
                     }
                  

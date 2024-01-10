@@ -20,8 +20,9 @@ class UnsplashModel: Identifiable, Codable {
     let small: String?
     let thumb: String?
     let tags: String?
+    let fileExtension: String?
     
-    init(id: String, user: User?, exif: Exif?, location: Location?, isFavorite: Bool = false, preview_url: String? = nil, raw: String?, full: String?, regular: String?, small: String?, thumb: String?, tags: String?) {
+    init(id: String, user: User?, exif: Exif?, location: Location?, isFavorite: Bool = false, preview_url: String? = nil, raw: String?, full: String?, regular: String?, small: String?, thumb: String?, tags: String?, fileExtension: String?) {
         self.id = id
         self.user = user
         self.exif = exif
@@ -34,6 +35,7 @@ class UnsplashModel: Identifiable, Codable {
         self.small = small
         self.thumb = thumb
         self.tags = tags
+        self.fileExtension = fileExtension
     }
 }
 
