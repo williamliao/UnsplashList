@@ -131,7 +131,18 @@ class GridViewModel: ObservableObject {
             return
         }
         
-        self.imagesService.fetchUnsplash(for: .search(for: query, perPage: "10", page: "1"), using: ()) { result in
+        let lowercasedSearchText = query.lowercased()
+
+        var matchingImages: [UnsplashModel] = []
+
+        items.forEach { model in
+            let searchContent = model.tags
+            if searchContent?.lowercased().range(of: lowercasedSearchText, options: .caseInsensitive) != nil {
+               matchingImages.append(model)
+            }
+        }
+        
+        self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: "1"), using: ()) { result in
             
             switch result {
             case .success(let models):
@@ -139,6 +150,10 @@ class GridViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     if let models = models as? [UnsplashModel] {
                         self.items.append(contentsOf: models)
+                        
+                        if matchingImages.count > 0 {
+                            self.items.append(contentsOf: matchingImages)
+                        }
                         
                         self.itemsLoadedCount = self.items.count
                         self.dataIsLoading = false
