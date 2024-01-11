@@ -31,21 +31,12 @@ struct SideBarRow: View {
            
             if title == selectedTitle {
                 
-                if title.name == "Unsplash" || title.name == "Yande" {
+                if title.name == SideBarItem.unsplash.name || title.name == SideBarItem.yande.name || title.name == SideBarItem.danbooru.name {
                     
                 } else {
                     Image(systemName: "checkmark")
                         .foregroundColor(.accentColor)
                 }
-            }
-            
-            if selectedTitle == nil {
-                
-                if title.id == 2 {
-                    Image(systemName: "checkmark")
-                        .foregroundColor(.accentColor)
-                }
-
             }
         }
     }

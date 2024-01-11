@@ -15,6 +15,7 @@ struct FavoriteIconView: View {
     @StateObject private var favoriteVM = FavoriteIconViewModel()
     @AppStorage("favoriteItems") var favoriteItems: [UnsplashModel] = []
     @AppStorage("favoriteItems2") var favoriteItems2: [UnsplashModel] = []
+    @AppStorage("favoriteItems3") var favoriteItems3: [UnsplashModel] = []
     
     var body: some View {
         Image(systemName: item.isFavorite ? "heart.fill" : "heart")
@@ -43,6 +44,15 @@ struct FavoriteIconView: View {
                 favoriteItems.append(item)
             } else {
                 favoriteItems.removeAll { model in
+                    model.id == item.id
+                }
+            }
+        } else if currentSideBarItem.id == SideBarItemType.danbooruList.rawValue ||
+                    currentSideBarItem.id == SideBarItemType.danbooruFavorite.rawValue {
+            if item.isFavorite {
+                favoriteItems3.append(item)
+            } else {
+                favoriteItems3.removeAll { model in
                     model.id == item.id
                 }
             }

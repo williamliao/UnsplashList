@@ -52,7 +52,7 @@ struct HomeCoordinatorView: View {
     
     @State private var searchText = ""
 
-    let sideBarItem: [SideBarItem] = [.unsplash, .yande]
+    let sideBarItem: [SideBarItem] = [.unsplash, .yande, .danbooru]
     @State private var selectedItem: SideBarItem?
     @State var currentItem: SideBarItem?
     @State private var flags: [Bool] = [true, true]

@@ -18,6 +18,7 @@ class GridViewModel: ObservableObject {
     
     @AppStorage("favoriteItems") var favoriteItems: [UnsplashModel] = []
     @AppStorage("favoriteItems2") var favoriteItems2: [UnsplashModel] = []
+    @AppStorage("favoriteItems3") var favoriteItems3: [UnsplashModel] = []
 
     // MARK: 1 Configuration
     private let itemsFromEndThreshold = 10
@@ -63,6 +64,10 @@ class GridViewModel: ObservableObject {
                     loadYandeData()
                 } else if item.id == SideBarItemType.yandeFavorite.rawValue {
                     loadSaveYandeData()
+                } else if item.id == SideBarItemType.danbooruList.rawValue {
+                    loadDanbooru()
+                } else if item.id == SideBarItemType.danbooruFavorite.rawValue {
+                    loadSaveDanbooru()
                 }
             }
         }
@@ -96,6 +101,10 @@ class GridViewModel: ObservableObject {
     
     func loadSaveYandeData() {
         self.items.append(contentsOf: favoriteItems2)
+    }
+    
+    func loadSaveDanbooru() {
+        self.items.append(contentsOf: favoriteItems3)
     }
     
     func loadDanbooru() {
