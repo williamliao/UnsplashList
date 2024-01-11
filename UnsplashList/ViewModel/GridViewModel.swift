@@ -25,6 +25,7 @@ class GridViewModel: ObservableObject {
         
     // MARK: 2 API Pagination data
     private var totalItemsAvailable: Int? = 1000
+    private var maximumDownloadItem: Int = 20
     private var itemsLoadedCount: Int?
     @Published var dataIsLoading = false
     private var canLoadMorePages = true
@@ -82,7 +83,7 @@ class GridViewModel: ObservableObject {
     
     func loadData() {
 
-        self.imagesService.fetchUnsplash(for: .random(with: "50"), using: ()) { result in
+        self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ()) { result in
             
             switch result {
             case .success(let models):
@@ -246,6 +247,10 @@ class GridViewModel: ObservableObject {
     @MainActor func requestMoreItemsIfNeeded(index: Int) {
         guard let itemsLoadedCount = itemsLoadedCount,
               let totalItemsAvailable = totalItemsAvailable else {
+            return
+        }
+        
+        if dataIsLoading {
             return
         }
         
