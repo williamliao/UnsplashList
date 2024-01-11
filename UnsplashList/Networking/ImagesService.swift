@@ -119,4 +119,32 @@ extension ImagesService {
         
         loadingTask2 = nil
     }
+    
+    func fetchDanbooru<K, R>(for endpoint: Endpoint<K, R>,
+                          using requestData: K.RequestData, completion: @escaping (APIResult<Any, ServerError>) -> Void) {
+        
+        Task {
+            let result = try await self.data(for: endpoint, using: requestData, decodingType: [Danbooru].self)
+            
+            var newModels = [UnsplashModel]()
+            
+            switch result {
+            case .success(let models):
+                
+                var newModels = [UnsplashModel]()
+                
+                for res in models {
+                    let model = UnsplashModel(id: String(res.id), user: nil, exif: nil, location: nil, raw: res.file_url, full: res.file_url, regular: res.large_file_url, small: res.large_file_url, thumb: res.preview_file_url, tags: res.tag_string, fileExtension: res.file_ext)
+                    newModels.append(model)
+                }
+             
+                completion(.success(newModels))
+                
+            case .failure(let error):
+                completion(.failure(error as! ServerError))
+            }
+        }
+        
+        
+    }
 }
