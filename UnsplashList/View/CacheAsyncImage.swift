@@ -50,6 +50,9 @@ struct CacheAsyncImage<Content>: View where Content: View{
         if case .success (let image) = phase {
             imageCache.insertImage(image.getUIImage(newSize: CGSize(width: 180, height: 180)), for: url)
         }
+        if case .failure(let error) = phase {
+            print("error \(error)")
+        }
         return content(phase)
     }
 }
