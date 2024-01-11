@@ -38,7 +38,7 @@ class GridViewCoordinator: ObservableObject {
     }
 
     func open(_ item: UnsplashModel, downloadManager: DownloadManager) {
-        self.detailViewModel = DetailViewModel(item: item, downloadManager: downloadManager, coordinator: self)
+        self.detailViewModel = DetailViewModel(items:gridViewModel.items, item: item, downloadManager: downloadManager, coordinator: self)
         self.detailViewCoordinator = DetailViewCoordinator(imagesService: imagesService, detailViewModel: detailViewModel!)
     }
 }
