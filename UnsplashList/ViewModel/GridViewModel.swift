@@ -29,6 +29,9 @@ class GridViewModel: ObservableObject {
     @Published var dataIsLoading = false
     private var canLoadMorePages = true
     
+    private var query:String = ""
+    private var currentPage:Int = 1
+    
     init(imagesService: ImagesService, coordinator: GridViewCoordinator) {
         self.imagesService = imagesService
         self.coordinator = coordinator
@@ -50,6 +53,10 @@ class GridViewModel: ObservableObject {
     func change(_ item: SideBarItem) {
         
         self.removeAll()
+        
+        isSearch = false
+        query = ""
+        currentPage = 1
         
         currentDataItem = item
         
@@ -129,6 +136,9 @@ class GridViewModel: ObservableObject {
     }
     
     func loadDanbooruSearch(tag: String, page: String) {
+        
+        query = tag
+        
         self.imagesService.fetchDanbooru(for: .danbooruWithTag(with: tag, page: page), using: ()) { result in
             switch result {
             case .success(let models):
@@ -181,6 +191,10 @@ class GridViewModel: ObservableObject {
             return
         }
         
+        performSearch()
+        
+        self.query = query
+        
         let lowercasedSearchText = query.lowercased()
 
         var matchingImages: [UnsplashModel] = []
@@ -229,7 +243,7 @@ class GridViewModel: ObservableObject {
         return lastImage.id == item.id
     }
     
-    func requestMoreItemsIfNeeded(index: Int) {
+    @MainActor func requestMoreItemsIfNeeded(index: Int) {
         guard let itemsLoadedCount = itemsLoadedCount,
               let totalItemsAvailable = totalItemsAvailable else {
             return
@@ -240,13 +254,21 @@ class GridViewModel: ObservableObject {
             
             // Request next page
             if currentDataItem.id == SideBarItemType.unsplashList.rawValue {
-                loadData()
-            } else if currentDataItem.id == SideBarItemType.unsplashFavorite.rawValue  {
-                loadSaveUnsplashData()
+                if isSearch {
+                    currentPage += currentPage
+                    loadSearchData(query, "10", String(currentPage))
+                } else {
+                    loadData()
+                }
             } else if currentDataItem.id == SideBarItemType.yandeList.rawValue {
                 loadYandeData()
-            } else if currentDataItem.id == SideBarItemType.yandeFavorite.rawValue {
-                loadSaveYandeData()
+            } else if currentDataItem.id == SideBarItemType.danbooruList.rawValue {
+                if isSearch {
+                    currentPage += currentPage
+                    loadDanbooruSearch(tag: query, page: String(currentPage))
+                } else {
+                    loadDanbooru()
+                }
             }
         
         }
