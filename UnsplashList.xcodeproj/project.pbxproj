@@ -13,6 +13,7 @@
 		C8103CB82B4CEF040060939A /* FavoriteIconViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CB72B4CEF040060939A /* FavoriteIconViewModel.swift */; };
 		C8103CBC2B4E754C0060939A /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CBB2B4E754C0060939A /* DownloadManager.swift */; };
 		C8103CBE2B4E80970060939A /* DownloadButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CBD2B4E80970060939A /* DownloadButton.swift */; };
+		C8103CC02B4F760C0060939A /* Danbooru.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CBF2B4F760C0060939A /* Danbooru.swift */; };
 		C87E8F742B2A8CF300A9C604 /* XCTestCase+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */; };
 		C87E8F762B2A925900A9C604 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F752B2A925900A9C604 /* SafariWebView.swift */; };
 		C8A04F462B2835CF00E49408 /* UnsplashListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A04F452B2835CF00E49408 /* UnsplashListApp.swift */; };
@@ -168,6 +169,7 @@
 		C8103CB72B4CEF040060939A /* FavoriteIconViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteIconViewModel.swift; sourceTree = "<group>"; };
 		C8103CBB2B4E754C0060939A /* DownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		C8103CBD2B4E80970060939A /* DownloadButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButton.swift; sourceTree = "<group>"; };
+		C8103CBF2B4F760C0060939A /* Danbooru.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Danbooru.swift; sourceTree = "<group>"; };
 		C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Async.swift"; sourceTree = "<group>"; };
 		C87E8F752B2A925900A9C604 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
 		C8A04F422B2835CF00E49408 /* UnsplashList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnsplashList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -440,6 +442,7 @@
 				C8A04FA82B28507E00E49408 /* UserProfileInfo.swift */,
 				C8A04F832B28395800E49408 /* UnsplashModel.swift */,
 				C8103CB12B4BFB160060939A /* Yande.swift */,
+				C8103CBF2B4F760C0060939A /* Danbooru.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -764,6 +767,7 @@
 				C8A04F772B28367A00E49408 /* DetailView.swift in Sources */,
 				C8103CB82B4CEF040060939A /* FavoriteIconViewModel.swift in Sources */,
 				C8A04FAE2B28507F00E49408 /* Cursor.swift in Sources */,
+				C8103CC02B4F760C0060939A /* Danbooru.swift in Sources */,
 				C8A04FB32B28507F00E49408 /* Location.swift in Sources */,
 				C8A04F462B2835CF00E49408 /* UnsplashListApp.swift in Sources */,
 				C8A04FBF2B28507F00E49408 /* Total_current_user_submissions.swift in Sources */,
