@@ -17,10 +17,13 @@ struct PhotoView: View {
     @EnvironmentObject var viewModel: GridViewModel
     @State var id = UUID()
     
+    let imageCache = NSCache<NSString, UIImage>()
+    let imageCacheKey: NSString = "CachedImage"
+    
     var body: some View {
         let url = imageModel.thumb!
         
-        AsyncImage(url: URL(string: url)) { phase in
+        CacheAsyncImage(url: URL(string: url)!) { phase in
             switch phase {
             case .empty:
                 ProgressView()
@@ -96,6 +99,14 @@ struct PhotoView: View {
             }
         }
         .id(id)
+    }
+    
+    private func cacheImage(iamge: UIImage) {
+        imageCache.setObject(iamge, forKey: imageCacheKey)
+    }
+
+    private func cachedImage() -> UIImage? {
+        return imageCache.object(forKey: imageCacheKey)
     }
 }
 

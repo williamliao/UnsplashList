@@ -21,7 +21,7 @@ class GridViewModel: ObservableObject {
     @AppStorage("favoriteItems3") var favoriteItems3: [UnsplashModel] = []
 
     // MARK: 1 Configuration
-    private let itemsFromEndThreshold = 10
+    private let itemsFromEndThreshold = 5
         
     // MARK: 2 API Pagination data
     private var totalItemsAvailable: Int? = 1000

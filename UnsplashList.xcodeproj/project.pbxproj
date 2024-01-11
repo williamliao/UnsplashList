@@ -15,6 +15,9 @@
 		C8103CBE2B4E80970060939A /* DownloadButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CBD2B4E80970060939A /* DownloadButton.swift */; };
 		C8103CC02B4F760C0060939A /* Danbooru.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8103CBF2B4F760C0060939A /* Danbooru.swift */; };
 		C834EA3D2B4F95E400052CE5 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834EA3C2B4F95E400052CE5 /* PhotoView.swift */; };
+		C834EA3F2B4FBED800052CE5 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834EA3E2B4FBED800052CE5 /* ImageCache.swift */; };
+		C834EA412B4FC0EA00052CE5 /* CacheAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834EA402B4FC0EA00052CE5 /* CacheAsyncImage.swift */; };
+		C834EA432B4FC59500052CE5 /* Extenstion+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834EA422B4FC59500052CE5 /* Extenstion+Image.swift */; };
 		C87E8F742B2A8CF300A9C604 /* XCTestCase+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */; };
 		C87E8F762B2A925900A9C604 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F752B2A925900A9C604 /* SafariWebView.swift */; };
 		C8A04F462B2835CF00E49408 /* UnsplashListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A04F452B2835CF00E49408 /* UnsplashListApp.swift */; };
@@ -172,6 +175,9 @@
 		C8103CBD2B4E80970060939A /* DownloadButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadButton.swift; sourceTree = "<group>"; };
 		C8103CBF2B4F760C0060939A /* Danbooru.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Danbooru.swift; sourceTree = "<group>"; };
 		C834EA3C2B4F95E400052CE5 /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
+		C834EA3E2B4FBED800052CE5 /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		C834EA402B4FC0EA00052CE5 /* CacheAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheAsyncImage.swift; sourceTree = "<group>"; };
+		C834EA422B4FC59500052CE5 /* Extenstion+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extenstion+Image.swift"; sourceTree = "<group>"; };
 		C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Async.swift"; sourceTree = "<group>"; };
 		C87E8F752B2A925900A9C604 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
 		C8A04F422B2835CF00E49408 /* UnsplashList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnsplashList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -383,6 +389,7 @@
 				C8103CB52B4CEEDF0060939A /* FavoriteIconView.swift */,
 				C8103CBD2B4E80970060939A /* DownloadButton.swift */,
 				C834EA3C2B4F95E400052CE5 /* PhotoView.swift */,
+				C834EA402B4FC0EA00052CE5 /* CacheAsyncImage.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -394,6 +401,8 @@
 				C8A04F792B28379700E49408 /* PreviewHelper.swift */,
 				C87E8F752B2A925900A9C604 /* SafariWebView.swift */,
 				C8103CB32B4CE22A0060939A /* Extenstion+Array.swift */,
+				C834EA3E2B4FBED800052CE5 /* ImageCache.swift */,
+				C834EA422B4FC59500052CE5 /* Extenstion+Image.swift */,
 			);
 			path = Share;
 			sourceTree = "<group>";
@@ -757,6 +766,7 @@
 				C8A04FDC2B29825D00E49408 /* NetworkManager+Mock.swift in Sources */,
 				C8103CBC2B4E754C0060939A /* DownloadManager.swift in Sources */,
 				C8A04F752B28367000E49408 /* WebView.swift in Sources */,
+				C834EA3F2B4FBED800052CE5 /* ImageCache.swift in Sources */,
 				C8A04FC92B28507F00E49408 /* Categories.swift in Sources */,
 				C8A04FC22B28507F00E49408 /* SearchResults.swift in Sources */,
 				C8A04F732B28366500E49408 /* GridView.swift in Sources */,
@@ -774,6 +784,7 @@
 				C8A04FB32B28507F00E49408 /* Location.swift in Sources */,
 				C8A04F462B2835CF00E49408 /* UnsplashListApp.swift in Sources */,
 				C8A04FBF2B28507F00E49408 /* Total_current_user_submissions.swift in Sources */,
+				C834EA432B4FC59500052CE5 /* Extenstion+Image.swift in Sources */,
 				C834EA3D2B4F95E400052CE5 /* PhotoView.swift in Sources */,
 				C8A04FC42B28507F00E49408 /* Links.swift in Sources */,
 				C8A04F8C2B284F8E00E49408 /* ImagesService.swift in Sources */,
@@ -782,6 +793,7 @@
 				C8A04FD62B2850ED00E49408 /* EndPoint.swift in Sources */,
 				C8A04FC82B28507F00E49408 /* UserProfileInfo.swift in Sources */,
 				C8A04FCC2B28507F00E49408 /* Response.swift in Sources */,
+				C834EA412B4FC0EA00052CE5 /* CacheAsyncImage.swift in Sources */,
 				C8A04FC72B28507F00E49408 /* Urls.swift in Sources */,
 				C8DC698C2B2BDED8006CE5D2 /* SideBarRow.swift in Sources */,
 				C8A04FC62B28507F00E49408 /* Position.swift in Sources */,
