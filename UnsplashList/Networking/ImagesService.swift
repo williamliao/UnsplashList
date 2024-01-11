@@ -126,8 +126,6 @@ extension ImagesService {
         Task {
             let result = try await self.data(for: endpoint, using: requestData, decodingType: [Danbooru].self)
             
-            var newModels = [UnsplashModel]()
-            
             switch result {
             case .success(let models):
                 

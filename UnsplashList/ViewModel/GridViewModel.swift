@@ -32,8 +32,6 @@ class GridViewModel: ObservableObject {
         self.imagesService = imagesService
         self.coordinator = coordinator
         currentDataItem = .list
-        
-        loadDanbooru()
     }
     
     func open(model:UnsplashModel, downloadManager: DownloadManager) {
@@ -103,6 +101,26 @@ class GridViewModel: ObservableObject {
     func loadDanbooru() {
       
         self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10"), using: ()) { result in
+            switch result {
+            case .success(let models):
+                
+                DispatchQueue.main.async {
+                    if let models = models as? [UnsplashModel] {
+                        self.items.append(contentsOf: models)
+                        
+                        self.itemsLoadedCount = self.items.count
+                        self.dataIsLoading = false
+                    }
+                }
+                
+            case .failure(let error):
+                self.error = error
+            }
+        }
+    }
+    
+    func loadDanbooruSearch(tag: String, page: String) {
+        self.imagesService.fetchDanbooru(for: .danbooruWithTag(with: tag, page: page), using: ()) { result in
             switch result {
             case .success(let models):
                 

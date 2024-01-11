@@ -182,8 +182,8 @@ extension Endpoint where Kind == EndpointKinds.Key, Response == Danbooru {
         let data = Endpoint.readApiData()
         
         return Endpoint(dataSource:.danbooru, path: "posts.json", queryItems: [
-            URLQueryItem(name: "api_key", value: data?.api_key),
-            URLQueryItem(name: "login", value: data?.login),
+            //URLQueryItem(name: "api_key", value: data?.api_key),
+            //URLQueryItem(name: "login", value: data?.login),
             URLQueryItem(name: "tags", value: tag),
             URLQueryItem(name: "page", value: page),
         ])
