@@ -31,22 +31,22 @@ struct CacheAsyncImage<Content>: View where Content: View{
     
     var body: some View {
         
-        if let cached = imageCache.image(for: url){
-            let _ = print("cached: \(url.absoluteString)")
+        if let cached = imageCache.image(for: url) {
+            //let _ = print("cached: \(url.absoluteString)")
             content(.success(Image(uiImage: cached)))
         }else{
-            let _ = print("request: \(url.absoluteString)")
+            //let _ = print("request: \(url.absoluteString)")
             AsyncImage(
                 url: url,
                 scale: scale,
                 transaction: transaction
-            ){phase in
+            ){ phase in
                 cacheAndRender(phase: phase)
             }
         }
     }
     
-    @MainActor func cacheAndRender(phase: AsyncImagePhase) -> some View{
+    @MainActor func cacheAndRender(phase: AsyncImagePhase) -> some View {
         if case .success (let image) = phase {
             imageCache.insertImage(image.getUIImage(newSize: CGSize(width: 180, height: 180)), for: url)
         }
