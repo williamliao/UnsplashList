@@ -27,23 +27,12 @@ struct DetailView: View {
             ScrollView(.horizontal) {
                 LazyHStack(spacing: 0) {
                     ForEach(0 ..< viewModel.items.count, id: \.self) { i in
-                        
-
+                    
                         let url = URL(string: viewModel.items[i].regular!)
+                        let lowResolutionURL = URL(string: viewModel.items[i].thumb ?? "")
+                        let fullResolutionURL = URL(string: viewModel.items[i].raw ?? "")
                         
-                        if viewModel.downloadManager.checkFileExists(for: viewModel.items[i]) {
-                             
-                             Image(uiImage: viewModel.downloadManager.getImage(for: viewModel.items[i]))
-                                 .resizable()
-                                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-                                 .aspectRatio(1, contentMode: .fit)
-                             
-                         } else {
-                             
-                            
-                             DetailPhotoView(url: url!, navigationPath: $navigationPath)
-                             
-                         }
+                        DetailPhotoView(url: url!, lowResolutionURL: lowResolutionURL, fullResolutionURL: lowResolutionURL!, navigationPath: $navigationPath)
                     }
                 }.padding(.all, 10)
             }

@@ -6,50 +6,74 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct DetailPhotoView: View {
     
-    @State var url: URL
+    @State var url: URL?
+    @State var lowResolutionURL: URL?
+    @State var fullResolutionURL: URL?
     @Binding var navigationPath: [Route]
     @State var id = UUID()
+    @EnvironmentObject var downloadManager: DownloadManager
     
     var body: some View {
-        CacheAsyncImage(url: url) { phase in
-            switch phase {
-            case .empty:
-                ProgressView()
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFill()
-                   .clipShape(RoundedRectangle(cornerRadius: 25.0))
-                   .padding(.horizontal, 20)
-                   .containerRelativeFrame(.horizontal)
-                    .scrollTransition(.animated, axis: .horizontal) { content, phase in
-                        content
-                            .opacity(phase.isIdentity ? 1.0 : 0.8)
-                            .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
-                    }
-                    //.frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-                    .aspectRatio(1, contentMode: .fit)
-                    .onTapGesture {
-                        navigationPath.append(.url(url: url))
-                    }
-                    .id(id)
-            case .failure(_):
+        
+        KFImage(url)
+            .placeholder {
                 Image(systemName: "wifi.exclamationmark")
-                    .resizable()
-                    .scaledToFit()
-                    .onTapGesture {
-                        id = UUID()
-                    }
-                    .id(id)
-            @unknown default:
-                Image(systemName: "wifi.exclamationmark")
-                    .resizable()
-                    .scaledToFit()
+                    .font(.largeTitle)
+                    .opacity(0.3)
             }
-        }
+            .memoryCacheAccessExtending(ExpirationExtending.cacheTime)
+            .memoryCacheExpiration(StorageExpiration.seconds(600))
+            .diskCacheExpiration(StorageExpiration.days(30))
+            .cancelOnDisappear(true)
+            //.retry(maxCount: 3, interval: .seconds(5))
+            .onSuccess { r in
+                //print("success: \(r)")
+                downloadManager.downloadFileWithKingfisher(for: fullResolutionURL)
+            }
+            .onFailure { e in
+                print("failure: \(e)")
+            }
+            .lowDataModeSource(.network(handleLowResolutionURL(lowResolutionURL)))
+            .cacheOriginalImage()
+            .resizable()
+            .loadDiskFileSynchronously()
+            .fade(duration: 0.25)
+            .resizable()
+            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+            .aspectRatio(1, contentMode: .fit)
+           .clipShape(RoundedRectangle(cornerRadius: 25.0))
+           .padding(.horizontal, 20)
+           .containerRelativeFrame(.horizontal)
+            .scrollTransition(.animated, axis: .horizontal) { content, phase in
+                content
+                    .opacity(phase.isIdentity ? 1.0 : 0.8)
+                    .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+            }
+            .onTapGesture {
+                navigationPath.append(.url(url: handleFullResolutionURL(fullResolutionURL)))
+            }
+    }
+    
+    private func handleLowResolutionURL(_ lowResolutionURL: URL?) -> URL
+    {
+       if let unwrappedURL = lowResolutionURL {
+           return unwrappedURL
+       } else {
+           return URL(string: "https://example.com")!
+       }
+    }
+    
+    private func handleFullResolutionURL(_ fullResolutionURL: URL?) -> URL
+    {
+       if let unwrappedURL = fullResolutionURL {
+           return unwrappedURL
+       } else {
+           return URL(string: "https://example.com")!
+       }
     }
 }
 

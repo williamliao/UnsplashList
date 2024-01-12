@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UniformTypeIdentifiers
+import Kingfisher
 
 struct PhotoView: View {
     
@@ -17,88 +18,88 @@ struct PhotoView: View {
     @EnvironmentObject var viewModel: GridViewModel
     @State var id = UUID()
     
+    @State var isLoading = true
+    @State var progress = 0.0
+    
     let imageCache = NSCache<NSString, UIImage>()
     let imageCacheKey: NSString = "CachedImage"
     
     var body: some View {
         let url = imageModel.thumb!
-        
-        CacheAsyncImage(url: URL(string: url)!) { phase in
-            switch phase {
-            case .empty:
-                ProgressView()
-            case .success(let image):
-                
-                let downloadManager = DownloadManager()
-                    
-                VStack {
-                    image
-                        .resizable()
-                        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-                        .aspectRatio(1, contentMode: .fit)
-                        .onTapGesture {
-                            viewModel.open(model: imageModel, downloadManager: downloadManager)
-                            navigationPath.append(.detail)
-                        }
-                
-                    
-                    DownloadButton(item: imageModel)
-                        .environmentObject(downloadManager)
-                        .padding(.top)
-                        .padding(.bottom)
+        let downloadManager = DownloadManager()
+
+        VStack {
+            KFImage(URL(string: url)!)
+                .placeholder {
+                    // Placeholder while downloading.
+                    Image(systemName: "wifi.exclamationmark")
+                        .font(.largeTitle)
+                        .opacity(0.3)
                 }
-                
-                        .contextMenu {
-                            
-                            Button("Copy URL") {
-                                UIPasteboard.general.string = ""
-                                UIPasteboard.general.setValue(imageModel.raw ?? "", forPasteboardType: UTType.url.identifier)
-                            }
-                            
-                            if currentItem.id == SideBarItemType.yandeList.rawValue ||
-                                currentItem.id == SideBarItemType.yandeFavorite.rawValue {
-                               
-                                Button("Copy Tags") {
-                                    UIPasteboard.general.string = ""
-                                    UIPasteboard.general.setValue(imageModel.tags ?? "", forPasteboardType: UTType.url.identifier)
-                                }
-                            }
-                            
-                        }
-                        .overlay(alignment: .topTrailing, content: {
-                            
-                            HStack(alignment: .top) {
-                           
-                                FavoriteIconView(currentSideBarItem: $currentItem, item: imageModel)
-                                
-                            }
-                            
-                        })
-                        .onAppear {
-                            viewModel.requestMoreItemsIfNeeded(index: i)
-                        }
-                
+                .cancelOnDisappear(true)
+                //.retry(maxCount: 3, interval: .seconds(5))
+                .onProgress { receivedSize, totalSize in
+                    progress = CGFloat(Float(receivedSize) / Float(totalSize))
+                    
+                    print("success: \(progress)")
+                    
+                    if progress == 1.0 {
+                        isLoading = false
+                    }
+                }
+                .onSuccess { r in
+                    // r: RetrieveImageResult
+                    //print("success: \(r)")
+                }
+                .onFailure { e in
+                    // e: KingfisherError
+                    print("failure: \(e)")
+                }
+                .cacheOriginalImage()
+                .resizable()
+                .loadDiskFileSynchronously()
+                .fade(duration: 0.25)
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+                .aspectRatio(1, contentMode: .fit)
+                .onTapGesture {
+                    viewModel.open(model: imageModel, downloadManager: downloadManager)
+                    navigationPath.append(.detail)
+                }
+                .contextMenu {
+                    
+                    Button("Copy URL") {
+                        UIPasteboard.general.string = ""
+                        UIPasteboard.general.setValue(imageModel.raw ?? "", forPasteboardType: UTType.url.identifier)
+                    }
+                    
+                    if currentItem.id == SideBarItemType.yandeList.rawValue ||
+                        currentItem.id == SideBarItemType.yandeFavorite.rawValue {
                        
-            case .failure(_):
-                Image(systemName: "wifi.exclamationmark")
-                    .resizable()
-                    .scaledToFit()
-                    .onAppear {
-                        viewModel.requestMoreItemsIfNeeded(index: i)
+                        Button("Copy Tags") {
+                            UIPasteboard.general.string = ""
+                            UIPasteboard.general.setValue(imageModel.tags ?? "", forPasteboardType: UTType.url.identifier)
+                        }
                     }
-                    .onTapGesture {
-                        id = UUID()
+                    
+                }
+                .overlay(alignment: .topTrailing, content: {
+                    
+                    HStack(alignment: .top) {
+                   
+                        FavoriteIconView(currentSideBarItem: $currentItem, item: imageModel)
+                        
                     }
-            @unknown default:
-                Image(systemName: "wifi.exclamationmark")
-                    .resizable()
-                    .scaledToFit()
-                    .onAppear {
-                        viewModel.requestMoreItemsIfNeeded(index: i)
-                    }
-            }
+                    
+                })
+                .onAppear {
+                    viewModel.requestMoreItemsIfNeeded(index: i)
+                }
+            
+            DownloadButton(item: imageModel)
+                .environmentObject(downloadManager)
+                .padding(.top)
+                .padding(.bottom)
         }
-        .id(id)
     }
     
     private func cacheImage(iamge: UIImage) {

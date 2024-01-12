@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Kingfisher
 
 final class DownloadManager: NetworkManager, ObservableObject  {
     @Published var isDownloading = false
@@ -46,6 +47,60 @@ final class DownloadManager: NetworkManager, ObservableObject  {
            
            startDownload(at: url, destinationUrl: destinationUrl)
        }
+    }
+    
+    func downloadFileWithKingfisher(for url: URL?) {
+        
+        guard let downloadUrl = url else {
+            isDownloading = false
+            return
+        }
+        
+        let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        let fileExtension = downloadUrl.pathExtension
+        let fileName = downloadUrl.lastPathComponent
+
+        let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension)")
+        
+        if let destinationUrl = destinationUrl {
+            if FileManager().fileExists(atPath: destinationUrl.path) {
+                print("File already exists")
+                isDownloading = false
+            } else {
+                startDownloadWithKingfisher(at: downloadUrl, destinationUrl: destinationUrl)
+            }
+       } else {
+           
+           startDownloadWithKingfisher(at: downloadUrl, destinationUrl: destinationUrl)
+       }
+        
+    }
+    
+    func startDownloadWithKingfisher(at url: URL, destinationUrl: URL?) {
+        let resource = ImageResource(downloadURL: url)
+        
+        KingfisherManager.shared.retrieveImage(with: resource, options: nil, progressBlock: nil) { result in
+            
+            switch result {
+                case .success(let value):
+                    print("Image: \(value.image). Got from: \(value.cacheType)")
+                
+                if let data = value.data() {
+                    do {
+                        try data.write(to: destinationUrl!, options: Data.WritingOptions.atomic)
+                        DispatchQueue.main.async {
+                            self.isDownloading = false
+                        }
+                    } catch  {
+                        print("failed save Image: \(value.image). Got from: \(value.cacheType)")
+                    }
+                }
+                
+                case .failure(let error):
+                    print("Error: \(error)")
+                    self.isDownloading = false
+            }
+        }
     }
     
     func startDownload(at url: URL, destinationUrl: URL?) {
