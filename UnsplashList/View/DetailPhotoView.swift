@@ -18,17 +18,17 @@ struct DetailPhotoView: View {
     @EnvironmentObject var downloadManager: DownloadManager
     
     var body: some View {
-        
+       
         KFImage(url)
             .placeholder {
-                Image(systemName: "wifi.exclamationmark")
-                    .font(.largeTitle)
-                    .opacity(0.3)
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: Color.red))
             }
             .memoryCacheAccessExtending(ExpirationExtending.cacheTime)
             .memoryCacheExpiration(StorageExpiration.seconds(600))
             .diskCacheExpiration(StorageExpiration.days(30))
             .cancelOnDisappear(true)
+            .diskStoreWriteOptions(.atomic)
             //.retry(maxCount: 3, interval: .seconds(5))
             .onSuccess { r in
                 //print("success: \(r)")
@@ -54,7 +54,7 @@ struct DetailPhotoView: View {
                     .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
             }
             .onTapGesture {
-                navigationPath.append(.url(url: handleFullResolutionURL(fullResolutionURL)))
+                navigationPath.append(.webView(url: handleFullResolutionURL(fullResolutionURL)))
             }
     }
     

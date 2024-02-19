@@ -14,7 +14,7 @@ import Cocoa
 
 enum Route {
     case detail
-    case url(url: URL)
+    case webView(url: URL)
 }
 
 extension Route: Hashable {
@@ -101,7 +101,7 @@ struct HomeCoordinatorView: View {
                         
                         switch route {
                             
-                            case let .url(url):
+                            case let .webView(url):
                                 WebDisPlayView(navigationPath: $navigationPath, url: url)
                                     .transition(AnyTransition.move(edge: .leading))
                                     .animation(.default, value: navigationPath)

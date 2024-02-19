@@ -32,7 +32,8 @@ struct DetailView: View {
                         let lowResolutionURL = URL(string: viewModel.items[i].thumb ?? "")
                         let fullResolutionURL = URL(string: viewModel.items[i].raw ?? "")
                         
-                        DetailPhotoView(url: url!, lowResolutionURL: lowResolutionURL, fullResolutionURL: lowResolutionURL!, navigationPath: $navigationPath)
+                        DetailPhotoView(url: url!, lowResolutionURL: lowResolutionURL, fullResolutionURL: fullResolutionURL, navigationPath: $navigationPath)
+                            .environmentObject(viewModel.downloadManager)
                     }
                 }.padding(.all, 10)
             }

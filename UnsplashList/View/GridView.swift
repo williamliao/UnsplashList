@@ -34,7 +34,7 @@ struct GridView: View {
         
         return ForEach(0 ..< array.count, id: \.self) { i in
             
-            PhotoView(i:i, imageModel: viewModel.indexOfModel(index: i), currentItem: $currentItem, navigationPath: $navigationPath)
+            PhotoView(i:i, imageModel: viewModel.indexOfModel(index: i), currentItem: $currentItem, navigationPath: $navigationPath, progress: 0.5)
                 .environmentObject(viewModel)
         }
         .animation(.interactiveSpring(), value: 3)

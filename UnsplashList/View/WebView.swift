@@ -42,5 +42,5 @@ struct WebDisPlayView: View {
 }
 
 #Preview {
-    StatefulPreviewWrapper([.url(url: URL(string: "")!)]) { WebDisPlayView(navigationPath: $0, url: URL(string: "")!) }
+    StatefulPreviewWrapper([.webView(url: URL(string: "")!)]) { WebDisPlayView(navigationPath: $0, url: URL(string: "")!) }
 }

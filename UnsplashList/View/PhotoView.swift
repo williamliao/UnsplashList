@@ -17,35 +17,28 @@ struct PhotoView: View {
     @Binding var navigationPath: [Route]
     @EnvironmentObject var viewModel: GridViewModel
     @State var id = UUID()
-    
-    @State var isLoading = true
-    @State var progress = 0.0
+
+    @State var progress:Float
     
     let imageCache = NSCache<NSString, UIImage>()
     let imageCacheKey: NSString = "CachedImage"
-    
+   
     var body: some View {
         let url = imageModel.thumb!
         let downloadManager = DownloadManager()
 
         VStack {
             KFImage(URL(string: url)!)
-                .placeholder {
-                    // Placeholder while downloading.
-                    Image(systemName: "wifi.exclamationmark")
-                        .font(.largeTitle)
-                        .opacity(0.3)
+                //.placeholder {
+                    //
+                //}
+                .placeholder { progress in
+                    CircularProgressView(progress: progress)
                 }
                 .cancelOnDisappear(true)
                 //.retry(maxCount: 3, interval: .seconds(5))
                 .onProgress { receivedSize, totalSize in
-                    progress = CGFloat(Float(receivedSize) / Float(totalSize))
-                    
-                    print("success: \(progress)")
-                    
-                    if progress == 1.0 {
-                        isLoading = false
-                    }
+                    progress = (Float(receivedSize) / Float(totalSize))
                 }
                 .onSuccess { r in
                     // r: RetrieveImageResult
@@ -83,11 +76,9 @@ struct PhotoView: View {
                     
                 }
                 .overlay(alignment: .topTrailing, content: {
-                    
+          
                     HStack(alignment: .top) {
-                   
                         FavoriteIconView(currentSideBarItem: $currentItem, item: imageModel)
-                        
                     }
                     
                 })
@@ -101,7 +92,7 @@ struct PhotoView: View {
                 .padding(.bottom)
         }
     }
-    
+
     private func cacheImage(iamge: UIImage) {
         imageCache.setObject(iamge, forKey: imageCacheKey)
     }
