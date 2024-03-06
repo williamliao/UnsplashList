@@ -56,8 +56,16 @@ struct DownloadButton: View {
         .onAppear(perform: {
             isDownloaded = downloadManager.checkFileExists(for: item)
         })
-        .onChange(of: downloadManager.isDownloading) { oldValue, newValue in
-            isDownloaded = downloadManager.checkFileExists(for: item)
+        .modify {
+            if #available(iOS 17.0, *) {
+                $0.onChange(of: downloadManager.isDownloading) { oldValue, newValue in
+                    isDownloaded = downloadManager.checkFileExists(for: item)
+                }
+            } else {
+                $0.onChange(of: downloadManager.isDownloading, perform: { newValue in
+                    isDownloaded = downloadManager.checkFileExists(for: item)
+                })
+            }
         }
     }
 }

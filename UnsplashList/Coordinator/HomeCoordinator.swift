@@ -68,20 +68,41 @@ struct HomeCoordinatorView: View {
                     SideBarRow(title: row, selectedTitle: self.$selectedItem)
                 }
             }
-            .onChange(of: selectedItem) { oldValue, newValue in
-                
-                currentItem = newValue
-                
-                coordinator.gridCoordinator.gridViewModel.currentDataItem = newValue!
-                
-                if navigationPath.count > 0 {
-                    navigationPath.removeLast()
-                }
             
-                if currentItem!.id != 1 {
-                    coordinator.gridCoordinator.gridViewModel.change(currentItem!)
+            .modify {
+                if #available(iOS 17.0, *) {
+                    $0.onChange(of: selectedItem) { oldValue, newValue in
+                        
+                        currentItem = newValue
+                        
+                        coordinator.gridCoordinator.gridViewModel.currentDataItem = newValue!
+                        
+                        if navigationPath.count > 0 {
+                            navigationPath.removeLast()
+                        }
+                    
+                        if currentItem!.id != 1 {
+                            coordinator.gridCoordinator.gridViewModel.change(currentItem!)
+                        }
+                    }
+                } else {
+                    $0.onChange(of: selectedItem, perform: { newValue in
+                        currentItem = newValue
+                        
+                        coordinator.gridCoordinator.gridViewModel.currentDataItem = newValue!
+                        
+                        if navigationPath.count > 0 {
+                            navigationPath.removeLast()
+                        }
+                    
+                        if currentItem!.id != 1 {
+                            coordinator.gridCoordinator.gridViewModel.change(currentItem!)
+                        }
+                    })
                 }
             }
+            
+            
             
         } detail: {
             

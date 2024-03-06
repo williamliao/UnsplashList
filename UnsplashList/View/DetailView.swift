@@ -37,7 +37,11 @@ struct DetailView: View {
                     }
                 }.padding(.all, 10)
             }
-            .scrollTargetBehavior(.paging)
+            .modify {
+                if #available(iOS 17.0, *) {
+                    $0.scrollTargetBehavior(.paging)
+                }
+            }
         }
         
 //        .toolbar {

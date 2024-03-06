@@ -47,12 +47,17 @@ struct DetailPhotoView: View {
             .aspectRatio(1, contentMode: .fit)
            .clipShape(RoundedRectangle(cornerRadius: 25.0))
            .padding(.horizontal, 20)
-           .containerRelativeFrame(.horizontal)
-            .scrollTransition(.animated, axis: .horizontal) { content, phase in
-                content
-                    .opacity(phase.isIdentity ? 1.0 : 0.8)
-                    .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
-            }
+        
+           .modify {
+               if #available(iOS 17.0, *) {
+                   $0.containerRelativeFrame(.horizontal)
+                       .scrollTransition(.animated, axis: .horizontal) { content, phase in
+                           content
+                               .opacity(phase.isIdentity ? 1.0 : 0.8)
+                               .scaleEffect(phase.isIdentity ? 1.0 : 0.8)
+                    }
+               }
+           }
             .onTapGesture {
                 navigationPath.append(.webView(url: handleFullResolutionURL(fullResolutionURL)))
             }

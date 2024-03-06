@@ -83,6 +83,7 @@
 		C8A04FFB2B29AEC200E49408 /* UnsplashListiOSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A04FFA2B29AEC200E49408 /* UnsplashListiOSTests.swift */; };
 		C8A050052B29AEC200E49408 /* UnsplashListiOSUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A050042B29AEC200E49408 /* UnsplashListiOSUITests.swift */; };
 		C8A050072B29AEC200E49408 /* UnsplashListiOSUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A050062B29AEC200E49408 /* UnsplashListiOSUITestsLaunchTests.swift */; };
+		C8ABC8502B98598A00E0E81E /* Extension+ViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8ABC84F2B98598A00E0E81E /* Extension+ViewBuilder.swift */; };
 		C8DC69562B2AF1E6006CE5D2 /* DetailViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DC69552B2AF1E6006CE5D2 /* DetailViewCoordinator.swift */; };
 		C8DC69572B2B00F5006CE5D2 /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A04F852B283C6800E49408 /* HomeCoordinator.swift */; };
 		C8DC69582B2B00F9006CE5D2 /* CoordinatorGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A04F7B2B28387E00E49408 /* CoordinatorGridView.swift */; };
@@ -252,6 +253,7 @@
 		C8A050002B29AEC200E49408 /* UnsplashListiOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnsplashListiOSUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8A050042B29AEC200E49408 /* UnsplashListiOSUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashListiOSUITests.swift; sourceTree = "<group>"; };
 		C8A050062B29AEC200E49408 /* UnsplashListiOSUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsplashListiOSUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C8ABC84F2B98598A00E0E81E /* Extension+ViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension+ViewBuilder.swift"; sourceTree = "<group>"; };
 		C8DC69552B2AF1E6006CE5D2 /* DetailViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewCoordinator.swift; sourceTree = "<group>"; };
 		C8DC698B2B2BDED8006CE5D2 /* SideBarRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarRow.swift; sourceTree = "<group>"; };
 		C8E580CD2B2BE2D500C0EAD0 /* SideBarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideBarItem.swift; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 				C8103CB32B4CE22A0060939A /* Extenstion+Array.swift */,
 				C834EA3E2B4FBED800052CE5 /* ImageCache.swift */,
 				C834EA422B4FC59500052CE5 /* Extenstion+Image.swift */,
+				C8ABC84F2B98598A00E0E81E /* Extension+ViewBuilder.swift */,
 			);
 			path = Share;
 			sourceTree = "<group>";
@@ -815,6 +818,7 @@
 				C8A04F862B283C6800E49408 /* HomeCoordinator.swift in Sources */,
 				C8A04F892B284DC700E49408 /* View+Navigation.swift in Sources */,
 				C8A04FD62B2850ED00E49408 /* EndPoint.swift in Sources */,
+				C8ABC8502B98598A00E0E81E /* Extension+ViewBuilder.swift in Sources */,
 				C8A04FC82B28507F00E49408 /* UserProfileInfo.swift in Sources */,
 				C8A04FCC2B28507F00E49408 /* Response.swift in Sources */,
 				C834EA412B4FC0EA00052CE5 /* CacheAsyncImage.swift in Sources */,
@@ -1079,6 +1083,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1110,6 +1115,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
