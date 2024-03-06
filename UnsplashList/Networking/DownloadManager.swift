@@ -77,7 +77,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
     }
     
     func startDownloadWithKingfisher(at url: URL, destinationUrl: URL?) {
-        let resource = ImageResource(downloadURL: url)
+        let resource = KF.ImageResource(downloadURL: url)
         
         KingfisherManager.shared.retrieveImage(with: resource, options: nil, progressBlock: nil) { result in
             
