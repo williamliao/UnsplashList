@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -169,6 +169,19 @@
 			remoteInfo = UnsplashListiOS;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C8B64ACD2C05CA24004832A7 /* Embed PlugIns */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed PlugIns";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		C8103CB12B4BFB160060939A /* Yande.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Yande.swift; sourceTree = "<group>"; };
@@ -544,6 +557,7 @@
 				C8A04F3E2B2835CF00E49408 /* Sources */,
 				C8A04F3F2B2835CF00E49408 /* Frameworks */,
 				C8A04F402B2835CF00E49408 /* Resources */,
+				C8B64ACD2C05CA24004832A7 /* Embed PlugIns */,
 			);
 			buildRules = (
 			);
@@ -681,7 +695,7 @@
 				};
 			};
 			buildConfigurationList = C8A04F3D2B2835CF00E49408 /* Build configuration list for PBXProject "UnsplashList" */;
-			compatibilityVersion = "Xcode 15.0";
+			compatibilityVersion = "Xcode 15.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1091,7 +1105,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = williamliao.UnsplashList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1123,7 +1137,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = williamliao.UnsplashList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

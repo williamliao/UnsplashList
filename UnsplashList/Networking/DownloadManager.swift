@@ -123,8 +123,29 @@ final class DownloadManager: NetworkManager, ObservableObject  {
                 case .success(let imageData):
                     
                     try imageData.write(to: destinationUrl, options: Data.WritingOptions.atomic)
+                    
                     DispatchQueue.main.async {
                         self.isDownloading = false
+                        
+                        let apiData = self.readApiData()
+                        
+                        if let login = apiData?.login {
+                            
+                            let pathURL = "/Users/" + login + "/Downloads/"
+                            
+                            let fileURL = URL(fileURLWithPath: pathURL, isDirectory: true)
+                            let nameImage = UUID().uuidString + ".png"
+                            let fileURLwithName = fileURL.appendingPathComponent(nameImage)
+                            let saveImageData = UIImage(data: imageData)?.pngData()
+                            
+                            if let saveImageData  = saveImageData {
+                                do {
+                                    try saveImageData.write(to: fileURLwithName)
+                                } catch  {
+                                    print("** saveImageData error: \(error.localizedDescription)")
+                                }
+                            }
+                        }
                     }
                     
                 case .failure(let error):
@@ -215,6 +236,33 @@ final class DownloadManager: NetworkManager, ObservableObject  {
             }
         } else {
             return UIImage(systemName: "photo")!
+        }
+    }
+    
+    func readApiData() -> APIData? {
+        
+        do {
+            let location = NSString(string: "~/api.plist").expandingTildeInPath
+            let data: Data? = try Data(contentsOf: URL(fileURLWithPath: location))
+            
+            if let fileData = data {
+                guard let plist = try PropertyListSerialization.propertyList(from: fileData, options: .mutableContainers, format: nil) as? Dictionary<String, Any> else {return nil}
+              
+                let dict = plist.compactMapValues { $0 }
+                
+                let jsonData = try JSONSerialization.data(withJSONObject: dict, options: .prettyPrinted)
+                let decoder = JSONDecoder()
+                let result = try decoder.decode(APIData.self, from: jsonData)
+                
+                return result
+                
+            } else {
+                return nil
+            }
+            
+        } catch {
+            print(error.localizedDescription)
+            return nil
         }
     }
 }

@@ -234,8 +234,10 @@ class NetworkManager {
         }
     }
 
-    func prepareHeaders() -> [String: String]? {
+    func prepareHeaders(credential: String) -> [String: String]? {
         var headers = [String: String]()
+        headers["Authorization"] = "Basic \(credential)"
+        headers["Content-Type"] = "application/json"
         return headers
     }
     
