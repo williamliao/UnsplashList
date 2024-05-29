@@ -131,16 +131,17 @@ final class DownloadManager: NetworkManager, ObservableObject  {
                         
                         if let login = apiData?.login {
                             
-                            let pathURL = "/Users/" + login + "/Downloads/"
+                            let id = UUID().uuidString
+                            let lastPath = url.lastPathComponent
                             
-                            let fileURL = URL(fileURLWithPath: pathURL, isDirectory: true)
-                            let nameImage = UUID().uuidString + ".png"
-                            let fileURLwithName = fileURL.appendingPathComponent(nameImage)
-                            let saveImageData = UIImage(data: imageData)?.pngData()
+                            let saveURL = self.showSavePanel(fileName: lastPath)
+                            let saveImageItem = ImageItem(id: id, imageData: imageData)
+                            let saveImageData = saveImageItem.imageData
                             
-                            if let saveImageData  = saveImageData {
+                            if let saveImageData  = saveImageData, let saveURL = saveURL {
                                 do {
-                                    try saveImageData.write(to: fileURLwithName)
+                                   // try saveImageData.write(to: fileURLwithName)
+                                    try saveImageData.write(to: saveURL)
                                 } catch  {
                                     print("** saveImageData error: \(error.localizedDescription)")
                                 }
@@ -210,9 +211,9 @@ final class DownloadManager: NetworkManager, ObservableObject  {
         }
     }
     
-    func getImage(for item: UnsplashModel) -> UIImage {
+    func getImage(for item: UnsplashModel) -> ImageRepresentable {
         guard let url = URL(string: item.raw!) else {
-            return UIImage(systemName: "photo")!
+            return getPlaceHolderImage()
         }
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let fileExtension = item.fileExtension
@@ -226,17 +227,25 @@ final class DownloadManager: NetworkManager, ObservableObject  {
                 let imageData = try? Data(contentsOf: destinationUrl)
                 
                 if let imageData = imageData {
-                    return UIImage(data: imageData)!
+                    return ImageRepresentable(data: imageData)!
                 } else {
-                    return UIImage(systemName: "photo")!
+                    return getPlaceHolderImage()
                 }
                 
             } else {
-                return UIImage(systemName: "photo")!
+                return getPlaceHolderImage()
             }
         } else {
-            return UIImage(systemName: "photo")!
+            return getPlaceHolderImage()
         }
+    }
+    
+    func getPlaceHolderImage() -> ImageRepresentable {
+        #if canImport(UIKit)
+            return Image(systemName: "photo")
+        #elseif canImport(Cocoa)
+            return NSImage(systemSymbolName: "photo", accessibilityDescription: nil)!
+        #endif
     }
     
     func readApiData() -> APIData? {
@@ -264,5 +273,24 @@ final class DownloadManager: NetworkManager, ObservableObject  {
             print(error.localizedDescription)
             return nil
         }
+    }
+    
+    private func showSavePanel(fileName: String) -> URL? {
+        /// 1. Form the plugin's bundle URL
+        let bundleFileName = "MacPlugin.bundle"
+        guard let bundleURL = Bundle.main.builtInPlugInsURL?
+                                    .appendingPathComponent(bundleFileName) else { return nil }
+
+        /// 2. Create a bundle instance with the plugin URL
+        guard let bundle = Bundle(url: bundleURL) else { return nil }
+
+        /// 3. Load the bundle and our plugin class
+        let className = "MacPlugin.MacPlugin"
+        guard let pluginClass = bundle.classNamed(className) as? Plugin.Type else { return nil }
+
+        /// 4. Create an instance of the plugin class
+        let plugin = pluginClass.init()
+  
+        return plugin.savePanel(for: .png, fileName: fileName)
     }
 }

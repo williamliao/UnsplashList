@@ -111,7 +111,13 @@ struct HomeCoordinatorView: View {
                     .transition(AnyTransition.move(edge: .leading))
                     .animation(.default, value: navigationPath)
                     .navigationTitle("GridView")
-                    .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search...")
+                
+                    #if canImport(UIKit)
+                        .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search...")
+                    #elseif canImport(AppKit)
+                        .searchable(text:$searchText, placement: .sidebar, prompt: "Search...")
+                    #endif
+                
                     .onSubmit(of: .search) {
                         coordinator.gridCoordinator.gridViewModel.removeAll()
                         coordinator.gridCoordinator.gridViewModel.loadSearchData(searchText, "10", "1")

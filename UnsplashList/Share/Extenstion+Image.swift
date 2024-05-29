@@ -9,11 +9,16 @@ import SwiftUI
 
 extension Image {
     @MainActor
-    func getUIImage(newSize: CGSize) -> UIImage? {
+    func getImage(newSize: CGSize) -> ImageRepresentable? {
         let image = resizable()
             .scaledToFill()
             .frame(width: newSize.width, height: newSize.height)
             .clipped()
-        return ImageRenderer(content: image).uiImage
+        
+        #if canImport(UIKit)
+            return ImageRenderer(content: image).uiImage
+        #elseif canImport(Cocoa)
+            return ImageRenderer(content: image).nsImage
+        #endif
     }
 }

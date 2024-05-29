@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 struct CacheAsyncImage<Content>: View where Content: View{
     
@@ -33,7 +32,7 @@ struct CacheAsyncImage<Content>: View where Content: View{
         
         if let cached = imageCache.image(for: url) {
             //let _ = print("cached: \(url.absoluteString)")
-            content(.success(Image(uiImage: cached)))
+            content(.success(Image(cached)))
         }else{
             //let _ = print("request: \(url.absoluteString)")
             AsyncImage(
@@ -48,7 +47,7 @@ struct CacheAsyncImage<Content>: View where Content: View{
     
     @MainActor func cacheAndRender(phase: AsyncImagePhase) -> some View {
         if case .success (let image) = phase {
-            imageCache.insertImage(image.getUIImage(newSize: CGSize(width: 180, height: 180)), for: url)
+            imageCache.insertImage(image.getImage(newSize: CGSize(width: 180, height: 180)), for: url)
         }
         if case .failure(let error) = phase {
             print("error \(error)")

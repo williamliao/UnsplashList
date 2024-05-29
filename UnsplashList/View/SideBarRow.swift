@@ -25,6 +25,7 @@ struct SideBarRow: View {
                             .font(Font.system(size: 17))
                 }
             }
+            .buttonStyle(ClearButtonStyle())
             .padding(.top, 8)
             .padding(.bottom, 8)
             Spacer()
@@ -43,3 +44,10 @@ struct SideBarRow: View {
 }
 
 
+struct ClearButtonStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .foregroundColor(configuration.isPressed ? Color.blue : Color.white)
+            .background(Color.clear)
+    }
+}

@@ -9,6 +9,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 import Kingfisher
 
+#if canImport(UIKit)
+public typealias PasteboardRepresentable = UIPasteboard
+#elseif canImport(AppKit)
+public typealias PasteboardRepresentable = NSPasteboard
+#endif
+
 struct PhotoView: View {
     
     @State var i: Int
@@ -20,7 +26,7 @@ struct PhotoView: View {
 
     @State var progress:Float
     
-    let imageCache = NSCache<NSString, UIImage>()
+    let imageCache = NSCache<NSString, ImageRepresentable>()
     let imageCacheKey: NSString = "CachedImage"
    
     var body: some View {
@@ -61,16 +67,17 @@ struct PhotoView: View {
                 .contextMenu {
                     
                     Button("Copy URL") {
-                        UIPasteboard.general.string = ""
-                        UIPasteboard.general.setValue(imageModel.raw ?? "", forPasteboardType: UTType.url.identifier)
+                        PasteboardRepresentable.general.setString("", forType: .string)
+                        PasteboardRepresentable.general.setString(imageModel.raw ?? "", forType: .string)
                     }
                     
                     if currentItem.id == SideBarItemType.yandeList.rawValue ||
                         currentItem.id == SideBarItemType.yandeFavorite.rawValue {
                        
                         Button("Copy Tags") {
-                            UIPasteboard.general.string = ""
-                            UIPasteboard.general.setValue(imageModel.tags ?? "", forPasteboardType: UTType.url.identifier)
+                            PasteboardRepresentable.general.setString("", forType: .string)
+                            let tags = imageModel.tags ?? ""
+                            PasteboardRepresentable.general.setString(tags, forType: .string)
                         }
                     }
                     
@@ -92,12 +99,18 @@ struct PhotoView: View {
                 .padding(.bottom)
         }
     }
+    
+    private func setTagsForPa(iamge: ImageRepresentable) {
+        PasteboardRepresentable.general.setString("", forType: .string)
+        let tags = imageModel.tags ?? ""
+        PasteboardRepresentable.general.setString(tags, forType: .string)
+    }
 
-    private func cacheImage(iamge: UIImage) {
+    private func cacheImage(iamge: ImageRepresentable) {
         imageCache.setObject(iamge, forKey: imageCacheKey)
     }
 
-    private func cachedImage() -> UIImage? {
+    private func cachedImage() -> ImageRepresentable? {
         return imageCache.object(forKey: imageCacheKey)
     }
 }

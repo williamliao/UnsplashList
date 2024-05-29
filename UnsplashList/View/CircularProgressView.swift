@@ -8,6 +8,12 @@
 import SwiftUI
 import Kingfisher
 
+#if canImport(UIKit)
+public typealias ViewRepresentable = UIView
+#elseif canImport(AppKit)
+public typealias ViewRepresentable = NSView
+#endif
+
 struct CircularProgressView: View {
   let progress: Progress
 
@@ -31,7 +37,7 @@ struct CircularProgressView: View {
 }
 
 struct MyIndicator: Indicator {
-    let view: UIView = UIView()
+    let view: ViewRepresentable = ViewRepresentable()
     
     func startAnimatingView() { view.isHidden = false }
     func stopAnimatingView() { view.isHidden = true }
