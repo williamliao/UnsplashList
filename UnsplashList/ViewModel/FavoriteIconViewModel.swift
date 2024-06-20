@@ -11,7 +11,9 @@ import SwiftUI
 class FavoriteIconViewModel : ObservableObject {
  
     func updateFavorite(item: UnsplashModel) {
-        item.isFavorite = !item.isFavorite
+        var modifiedItem = item
+        modifiedItem.isFavorite = !modifiedItem.isFavorite
+       // item = modifiedItem
         self.objectWillChange.send()
     }
 }

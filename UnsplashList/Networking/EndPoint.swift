@@ -46,6 +46,8 @@ struct APIData: Codable {
     var accessKey: String
     var api_key: String
     var login: String
+    var dataBaseUrl: String
+    var dataBaseKey: String
 }
 
 struct Endpoint<Kind: EndpointKind, Response: Decodable> {

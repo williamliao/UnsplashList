@@ -7,7 +7,7 @@
 
 import Foundation
 
-class UnsplashModel: Identifiable, Codable {
+struct UnsplashModel: Identifiable, Codable, Sendable {
     let id: String
     let user: User?
     let exif: Exif?
@@ -21,6 +21,22 @@ class UnsplashModel: Identifiable, Codable {
     let thumb: String?
     let tags: String?
     let fileExtension: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case user
+        case exif
+        case location
+        case isFavorite
+        case preview_url
+        case raw
+        case full
+        case regular
+        case small
+        case thumb
+        case tags
+        case fileExtension
+    }
     
     init(id: String, user: User?, exif: Exif?, location: Location?, isFavorite: Bool = false, preview_url: String? = nil, raw: String?, full: String?, regular: String?, small: String?, thumb: String?, tags: String?, fileExtension: String?) {
         self.id = id

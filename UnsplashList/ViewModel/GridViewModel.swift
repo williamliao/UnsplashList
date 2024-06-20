@@ -15,6 +15,7 @@ class GridViewModel: ObservableObject {
 
     private unowned let coordinator: GridViewCoordinator
     private let imagesService: ImagesService
+    private var dataBaseService = DataBaseService()
     
     @AppStorage("favoriteItems") var favoriteItems: [UnsplashModel] = []
     @AppStorage("favoriteItems2") var favoriteItems2: [UnsplashModel] = []
@@ -51,7 +52,8 @@ class GridViewModel: ObservableObject {
         return items
     }
     
-    func change(_ item: SideBarItem) {
+    @MainActor
+    func change(_ item: SideBarItem) async {
         
         self.removeAll()
         
@@ -61,61 +63,65 @@ class GridViewModel: ObservableObject {
         
         currentDataItem = item
         
-        Task {
-            await MainActor.run {
-                
-                if item.id == SideBarItemType.unsplashList.rawValue {
-                    loadData()
-                } else if item.id == SideBarItemType.unsplashFavorite.rawValue  {
-                    loadSaveUnsplashData()
-                } else if item.id == SideBarItemType.yandeList.rawValue {
-                    loadYandeData()
-                } else if item.id == SideBarItemType.yandeFavorite.rawValue {
-                    loadSaveYandeData()
-                } else if item.id == SideBarItemType.danbooruList.rawValue {
-                    loadDanbooru()
-                } else if item.id == SideBarItemType.danbooruFavorite.rawValue {
-                    loadSaveDanbooru()
-                }
-            }
+        if item.id == SideBarItemType.unsplashList.rawValue {
+            await loadData()
+        } else if item.id == SideBarItemType.unsplashFavorite.rawValue  {
+            await loadSaveUnsplashData()
+        } else if item.id == SideBarItemType.yandeList.rawValue {
+            await loadYandeData()
+        } else if item.id == SideBarItemType.yandeFavorite.rawValue {
+            await loadSaveYandeData()
+        } else if item.id == SideBarItemType.danbooruList.rawValue {
+            await loadDanbooru()
+        } else if item.id == SideBarItemType.danbooruFavorite.rawValue {
+            await loadSaveDanbooru()
         }
     }
     
-    func loadData() {
+    @MainActor
+    func loadData() async {
 
-        self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ()) { result in
-            
-            switch result {
-            case .success(let models):
+        Task {
+            await self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ()) { result in
                 
-                DispatchQueue.main.async {
-                    if let models = models as? [UnsplashModel] {
-                        self.items.append(contentsOf: models)
-                        
-                        self.itemsLoadedCount = self.items.count
-                        self.dataIsLoading = false
+                switch result {
+                case .success(let models):
+    
+                    DispatchQueue.main.async {
+                        if let models = models as? [UnsplashModel] {
+                            self.items.append(contentsOf: models)
+    
+                            self.itemsLoadedCount = self.items.count
+                            self.dataIsLoading = false
+                        }
                     }
+    
+                case .failure(let error):
+                    self.error = error
                 }
-                
-            case .failure(let error):
-                self.error = error
             }
         }
     }
     
-    func loadSaveUnsplashData() {
-        self.items.append(contentsOf: favoriteItems)
+    @MainActor
+    func loadSaveUnsplashData() async {
+        let items = await dataBaseService.fetchModel()
+        
+       // print("items \(items)")
+        self.items.append(contentsOf: items)
+       // self.items.append(contentsOf: favoriteItems)
     }
     
-    func loadSaveYandeData() {
+    func loadSaveYandeData() async {
         self.items.append(contentsOf: favoriteItems2)
     }
     
-    func loadSaveDanbooru() {
+    func loadSaveDanbooru() async {
         self.items.append(contentsOf: favoriteItems3)
     }
     
-    func loadDanbooru() {
+    @MainActor
+    func loadDanbooru() async {
       
         self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10"), using: ()) { result in
             switch result {
@@ -136,7 +142,8 @@ class GridViewModel: ObservableObject {
         }
     }
     
-    func loadDanbooruSearch(tag: String, page: String) {
+    @MainActor
+    func loadDanbooruSearch(tag: String, page: String) async {
         
         query = tag
         
@@ -159,7 +166,8 @@ class GridViewModel: ObservableObject {
         }
     }
     
-    func loadYandeData() {
+    @MainActor
+    func loadYandeData() async {
         
 //        if dataIsLoading {
 //            return
@@ -186,7 +194,7 @@ class GridViewModel: ObservableObject {
         }
     }
     
-    @MainActor func loadSearchData(_ query: String, _ perPage: String, _ page: String) {
+    @MainActor func loadSearchData(_ query: String, _ perPage: String, _ page: String) async {
         
         if query.count == 0 {
             return
@@ -207,7 +215,7 @@ class GridViewModel: ObservableObject {
             }
         }
         
-        self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: "1"), using: ()) { result in
+      /*  await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: "1"), using: ()) { result in
             
             switch result {
             case .success(let models):
@@ -228,7 +236,7 @@ class GridViewModel: ObservableObject {
             case .failure(let error):
                 self.error = error
             }
-        }
+        } */
     }
     
     func performSearch() {
@@ -244,7 +252,7 @@ class GridViewModel: ObservableObject {
         return lastImage.id == item.id
     }
     
-    @MainActor func requestMoreItemsIfNeeded(index: Int) {
+    @MainActor func requestMoreItemsIfNeeded(index: Int) async {
         guard let itemsLoadedCount = itemsLoadedCount,
               let totalItemsAvailable = totalItemsAvailable else {
             return
@@ -261,18 +269,18 @@ class GridViewModel: ObservableObject {
             if currentDataItem.id == SideBarItemType.unsplashList.rawValue {
                 if isSearch {
                     currentPage += currentPage
-                    loadSearchData(query, "10", String(currentPage))
+                    await loadSearchData(query, "10", String(currentPage))
                 } else {
-                    loadData()
+                    await loadData()
                 }
             } else if currentDataItem.id == SideBarItemType.yandeList.rawValue {
-                loadYandeData()
+                await loadYandeData()
             } else if currentDataItem.id == SideBarItemType.danbooruList.rawValue {
                 if isSearch {
                     currentPage += currentPage
-                    loadDanbooruSearch(tag: query, page: String(currentPage))
+                    await loadDanbooruSearch(tag: query, page: String(currentPage))
                 } else {
-                    loadDanbooru()
+                    await loadDanbooru()
                 }
             }
         

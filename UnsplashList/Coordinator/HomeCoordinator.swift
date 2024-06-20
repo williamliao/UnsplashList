@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Supabase
 #if canImport(UIKit)
 import UIKit
 #else
@@ -56,7 +57,7 @@ struct HomeCoordinatorView: View {
     @State private var selectedItem: SideBarItem?
     @State var currentItem: SideBarItem?
     @State private var flags: [Bool] = [true, true]
- 
+   
     // MARK: Views
 
     var body: some View {
@@ -82,7 +83,9 @@ struct HomeCoordinatorView: View {
                         }
                     
                         if currentItem!.id != 1 {
-                            coordinator.gridCoordinator.gridViewModel.change(currentItem!)
+                            Task {
+                                await coordinator.gridCoordinator.gridViewModel.change(currentItem!)
+                            }
                         }
                     }
                 } else {
@@ -96,7 +99,9 @@ struct HomeCoordinatorView: View {
                         }
                     
                         if currentItem!.id != 1 {
-                            coordinator.gridCoordinator.gridViewModel.change(currentItem!)
+                            Task {
+                                await coordinator.gridCoordinator.gridViewModel.change(currentItem!)
+                            }
                         }
                     })
                 }
@@ -119,8 +124,10 @@ struct HomeCoordinatorView: View {
                     #endif
                 
                     .onSubmit(of: .search) {
-                        coordinator.gridCoordinator.gridViewModel.removeAll()
-                        coordinator.gridCoordinator.gridViewModel.loadSearchData(searchText, "10", "1")
+                        Task {
+                            await coordinator.gridCoordinator.gridViewModel.removeAll()
+                            await coordinator.gridCoordinator.gridViewModel.loadSearchData(searchText, "10", "1")
+                        }
                     }
                    // .navigationSplitViewColumnWidth(min: 200, ideal: 300, max: 400)
                 

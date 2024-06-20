@@ -14,6 +14,15 @@ struct Exif: Codable {
     let aperture: String?
     let focal_length: String?
     let iso: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case make
+        case model
+        case exposure_time
+        case aperture
+        case focal_length
+        case iso
+    }
 }
 
 extension Exif: Hashable {

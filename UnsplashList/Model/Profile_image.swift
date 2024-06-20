@@ -11,6 +11,12 @@ struct Profile_image: Codable {
     let small: String
     let medium: String
     let large: String
+    
+    enum CodingKeys: String, CodingKey {
+        case small
+        case medium
+        case large
+    }
 }
 
 extension Profile_image: Hashable, Equatable {

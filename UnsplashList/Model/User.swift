@@ -27,6 +27,27 @@ struct User: Codable, Identifiable {
     let total_photos: Int
     let accepted_tos: Bool
     let for_hire: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case updated_at
+        case username
+        case name
+        case first_name
+        case last_name
+        case twitter_username
+        case portfolio_url
+        case bio
+        case location
+        case links
+        case profile_image
+        case instagram_username
+        case total_collections
+        case total_photos
+        case total_likes
+        case accepted_tos
+        case for_hire
+    }
 }
 
 extension User: Hashable, Equatable {

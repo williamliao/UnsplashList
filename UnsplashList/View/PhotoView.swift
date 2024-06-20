@@ -22,6 +22,7 @@ struct PhotoView: View {
     @Binding var currentItem: SideBarItem
     @Binding var navigationPath: [Route]
     @EnvironmentObject var viewModel: GridViewModel
+    @Environment(DataBaseService.self) private var supabaseClient: DataBaseService?
     @State var id = UUID()
 
     @State var progress:Float
@@ -90,22 +91,19 @@ struct PhotoView: View {
                     
                 })
                 .onAppear {
-                    viewModel.requestMoreItemsIfNeeded(index: i)
+                    Task {
+                        await viewModel.requestMoreItemsIfNeeded(index: i)
+                    }
                 }
             
             DownloadButton(item: imageModel)
                 .environmentObject(downloadManager)
+                .environment(supabaseClient)
                 .padding(.top)
                 .padding(.bottom)
         }
     }
-    
-    private func setTagsForPa(iamge: ImageRepresentable) {
-        PasteboardRepresentable.general.setString("", forType: .string)
-        let tags = imageModel.tags ?? ""
-        PasteboardRepresentable.general.setString(tags, forType: .string)
-    }
-
+   
     private func cacheImage(iamge: ImageRepresentable) {
         imageCache.setObject(iamge, forKey: imageCacheKey)
     }

@@ -130,7 +130,7 @@ class NetworkManager {
     var format: QueryFormat { return .urlEncoded }
     var type: QueryType { return .path }
     
-    private static var cache: URLCache = {
+    @MainActor private static var cache: URLCache = {
         let memoryCapacity = 50 * 1024 * 1024
         let diskCapacity = 100 * 1024 * 1024
         let diskPath = "unsplash"
@@ -180,7 +180,7 @@ class NetworkManager {
     
     // MARK: - Base
     
-    public static var urlSessionConfiguration: URLSessionConfiguration = {
+    @MainActor public static var urlSessionConfiguration: URLSessionConfiguration = {
         let sessionConfiguration = URLSessionConfiguration.default
         sessionConfiguration.requestCachePolicy = .reloadIgnoringLocalCacheData
         sessionConfiguration.timeoutIntervalForRequest = 3.0
@@ -190,7 +190,7 @@ class NetworkManager {
         return sessionConfiguration
     }()
     
-    internal static func urlSession() -> URLSession {
+    @MainActor internal static func urlSession() -> URLSession {
         let networkingHandler = NetworkingHandler()
         let session = URLSession(configuration: NetworkManager.urlSessionConfiguration, delegate: networkingHandler, delegateQueue: nil)
         return session
@@ -322,7 +322,7 @@ extension NetworkManager {
         }
     }
 
-    func saveRequestCache(request: URLRequest, data: Data, httpResponse: HTTPURLResponse) {
+    @MainActor func saveRequestCache(request: URLRequest, data: Data, httpResponse: HTTPURLResponse) {
         
         guard let cache = NetworkManager.urlSessionConfiguration.urlCache else {
             return
@@ -333,7 +333,7 @@ extension NetworkManager {
         }
     }
         
-    func loadRequestCacheIfExist(request: URLRequest) -> ImageCacheRespone? {
+    @MainActor func loadRequestCacheIfExist(request: URLRequest) -> ImageCacheRespone? {
         if let cachedResponse = NetworkManager.urlSessionConfiguration.urlCache?.cachedResponse(for: request),
             let httpResponse = cachedResponse.response as? HTTPURLResponse,
             let etag = httpResponse.value(forHTTPHeaderField: "Etag"),
@@ -452,7 +452,7 @@ extension NetworkManager {
 
 // MARK: - URLSessionTaskDelegate
 
-class NetworkingHandler: NSObject, URLSessionTaskDelegate {
+class NetworkingHandler: NSObject, URLSessionTaskDelegate, @unchecked Sendable {
     
     func urlSession(_ session: URLSession, taskIsWaitingForConnectivity task: URLSessionTask) {
         // Indicate network status, e.g., offline mode

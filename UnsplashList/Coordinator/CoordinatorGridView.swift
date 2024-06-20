@@ -12,7 +12,6 @@ struct GridCoordinatorView: View {
     // MARK: Stored Properties
     @ObservedObject var coordinator: GridViewCoordinator
     @Binding var navigationPath: [Route]
-    
 
     var body: some View {
         GridView(viewModel: coordinator.gridViewModel, navigationPath: $navigationPath, currentItem: $coordinator.gridViewModel.currentDataItem)

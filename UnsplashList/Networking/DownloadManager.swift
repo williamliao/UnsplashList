@@ -13,8 +13,9 @@ final class DownloadManager: NetworkManager, ObservableObject  {
     @Published var isDownloading = false
     @Published var isDownloaded = false
     private var loadingTask: Task<Void, Error>?
+    private var dataBaseService = DataBaseService()
     
-    override init(endPoint: NetworkManager.NetworkEndpoint = .random, withSession session: Networking = urlSession()) {
+    override init(endPoint: NetworkManager.NetworkEndpoint = .random, withSession session: Networking = URLSession.shared) {
         super.init(withSession: session)
     }
     
@@ -89,7 +90,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
                     do {
                         try data.write(to: destinationUrl!, options: Data.WritingOptions.atomic)
                         DispatchQueue.main.async {
-                            self.isDownloading = false
+                           // self.isDownloading = false
                         }
                     } catch  {
                         print("failed save Image: \(value.image). Got from: \(value.cacheType)")
@@ -114,7 +115,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
             return
         }
         
-        loadingTask = Task {
+       /* loadingTask = Task {
             
             do {
                 let result = try await self.data(for: urlRequest)
@@ -161,7 +162,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
             
         }
             
-        loadingTask = nil
+        loadingTask = nil */
     }
     
     func deleteFile(for item: UnsplashModel) {
@@ -173,6 +174,10 @@ final class DownloadManager: NetworkManager, ObservableObject  {
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let fileExtension = item.fileExtension
         let fileName = url.lastPathComponent
+        
+      /*  Task {
+            await dataBaseService.saveModel(item:item)
+        }
 
         let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension ?? "jpg")")
         if let destinationUrl = destinationUrl {
@@ -184,7 +189,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
             } catch let error {
                 print("Error while deleting video file: ", error)
             }
-        }
+        } */
     }
     
     func checkFileExists(for item: UnsplashModel) -> Bool {
@@ -195,7 +200,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let fileExtension = item.fileExtension
         let fileName = url.lastPathComponent
-
+      
         let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension ?? "jpg")")
         if let destinationUrl = destinationUrl {
             if (FileManager().fileExists(atPath: destinationUrl.path)) {
