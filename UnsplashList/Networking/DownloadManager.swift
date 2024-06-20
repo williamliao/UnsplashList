@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Kingfisher
 
-final class DownloadManager: NetworkManager, ObservableObject  {
+final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendable  {
     @Published var isDownloading = false
     @Published var isDownloaded = false
     private var loadingTask: Task<Void, Error>?
@@ -130,7 +130,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
                         
                         let apiData = self.readApiData()
                         
-                        if let login = apiData?.login {
+                       // if let login = apiData?.login {
                             
                             let id = UUID().uuidString
                             let lastPath = url.lastPathComponent
@@ -147,7 +147,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
                                     print("** saveImageData error: \(error.localizedDescription)")
                                 }
                             }
-                        }
+                       // }
                     }
                     
                 case .failure(let error):

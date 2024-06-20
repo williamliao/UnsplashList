@@ -37,7 +37,7 @@ struct WebView {
         Coordinator(self)
     }
     
-    func makeWebView(context: Context) -> WKWebView {
+    @MainActor func makeWebView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)

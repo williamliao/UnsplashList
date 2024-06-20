@@ -182,7 +182,7 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         }
     }
     
-    @MainActor func loadSearchData(_ query: String, _ perPage: String, _ page: String) async {
+    func loadSearchData(_ query: String, _ perPage: String, _ page: String) async {
         
         if query.count == 0 {
             return
@@ -194,39 +194,37 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         
         let lowercasedSearchText = query.lowercased()
 
-        var matchingImages: [UnsplashModel] = []
-
-        items.forEach { model in
-            let searchContent = model.tags
-            if searchContent?.lowercased().range(of: lowercasedSearchText, options: .caseInsensitive) != nil {
-               matchingImages.append(model)
-            }
-        }
-        
-      /*  await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: "1"), using: ()) { result in
+        await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: "1"), using: ()) { result in
             
             switch result {
             case .success(let models):
                 
                 DispatchQueue.main.async {
-                    if let models = models as? [UnsplashModel] {
-                        self.items.append(contentsOf: models)
-                        
-                        if matchingImages.count > 0 {
-                            self.items.append(contentsOf: matchingImages)
+                    self.items.append(contentsOf: models)
+                    
+                    var matchingImages: [UnsplashModel] = []
+
+                    self.items.forEach { model in
+                        let searchContent = model.tags
+                        if searchContent?.lowercased().range(of: lowercasedSearchText, options: .caseInsensitive) != nil {
+                           matchingImages.append(model)
                         }
-                        
-                        self.itemsLoadedCount = self.items.count
-                        self.dataIsLoading = false
                     }
+                    
+                    if matchingImages.count > 0 {
+                        self.items.append(contentsOf: matchingImages)
+                    }
+                    
+                    self.itemsLoadedCount = self.items.count
+                    self.dataIsLoading = false
                 }
                 
             case .failure(let error):
                 self.error = error
             }
-        } */
+        }
     }
-    
+  
     func performSearch() {
         isSearch = true
     }

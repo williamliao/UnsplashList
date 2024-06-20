@@ -125,7 +125,7 @@ struct HomeCoordinatorView: View {
                 
                     .onSubmit(of: .search) {
                         Task {
-                            await coordinator.gridCoordinator.gridViewModel.removeAll()
+                            coordinator.gridCoordinator.gridViewModel.removeAll()
                             await coordinator.gridCoordinator.gridViewModel.loadSearchData(searchText, "10", "1")
                         }
                     }
