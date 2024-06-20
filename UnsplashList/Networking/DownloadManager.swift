@@ -115,7 +115,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
             return
         }
         
-       /* loadingTask = Task {
+        loadingTask = Task {
             
             do {
                 let result = try await self.data(for: urlRequest)
@@ -162,7 +162,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
             
         }
             
-        loadingTask = nil */
+        loadingTask = nil
     }
     
     func deleteFile(for item: UnsplashModel) {
@@ -175,7 +175,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
         let fileExtension = item.fileExtension
         let fileName = url.lastPathComponent
         
-      /*  Task {
+        Task {
             await dataBaseService.saveModel(item:item)
         }
 
@@ -189,7 +189,7 @@ final class DownloadManager: NetworkManager, ObservableObject  {
             } catch let error {
                 print("Error while deleting video file: ", error)
             }
-        } */
+        }
     }
     
     func checkFileExists(for item: UnsplashModel) -> Bool {

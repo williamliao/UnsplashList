@@ -93,11 +93,11 @@ class DataBaseService {
         
         let filename = url.lastPathComponent
         
-//        let storageClient = await DataBaseService.shared.storageClient()
-//        guard let uploadResponseData = try? await storageClient?.upload(
-//            path: "\(item.id)/\(filename)",
-//                file: Data()
-//            ) else { return }
+        let storageClient = await DataBaseService.shared.storageClient()
+        guard let uploadResponseData = try? await storageClient?.upload(
+            path: "\(item.id)/\(filename)",
+                file: Data()
+            ) else { return }
     }
     
     func downloadImage(item: UnsplashModel) async {
@@ -106,33 +106,33 @@ class DataBaseService {
             return
         }
 
-//        if let data = try? await DataBaseService.shared.storageClient()?.download(
-//            path: url
-//        ) {
-//            let image = ImageRepresentable(data: data)
-//        }
+        if let data = try? await DataBaseService.shared.storageClient()?.download(
+            path: url
+        ) {
+            let image = ImageRepresentable(data: data)
+        }
         
     }
 
     func saveModel(item: UnsplashModel) async {
         
-//        Task {
-//              do {
-//
-//                try await supabaseClient.database
-//                  .from("saveimages")
-//                  .update(items)
-//
-//                  .execute()
-//                  
-//              } catch {
-//                debugPrint(error)
-//              }
-//            }
+        Task {
+              do {
+
+                try await supabaseClient.database
+                  .from("saveimages")
+                  .update(items)
+
+                  .execute()
+                  
+              } catch {
+                debugPrint(error)
+              }
+            }
     }
     
     func fetchModel() async -> [UnsplashModel] {
-    /*    do {
+        do {
             
             let i = try await supabaseClient.database
                    .from("saveimages")
@@ -158,7 +158,7 @@ class DataBaseService {
             debugPrint(error)
             
             return items
-        } */
+        }
         
         return items
     }

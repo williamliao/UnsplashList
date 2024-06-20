@@ -11,7 +11,7 @@ import Supabase
 @main
 struct UnsplashListApp: App {
     
-    @StateObject var coordinator = HomeCoordinator(imagesService: ImagesService(endPoint: .random))
+    @StateObject var coordinator = HomeCoordinator(imagesService: ImagesService(endPoint: .random, withSession: ProductionSession.shared))
 
     var body: some Scene {
         WindowGroup {

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class GridViewModel: ObservableObject {
+class GridViewModel: ObservableObject, @unchecked Sendable {
     @Published var items = [UnsplashModel]()
     @Published var error: ServerError?
     @Published var isSearch: Bool = false
@@ -78,32 +78,26 @@ class GridViewModel: ObservableObject {
         }
     }
     
-    @MainActor
     func loadData() async {
 
-        Task {
-            await self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ()) { result in
-                
-                switch result {
-                case .success(let models):
-    
-                    DispatchQueue.main.async {
-                        if let models = models as? [UnsplashModel] {
-                            self.items.append(contentsOf: models)
-    
-                            self.itemsLoadedCount = self.items.count
-                            self.dataIsLoading = false
-                        }
-                    }
-    
-                case .failure(let error):
-                    self.error = error
+        await self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ()) { result in
+            
+            switch result {
+            case .success(let models):
+
+                DispatchQueue.main.async {
+                    self.items.append(contentsOf: models)
+
+                    self.itemsLoadedCount = self.items.count
+                    self.dataIsLoading = false
                 }
+
+            case .failure(let error):
+                self.error = error
             }
         }
     }
     
-    @MainActor
     func loadSaveUnsplashData() async {
         let items = await dataBaseService.fetchModel()
         
@@ -120,20 +114,17 @@ class GridViewModel: ObservableObject {
         self.items.append(contentsOf: favoriteItems3)
     }
     
-    @MainActor
     func loadDanbooru() async {
       
-        self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10"), using: ()) { result in
+        await self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10"), using: ()) { result in
             switch result {
             case .success(let models):
                 
                 DispatchQueue.main.async {
-                    if let models = models as? [UnsplashModel] {
-                        self.items.append(contentsOf: models)
-                        
-                        self.itemsLoadedCount = self.items.count
-                        self.dataIsLoading = false
-                    }
+                    self.items.append(contentsOf: models)
+                    
+                    self.itemsLoadedCount = self.items.count
+                    self.dataIsLoading = false
                 }
                 
             case .failure(let error):
@@ -142,22 +133,19 @@ class GridViewModel: ObservableObject {
         }
     }
     
-    @MainActor
     func loadDanbooruSearch(tag: String, page: String) async {
         
         query = tag
         
-        self.imagesService.fetchDanbooru(for: .danbooruWithTag(with: tag, page: page), using: ()) { result in
+        await self.imagesService.fetchDanbooru(for: .danbooruWithTag(with: tag, page: page), using: ()) { result in
             switch result {
             case .success(let models):
                 
                 DispatchQueue.main.async {
-                    if let models = models as? [UnsplashModel] {
-                        self.items.append(contentsOf: models)
-                        
-                        self.itemsLoadedCount = self.items.count
-                        self.dataIsLoading = false
-                    }
+                    self.items.append(contentsOf: models)
+                    
+                    self.itemsLoadedCount = self.items.count
+                    self.dataIsLoading = false
                 }
                 
             case .failure(let error):
@@ -166,7 +154,6 @@ class GridViewModel: ObservableObject {
         }
     }
     
-    @MainActor
     func loadYandeData() async {
         
 //        if dataIsLoading {
@@ -175,21 +162,22 @@ class GridViewModel: ObservableObject {
         
         dataIsLoading = true
 
-        self.imagesService.fetchYande(for: .yande(with: "10"), using: ()) { result in
-            switch result {
-            case .success(let models):
-                
-                DispatchQueue.main.async {
-                    if let models = models as? [UnsplashModel] {
+        Task {
+            await self.imagesService.fetchYande(for: .yande(with: "10"), using: ()) { result in
+                switch result {
+                case .success(let models):
+                    
+                    DispatchQueue.main.async {
+                      
                         self.items.append(contentsOf: models)
                         
                         self.itemsLoadedCount = self.items.count
                         self.dataIsLoading = false
                     }
+                    
+                case .failure(let error):
+                    self.error = error
                 }
-                
-            case .failure(let error):
-                self.error = error
             }
         }
     }

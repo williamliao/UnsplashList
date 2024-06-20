@@ -123,14 +123,27 @@ private extension Int {
     var megabytes: Int { return self * 1024 * 1024 }
 }
 
-class NetworkManager {
+class BaseSession {
     
-    //static let sharedInstance = NetworkManager()
-
-    var format: QueryFormat { return .urlEncoded }
-    var type: QueryType { return .path }
+    open class var shared: URLSession {
+        return createSession()
+    }
     
-    @MainActor private static var cache: URLCache = {
+    static func createSession() -> URLSession {
+        let networkingHandler = NetworkingHandler()
+        
+        let sessionConfiguration = URLSessionConfiguration.default
+        sessionConfiguration.requestCachePolicy = .reloadIgnoringLocalCacheData
+        sessionConfiguration.timeoutIntervalForRequest = 3.0
+        sessionConfiguration.timeoutIntervalForResource = 15.0
+        sessionConfiguration.urlCache = cache()
+        sessionConfiguration.waitsForConnectivity = true
+        
+        let session = URLSession(configuration: sessionConfiguration, delegate: networkingHandler, delegateQueue: nil)
+        return session
+    }
+    
+    static func cache() -> URLCache {
         let memoryCapacity = 50 * 1024 * 1024
         let diskCapacity = 100 * 1024 * 1024
         let diskPath = "unsplash"
@@ -155,8 +168,38 @@ class NetworkManager {
             fatalError()
             #endif
         }
-    }()
+    }
+}
+
+class ProductionSession: BaseSession {
     
+    @MainActor static let sharedInstance = ProductionSession()
+}
+
+class DevelopmentSession: BaseSession {
+    
+    @MainActor static let sharedInstance = DevelopmentSession()
+    
+    open class override var shared: URLSession {
+        return createTestSession()
+    }
+    
+    static func createTestSession() -> URLSession {
+        let session = createSession()
+        session.configuration.timeoutIntervalForResource = 5.0
+        return session
+    }
+}
+
+class NetworkManager: NSObject, @unchecked Sendable  {
+    
+    //static let sharedInstance = NetworkManager()
+    
+    //open class var shared: URLSession { get }
+
+    var format: QueryFormat { return .urlEncoded }
+    var type: QueryType { return .path }
+
     private var successCodes: CountableRange<Int> = 200..<299
     private var failureClientCodes: CountableRange<Int> = 400..<499
     private var failureBackendCodes: CountableRange<Int> = 500..<511
@@ -179,23 +222,6 @@ class NetworkManager {
     }
     
     // MARK: - Base
-    
-    @MainActor public static var urlSessionConfiguration: URLSessionConfiguration = {
-        let sessionConfiguration = URLSessionConfiguration.default
-        sessionConfiguration.requestCachePolicy = .reloadIgnoringLocalCacheData
-        sessionConfiguration.timeoutIntervalForRequest = 3.0
-        sessionConfiguration.timeoutIntervalForResource = 15.0
-        sessionConfiguration.urlCache = cache
-        sessionConfiguration.waitsForConnectivity = true
-        return sessionConfiguration
-    }()
-    
-    @MainActor internal static func urlSession() -> URLSession {
-        let networkingHandler = NetworkingHandler()
-        let session = URLSession(configuration: NetworkManager.urlSessionConfiguration, delegate: networkingHandler, delegateQueue: nil)
-        return session
-    }
-
     static let defaultHeaders = [
         "Content-Type": "application/json",
         "cache-control": "no-cache",
@@ -322,9 +348,9 @@ extension NetworkManager {
         }
     }
 
-    @MainActor func saveRequestCache(request: URLRequest, data: Data, httpResponse: HTTPURLResponse) {
+    func saveRequestCache(request: URLRequest, data: Data, httpResponse: HTTPURLResponse) {
         
-        guard let cache = NetworkManager.urlSessionConfiguration.urlCache else {
+        guard let cache = ProductionSession.shared.configuration.urlCache else {
             return
         }
         
@@ -333,8 +359,8 @@ extension NetworkManager {
         }
     }
         
-    @MainActor func loadRequestCacheIfExist(request: URLRequest) -> ImageCacheRespone? {
-        if let cachedResponse = NetworkManager.urlSessionConfiguration.urlCache?.cachedResponse(for: request),
+    func loadRequestCacheIfExist(request: URLRequest) -> ImageCacheRespone? {
+        if let cachedResponse = ProductionSession.shared.configuration.urlCache?.cachedResponse(for: request),
             let httpResponse = cachedResponse.response as? HTTPURLResponse,
             let etag = httpResponse.value(forHTTPHeaderField: "Etag"),
             let lastModified = httpResponse.value(forHTTPHeaderField: "Last-Modified"),

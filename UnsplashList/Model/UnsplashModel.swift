@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UnsplashModel: Identifiable, Codable, Sendable {
+struct UnsplashModel: Identifiable, Codable, @unchecked Sendable {
     let id: String
     let user: User?
     let exif: Exif?
