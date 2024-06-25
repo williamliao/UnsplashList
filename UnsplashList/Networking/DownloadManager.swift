@@ -13,7 +13,6 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
     @Published var isDownloading = false
     @Published var isDownloaded = false
     private var loadingTask: Task<Void, Error>?
-    private var dataBaseService = DataBaseService()
     
     override init(endPoint: NetworkManager.NetworkEndpoint = .random, withSession session: Networking = URLSession.shared) {
         super.init(withSession: session)
@@ -42,11 +41,11 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
                 print("File already exists")
                 isDownloading = false
             } else {
-                startDownload(at: url, destinationUrl: destinationUrl)
+                startDownload(at: url, destinationUrl: destinationUrl, for: item)
             }
        } else {
            
-           startDownload(at: url, destinationUrl: destinationUrl)
+           startDownload(at: url, destinationUrl: destinationUrl, for: item)
        }
     }
     
@@ -104,7 +103,7 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
         }
     }
     
-    func startDownload(at url: URL, destinationUrl: URL?) {
+    func startDownload(at url: URL, destinationUrl: URL?, for item: UnsplashModel) {
         guard let destinationUrl = destinationUrl else {
             return
         }
@@ -138,7 +137,7 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
                             let saveURL = self.showSavePanel(fileName: lastPath)
                             let saveImageItem = ImageItem(id: id, imageData: imageData)
                             let saveImageData = saveImageItem.imageData
-                            
+                        
                             if let saveImageData  = saveImageData, let saveURL = saveURL {
                                 do {
                                    // try saveImageData.write(to: fileURLwithName)
@@ -174,11 +173,7 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let fileExtension = item.fileExtension
         let fileName = url.lastPathComponent
-        
-        Task {
-            await dataBaseService.saveModel(item:item)
-        }
-
+       
         let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension ?? "jpg")")
         if let destinationUrl = destinationUrl {
             guard FileManager().fileExists(atPath: destinationUrl.path) else { return }
@@ -197,10 +192,11 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
             isDownloaded = false
             return isDownloaded
         }
+      
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let fileExtension = item.fileExtension
         let fileName = url.lastPathComponent
-      
+       
         let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension ?? "jpg")")
         if let destinationUrl = destinationUrl {
             if (FileManager().fileExists(atPath: destinationUrl.path)) {

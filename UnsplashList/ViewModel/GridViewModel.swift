@@ -15,7 +15,6 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
 
     private unowned let coordinator: GridViewCoordinator
     private let imagesService: ImagesService
-    private var dataBaseService = DataBaseService()
     
     @AppStorage("favoriteItems") var favoriteItems: [UnsplashModel] = []
     @AppStorage("favoriteItems2") var favoriteItems2: [UnsplashModel] = []
@@ -99,11 +98,9 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
     }
     
     func loadSaveUnsplashData() async {
-        let items = await dataBaseService.fetchModel()
-        
-       // print("items \(items)")
-        self.items.append(contentsOf: items)
-       // self.items.append(contentsOf: favoriteItems)
+        DispatchQueue.main.async {
+            self.items.append(contentsOf: self.favoriteItems)
+        }
     }
     
     func loadSaveYandeData() async {

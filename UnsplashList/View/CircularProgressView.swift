@@ -36,8 +36,8 @@ struct CircularProgressView: View {
   }
 }
 
-@MainActor
-struct MyIndicator: @preconcurrency Indicator {
+@preconcurrency @MainActor
+struct MyIndicator: Indicator {
     let view: ViewRepresentable = ViewRepresentable()
     
     func startAnimatingView() { view.isHidden = false }

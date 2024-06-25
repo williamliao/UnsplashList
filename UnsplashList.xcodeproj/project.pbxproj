@@ -21,21 +21,6 @@
 		C834EA412B4FC0EA00052CE5 /* CacheAsyncImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834EA402B4FC0EA00052CE5 /* CacheAsyncImage.swift */; };
 		C834EA432B4FC59500052CE5 /* Extenstion+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834EA422B4FC59500052CE5 /* Extenstion+Image.swift */; };
 		C834EA452B4FDC5000052CE5 /* DetailPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C834EA442B4FDC5000052CE5 /* DetailPhotoView.swift */; };
-		C85607F42C22B8A6004FFE51 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = C85607F32C22B8A6004FFE51 /* Auth */; };
-		C85607F62C22B8A6004FFE51 /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = C85607F52C22B8A6004FFE51 /* Functions */; };
-		C85607F82C22B8A6004FFE51 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = C85607F72C22B8A6004FFE51 /* PostgREST */; };
-		C85607FA2C22B8A6004FFE51 /* Realtime in Frameworks */ = {isa = PBXBuildFile; productRef = C85607F92C22B8A6004FFE51 /* Realtime */; };
-		C85607FC2C22B8A6004FFE51 /* Storage in Frameworks */ = {isa = PBXBuildFile; productRef = C85607FB2C22B8A6004FFE51 /* Storage */; };
-		C85607FE2C22B8DD004FFE51 /* DataBaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C85607FD2C22B8DD004FFE51 /* DataBaseService.swift */; };
-		C85608002C22B92C004FFE51 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = C85607FF2C22B92C004FFE51 /* Supabase */; };
-		C85608032C22D03B004FFE51 /* BitCollections in Frameworks */ = {isa = PBXBuildFile; productRef = C85608022C22D03B004FFE51 /* BitCollections */; };
-		C85608052C22D03B004FFE51 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = C85608042C22D03B004FFE51 /* Collections */; };
-		C85608072C22D03B004FFE51 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C85608062C22D03B004FFE51 /* DequeModule */; };
-		C85608092C22D03B004FFE51 /* HashTreeCollections in Frameworks */ = {isa = PBXBuildFile; productRef = C85608082C22D03B004FFE51 /* HashTreeCollections */; };
-		C856080B2C22D03B004FFE51 /* HeapModule in Frameworks */ = {isa = PBXBuildFile; productRef = C856080A2C22D03B004FFE51 /* HeapModule */; };
-		C856080D2C22D0B8004FFE51 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = C856080C2C22D0B8004FFE51 /* OrderedCollections */; };
-		C856080F2C22D0CC004FFE51 /* _RopeModule in Frameworks */ = {isa = PBXBuildFile; productRef = C856080E2C22D0CC004FFE51 /* _RopeModule */; };
-		C85608122C22D144004FFE51 /* IdentifiedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = C85608112C22D144004FFE51 /* IdentifiedCollections */; };
 		C87E8F742B2A8CF300A9C604 /* XCTestCase+Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */; };
 		C87E8F762B2A925900A9C604 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E8F752B2A925900A9C604 /* SafariWebView.swift */; };
 		C8A04F462B2835CF00E49408 /* UnsplashListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A04F452B2835CF00E49408 /* UnsplashListApp.swift */; };
@@ -224,7 +209,6 @@
 		C834EA402B4FC0EA00052CE5 /* CacheAsyncImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheAsyncImage.swift; sourceTree = "<group>"; };
 		C834EA422B4FC59500052CE5 /* Extenstion+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extenstion+Image.swift"; sourceTree = "<group>"; };
 		C834EA442B4FDC5000052CE5 /* DetailPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPhotoView.swift; sourceTree = "<group>"; };
-		C85607FD2C22B8DD004FFE51 /* DataBaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseService.swift; sourceTree = "<group>"; };
 		C87E8F732B2A8CF300A9C604 /* XCTestCase+Async.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Async.swift"; sourceTree = "<group>"; };
 		C87E8F752B2A925900A9C604 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
 		C8A04F422B2835CF00E49408 /* UnsplashList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UnsplashList.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -308,20 +292,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C85608122C22D144004FFE51 /* IdentifiedCollections in Frameworks */,
-				C85608002C22B92C004FFE51 /* Supabase in Frameworks */,
-				C85607FC2C22B8A6004FFE51 /* Storage in Frameworks */,
-				C85607F82C22B8A6004FFE51 /* PostgREST in Frameworks */,
-				C85607F62C22B8A6004FFE51 /* Functions in Frameworks */,
-				C85608092C22D03B004FFE51 /* HashTreeCollections in Frameworks */,
-				C85608032C22D03B004FFE51 /* BitCollections in Frameworks */,
-				C856080F2C22D0CC004FFE51 /* _RopeModule in Frameworks */,
-				C85607F42C22B8A6004FFE51 /* Auth in Frameworks */,
-				C85608052C22D03B004FFE51 /* Collections in Frameworks */,
-				C85608072C22D03B004FFE51 /* DequeModule in Frameworks */,
-				C85607FA2C22B8A6004FFE51 /* Realtime in Frameworks */,
-				C856080B2C22D03B004FFE51 /* HeapModule in Frameworks */,
-				C856080D2C22D0B8004FFE51 /* OrderedCollections in Frameworks */,
 				C81CE70F2B4FEE30005AA4A8 /* Kingfisher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -562,7 +532,6 @@
 				C8A04F8B2B284F8E00E49408 /* ImagesService.swift */,
 				C8A04FDB2B29825D00E49408 /* NetworkManager+Mock.swift */,
 				C8103CBB2B4E754C0060939A /* DownloadManager.swift */,
-				C85607FD2C22B8DD004FFE51 /* DataBaseService.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -623,20 +592,6 @@
 			name = UnsplashList;
 			packageProductDependencies = (
 				C81CE70E2B4FEE30005AA4A8 /* Kingfisher */,
-				C85607F32C22B8A6004FFE51 /* Auth */,
-				C85607F52C22B8A6004FFE51 /* Functions */,
-				C85607F72C22B8A6004FFE51 /* PostgREST */,
-				C85607F92C22B8A6004FFE51 /* Realtime */,
-				C85607FB2C22B8A6004FFE51 /* Storage */,
-				C85607FF2C22B92C004FFE51 /* Supabase */,
-				C85608022C22D03B004FFE51 /* BitCollections */,
-				C85608042C22D03B004FFE51 /* Collections */,
-				C85608062C22D03B004FFE51 /* DequeModule */,
-				C85608082C22D03B004FFE51 /* HashTreeCollections */,
-				C856080A2C22D03B004FFE51 /* HeapModule */,
-				C856080C2C22D0B8004FFE51 /* OrderedCollections */,
-				C856080E2C22D0CC004FFE51 /* _RopeModule */,
-				C85608112C22D144004FFE51 /* IdentifiedCollections */,
 			);
 			productName = UnsplashList;
 			productReference = C8A04F422B2835CF00E49408 /* UnsplashList.app */;
@@ -796,9 +751,6 @@
 			mainGroup = C8A04F392B2835CF00E49408;
 			packageReferences = (
 				C81CE70C2B4FED6C005AA4A8 /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				C85607F22C22B8A5004FFE51 /* XCRemoteSwiftPackageReference "supabase-swift" */,
-				C85608012C22D03B004FFE51 /* XCRemoteSwiftPackageReference "swift-collections" */,
-				C85608102C22D144004FFE51 /* XCRemoteSwiftPackageReference "swift-identified-collections" */,
 			);
 			productRefGroup = C8A04F432B2835CF00E49408 /* Products */;
 			projectDirPath = "";
@@ -879,7 +831,6 @@
 			files = (
 				C8A04FAF2B28507F00E49408 /* Favorite.swift in Sources */,
 				C87E8F762B2A925900A9C604 /* SafariWebView.swift in Sources */,
-				C85607FE2C22B8DD004FFE51 /* DataBaseService.swift in Sources */,
 				C8A04FB72B28507F00E49408 /* SearchRespone.swift in Sources */,
 				C8A04FB02B28507F00E49408 /* Profile_image.swift in Sources */,
 				C8103CBE2B4E80970060939A /* DownloadButton.swift in Sources */,
@@ -1609,30 +1560,6 @@
 				minimumVersion = 7.10.1;
 			};
 		};
-		C85607F22C22B8A5004FFE51 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/supabase/supabase-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.1;
-			};
-		};
-		C85608012C22D03B004FFE51 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-collections.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.1;
-			};
-		};
-		C85608102C22D144004FFE51 /* XCRemoteSwiftPackageReference "swift-identified-collections" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-identified-collections";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1640,76 +1567,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C81CE70C2B4FED6C005AA4A8 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
-		};
-		C85607F32C22B8A6004FFE51 /* Auth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85607F22C22B8A5004FFE51 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Auth;
-		};
-		C85607F52C22B8A6004FFE51 /* Functions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85607F22C22B8A5004FFE51 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Functions;
-		};
-		C85607F72C22B8A6004FFE51 /* PostgREST */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85607F22C22B8A5004FFE51 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = PostgREST;
-		};
-		C85607F92C22B8A6004FFE51 /* Realtime */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85607F22C22B8A5004FFE51 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Realtime;
-		};
-		C85607FB2C22B8A6004FFE51 /* Storage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85607F22C22B8A5004FFE51 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Storage;
-		};
-		C85607FF2C22B92C004FFE51 /* Supabase */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85607F22C22B8A5004FFE51 /* XCRemoteSwiftPackageReference "supabase-swift" */;
-			productName = Supabase;
-		};
-		C85608022C22D03B004FFE51 /* BitCollections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85608012C22D03B004FFE51 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = BitCollections;
-		};
-		C85608042C22D03B004FFE51 /* Collections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85608012C22D03B004FFE51 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = Collections;
-		};
-		C85608062C22D03B004FFE51 /* DequeModule */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85608012C22D03B004FFE51 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = DequeModule;
-		};
-		C85608082C22D03B004FFE51 /* HashTreeCollections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85608012C22D03B004FFE51 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = HashTreeCollections;
-		};
-		C856080A2C22D03B004FFE51 /* HeapModule */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85608012C22D03B004FFE51 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = HeapModule;
-		};
-		C856080C2C22D0B8004FFE51 /* OrderedCollections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85608012C22D03B004FFE51 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = OrderedCollections;
-		};
-		C856080E2C22D0CC004FFE51 /* _RopeModule */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85608012C22D03B004FFE51 /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = _RopeModule;
-		};
-		C85608112C22D144004FFE51 /* IdentifiedCollections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C85608102C22D144004FFE51 /* XCRemoteSwiftPackageReference "swift-identified-collections" */;
-			productName = IdentifiedCollections;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

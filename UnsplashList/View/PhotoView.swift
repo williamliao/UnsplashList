@@ -22,7 +22,6 @@ struct PhotoView: View {
     @Binding var currentItem: SideBarItem
     @Binding var navigationPath: [Route]
     @EnvironmentObject var viewModel: GridViewModel
-    @Environment(DataBaseService.self) private var supabaseClient: DataBaseService?
     @State var id = UUID()
 
     @State var progress:Float
@@ -98,7 +97,6 @@ struct PhotoView: View {
             
             DownloadButton(item: imageModel)
                 .environmentObject(downloadManager)
-                .environment(supabaseClient)
                 .padding(.top)
                 .padding(.bottom)
         }

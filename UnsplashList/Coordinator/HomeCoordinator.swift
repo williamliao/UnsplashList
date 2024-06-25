@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Supabase
 #if canImport(UIKit)
 import UIKit
 #else
