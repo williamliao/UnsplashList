@@ -104,11 +104,15 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
     }
     
     func loadSaveYandeData() async {
-        self.items.append(contentsOf: favoriteItems2)
+        DispatchQueue.main.async {
+            self.items.append(contentsOf: self.favoriteItems2)
+        }
     }
     
     func loadSaveDanbooru() async {
-        self.items.append(contentsOf: favoriteItems3)
+        DispatchQueue.main.async {
+            self.items.append(contentsOf: self.favoriteItems3)
+        }
     }
     
     func loadDanbooru() async {

@@ -23,11 +23,12 @@ struct SideBarRow: View {
                     Image(systemName: title.icon)
                     Text(title.name)
                             .font(Font.system(size: 17))
+                            .frame(maxWidth: .infinity)
+                    
                 }
+                .background(.red)
             }
             .buttonStyle(ClearButtonStyle())
-            .padding(.top, 8)
-            .padding(.bottom, 8)
             Spacer()
            
             if title == selectedTitle {

@@ -62,12 +62,33 @@ struct HomeCoordinatorView: View {
     var body: some View {
         
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            
-            List(sideBarItem, children: \.items, selection: $selectedItem) { row in
-                HStack {
-                    SideBarRow(title: row, selectedTitle: self.$selectedItem)
+
+            List {
+                ForEach(mainMenuItems) { menuItem in
+
+                    Section(header:
+                        HStack {
+
+                            Text(menuItem.name)
+                                .font(.title3)
+                                .fontWeight(.heavy)
+
+                            Image(menuItem.icon)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 30, height: 30)
+
+                        }
+                        .padding(.vertical)
+
+                    ) {
+                        OutlineGroup(menuItem.items ?? [SideBarItem](), id: \.id, children: \.items) {  item in
+                            SideBarRow(title: item, selectedTitle: self.$selectedItem)
+                        }
+                    }
                 }
             }
+            .listStyle(.sidebar)
             
             .modify {
                 if #available(iOS 17.0, *) {

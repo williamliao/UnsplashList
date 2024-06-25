@@ -37,6 +37,12 @@ struct SideBarItem: Equatable, Identifiable {
     static let favorite3 = SideBarItem(id: 8, name: "Favorite", icon: "heart.fill")
 }
 
+let mainMenuItems = [ SideBarItem(id: 0, name: "unsplash", icon: "photo", items:           [SideBarItem.list, SideBarItem.favorite]),
+                      SideBarItem(id: 1,name: "yande", icon: "photo", items: [SideBarItem.list2, SideBarItem.favorite2]),
+                      SideBarItem(id: 2,name: "danbooru", icon: "photo", items: [SideBarItem.list3, SideBarItem.favorite3])
+                    ]
+
+
 extension SideBarItem {
     static func == (lhs: SideBarItem, rhs: SideBarItem) -> Bool {
         return lhs.id == rhs.id
