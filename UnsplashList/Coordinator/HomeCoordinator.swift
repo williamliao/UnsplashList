@@ -89,6 +89,7 @@ struct HomeCoordinatorView: View {
                 }
             }
             .listStyle(.sidebar)
+            .toolbar(removing: .sidebarToggle)
             
             .modify {
                 if #available(iOS 17.0, *) {

@@ -26,7 +26,6 @@ struct SideBarRow: View {
                             .frame(maxWidth: .infinity)
                     
                 }
-                .background(.red)
             }
             .buttonStyle(ClearButtonStyle())
             Spacer()
