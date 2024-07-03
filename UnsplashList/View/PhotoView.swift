@@ -26,7 +26,7 @@ struct PhotoView: View {
 
     @State var progress:Float
     
-    let imageCache = NSCache<NSString, ImageRepresentable>()
+    let imageCache = ImageCache()
     let imageCacheKey: NSString = "CachedImage"
    
     var body: some View {
@@ -48,7 +48,7 @@ struct PhotoView: View {
                 }
                 .onSuccess { r in
                     // r: RetrieveImageResult
-                    //print("success: \(r)")
+                    cacheImage(image: r.image, url: r.source.url!)
                 }
                 .onFailure { e in
                     // e: KingfisherError
@@ -102,12 +102,12 @@ struct PhotoView: View {
         }
     }
    
-    private func cacheImage(iamge: ImageRepresentable) {
-        imageCache.setObject(iamge, forKey: imageCacheKey)
+    private func cacheImage(image: ImageRepresentable, url: URL) {
+        imageCache.insertImage(image, for: url)
     }
 
-    private func cachedImage() -> ImageRepresentable? {
-        return imageCache.object(forKey: imageCacheKey)
+    private func cachedImage(url: URL) -> ImageRepresentable? {
+        return imageCache.image(for: url)
     }
 }
 

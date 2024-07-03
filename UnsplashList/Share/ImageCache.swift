@@ -102,6 +102,17 @@ extension ImageCache {
     }
 }
 
+struct ImageCacheKey: EnvironmentKey {
+    static let defaultValue: ImageCacheType = ImageCache()
+}
+
+extension EnvironmentValues {
+    var imageCache: ImageCache {
+        get { self[ImageCacheKey.self] as! ImageCache }
+        set { self[ImageCacheKey.self] = newValue }
+    }
+}
+
 
 fileprivate extension ImageRepresentable {
 
