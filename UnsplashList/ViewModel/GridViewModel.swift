@@ -118,7 +118,7 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
     
     func loadDanbooru() async {
       
-        await self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10"), using: ()) { result in
+        await self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10", page: currentPage), using: ()) { result in
             switch result {
             case .success(let models):
                 
@@ -163,14 +163,20 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
 //        }
         
         dataIsLoading = true
-
+      
         Task {
-            await self.imagesService.fetchYande(for: .yande(with: "10"), using: ()) { result in
+            await self.imagesService.fetchYande(for: .yande(with: "10", page: currentPage), using: ()) { result in
                 switch result {
                 case .success(let models):
                     
                     DispatchQueue.main.async {
-                      
+                        
+                       //let fileId = models.map{ $0.id }
+                        
+                        //print("fileId \(fileId)")
+                        
+                        self.currentPage = self.currentPage + 1
+
                         self.items.append(contentsOf: models)
                         
                         self.itemsLoadedCount = self.items.count
@@ -196,7 +202,7 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         
         let lowercasedSearchText = query.lowercased()
 
-        await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: "1"), using: ()) { result in
+        await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: currentPage), using: ()) { result in
             
             switch result {
             case .success(let models):

@@ -51,7 +51,7 @@ struct Danbooru:Identifiable, Codable {
     let tag_string_copyright: String
     let tag_string_artist: String
     let tag_string_meta: String
-    let file_url: String
+    let file_url: String?
     let large_file_url: String
     let preview_file_url: String
 }

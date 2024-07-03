@@ -145,7 +145,7 @@ extension Endpoint where Kind == EndpointKinds.Key, Response == RandomResponse {
 
 extension Endpoint where Kind == EndpointKinds.Key,
     Response == SearchRespone {
-    static func search(for query: String, perPage: String, page: String) -> Self {
+    static func search(for query: String, perPage: String, page: Int) -> Self {
         let data = Endpoint.readApiData()
         return Endpoint(dataSource:.unsplashSearch ,path: "search/photos", queryItems: [
             URLQueryItem(name: "query", value: query),
@@ -158,24 +158,26 @@ extension Endpoint where Kind == EndpointKinds.Key,
 }
 
 extension Endpoint where Kind == EndpointKinds.Key, Response == YandePost {
-    static func yande(with limit: String) -> Self {
+    static func yande(with limit: String, page: Int) -> Self {
         Endpoint(dataSource:.yande, path: "post.json", queryItems: [
             URLQueryItem(name: "limit", value: limit),
             URLQueryItem(name: "api_version", value: "2"),
+            URLQueryItem(name: "page", value: String(page)),
         ])
     }
 }
 
 extension Endpoint where Kind == EndpointKinds.Key, Response == Danbooru {
-    static func danbooruRandom(with limit: String) -> Self {
+    static func danbooruRandom(with limit: String, page: Int) -> Self {
         
         let data = Endpoint.readApiData()
         
         return Endpoint(dataSource:.danbooru, path: "posts.json", queryItems: [
-            URLQueryItem(name: "api_key", value: data?.api_key),
-            URLQueryItem(name: "login", value: data?.login),
+         //   URLQueryItem(name: "api_key", value: data?.api_key),
+        //    URLQueryItem(name: "login", value: data?.login),
             URLQueryItem(name: "random", value: "true"),
             URLQueryItem(name: "limit", value: limit),
+            URLQueryItem(name: "page", value: String(page)),
         ])
     }
     

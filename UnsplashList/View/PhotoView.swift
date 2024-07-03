@@ -59,7 +59,7 @@ struct PhotoView: View {
                 .loadDiskFileSynchronously()
                 .fade(duration: 0.25)
                 .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-                .aspectRatio(1, contentMode: .fit)
+                .aspectRatio(contentMode: .fit)
                 .onTapGesture {
                     viewModel.open(model: imageModel, downloadManager: downloadManager)
                     navigationPath.append(.detail)
