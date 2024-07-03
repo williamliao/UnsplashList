@@ -23,14 +23,19 @@ struct WebDisPlayView: View {
                 WebView(url: url,
                          isLoading: $isLoading,
                          error: $error)
+               
+                
                 if isLoading {
                     ProgressView()
                 }
             } else {
                 Text("Sorry, we could not load this url.")
             }
+               
         }
-        .navigationBarBackButtonHidden(true)
+       
+        
+      //  .navigationBarBackButtonHidden(true)
         #if canImport(UIKit)
         .navigationBarItems(leading: Button(action : {
             navigationPath.removeLast()

@@ -39,6 +39,7 @@ struct WebView {
     
     @MainActor func makeWebView(context: Context) -> WKWebView {
         let webView = WKWebView()
+        webView.setValue(false, forKey: "drawsBackground")
         webView.navigationDelegate = context.coordinator
         let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)
         webView.load(request)
@@ -86,3 +87,4 @@ extension WebView: UIViewRepresentable {
      }
 }
 #endif
+
