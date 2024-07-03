@@ -29,7 +29,7 @@ class GridViewCoordinator: ObservableObject {
 
     @Published var gridViewModel: GridViewModel!
     @Published var detailViewModel: DetailViewModel?
-    @Published var detailViewCoordinator: DetailViewCoordinator?
+    @Published var detailViewCoordinator: DetailViewCoordinator!
     
     private let imagesService: ImagesService
     private unowned let parent: HomeCoordinator
@@ -38,6 +38,7 @@ class GridViewCoordinator: ObservableObject {
         self.imagesService = imagesService
         self.parent = parent
         self.gridViewModel = GridViewModel(imagesService: imagesService, coordinator: self)
+        
     }
 
     func open(_ item: ImageModel, downloadManager: DownloadManager) {

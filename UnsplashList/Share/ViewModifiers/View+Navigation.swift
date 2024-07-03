@@ -18,16 +18,11 @@ extension View {
                 }
             }
         )
-        
-        if #available(iOS 16.0, *) {
-            return NavigationLink(value: isActive.wrappedValue, label: { self })
-        } else {
-            return NavigationLink(
-                destination: EmptyView(),
-                isActive: isActive
-            ) {
-                self
-            }
+        return NavigationLink(
+            destination: EmptyView(),
+            isActive: isActive
+        ) {
+            self
         }
     }
 
@@ -52,21 +47,13 @@ extension View {
         isActive: Binding<Bool>,
         @ViewBuilder destination: () -> Destination
     ) -> some View {
-        
-        if #available(iOS 16.0, *) {
-           return overlay(
-                NavigationLink(value: isActive.wrappedValue, label: { EmptyView() })
+        overlay(
+            NavigationLink(
+                destination: isActive.wrappedValue ? destination() : nil,
+                isActive: isActive,
+                label: { EmptyView() }
             )
-        } else {
-            return overlay(
-                NavigationLink(
-                    destination: isActive.wrappedValue ? destination() : nil,
-                    isActive: isActive,
-                    label: { EmptyView() }
-                )
-  
-            )
-        }
+        )
     }
 
 }
@@ -84,11 +71,11 @@ extension NavigationLink {
                 }
             }
         )
-        
         self.init(
             destination: item.wrappedValue.map(destination),
             isActive: isActive,
             label: label
         )
     }
+
 }

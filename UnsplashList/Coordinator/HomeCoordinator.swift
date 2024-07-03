@@ -163,7 +163,7 @@ struct HomeCoordinatorView: View {
                                     .navigationTitle("WebView")
                             
                             case .detail:
-                                DetailCoordinatorView(coordinator: coordinator.gridCoordinator.detailViewCoordinator!, navigationPath: $navigationPath)
+                                DetailCoordinatorView(coordinator: coordinator.gridCoordinator.detailViewCoordinator, navigationPath: $navigationPath)
                                     .transition(AnyTransition.move(edge: .leading))
                                     .animation(.default, value: navigationPath)
                                     .navigationTitle("DetailView")
