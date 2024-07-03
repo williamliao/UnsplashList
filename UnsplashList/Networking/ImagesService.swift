@@ -56,8 +56,9 @@ extension ImagesService {
                             for res in models {
                                 
                                 let tags: String = res.tags?.title ?? ""
+                                let fileExtension = res.urls.raw.getPathExtension()
                                 
-                                let model = ImageModel(id: res.id, create_at: res.user?.updated_at, updated_at: res.user?.updated_at, name: res.user?.name, bio: res.user?.bio, location: res.user?.location,likes: res.user?.total_likes, isFavorite: false, raw: res.urls.raw, full: res.urls.full, regular: res.urls.regular, small: res.urls.small, thumb: res.urls.thumb, tags: tags, fileExtension: "jpg", service: "unsplash")
+                                let model = ImageModel(id: res.id, create_at: res.user?.updated_at, updated_at: res.user?.updated_at, name: res.user?.name, bio: res.user?.bio, location: res.user?.location,likes: res.user?.total_likes, isFavorite: false, raw: res.urls.raw, full: res.urls.full, regular: res.urls.regular, small: res.urls.small, thumb: res.urls.thumb, tags: tags, fileExtension: fileExtension, service: "unsplash")
                               
                                 newModels.append(model)
                             }
@@ -82,8 +83,9 @@ extension ImagesService {
                     
                     for res in models.results {
                         let tags: String = res.tags?.first?.type ?? ""
+                        let fileExtension = res.urls?.raw.getPathExtension()
                         
-                        let model = ImageModel(id: res.id, create_at: res.user?.updated_at, updated_at: res.user?.updated_at, name: res.user?.name, bio: res.user?.bio, location: res.user?.location,likes: res.user?.total_likes, isFavorite: false, raw: res.urls?.raw, full: res.urls?.full, regular: res.urls?.regular, small: res.urls?.small, thumb: res.urls?.thumb, tags: tags, fileExtension: "jpg", service: "unsplash")
+                        let model = ImageModel(id: res.id, create_at: res.user?.updated_at, updated_at: res.user?.updated_at, name: res.user?.name, bio: res.user?.bio, location: res.user?.location,likes: res.user?.total_likes, isFavorite: false, raw: res.urls?.raw, full: res.urls?.full, regular: res.urls?.regular, small: res.urls?.small, thumb: res.urls?.thumb, tags: tags, fileExtension: fileExtension, service: "unsplash")
                         
                         newModels.append(model)
                     }
@@ -119,8 +121,9 @@ extension ImagesService {
                     
                     for res in models.posts {
                         let tags: String = res.tags
+                        let fileExtension = res.file_url.getPathExtension()
                         
-                        let model = ImageModel(id: String(res.id), create_at: String(res.created_at), updated_at: String(res.updated_at), name: res.author, bio: "", location: "", likes: res.score, isFavorite: false, raw: res.file_url, full: res.file_url, regular: res.sample_url, small: res.preview_url, thumb: res.preview_url, tags: tags, fileExtension: "jpg", service: "yande")
+                        let model = ImageModel(id: String(res.id), create_at: String(res.created_at), updated_at: String(res.updated_at), name: res.author, bio: "", location: "", likes: res.score, isFavorite: false, raw: res.file_url, full: res.file_url, regular: res.sample_url, small: res.preview_url, thumb: res.preview_url, tags: tags, fileExtension: fileExtension, service: "yande")
                         
                         newModels.append(model)
                     }
@@ -168,5 +171,11 @@ extension ImagesService {
         } catch {
             completion(.failure(error as! ServerError))
         }
+    }
+}
+
+extension String {
+    func getPathExtension() -> String {
+        return (self as NSString).pathExtension
     }
 }
