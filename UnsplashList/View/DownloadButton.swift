@@ -10,7 +10,7 @@ import SwiftUI
 struct DownloadButton: View {
     @EnvironmentObject var downloadManager: DownloadManager
     @Environment(\.colorScheme) var colorScheme
-    let item: UnsplashModel
+    let item: ImageModel
     
     @State var isDownloaded = false
     

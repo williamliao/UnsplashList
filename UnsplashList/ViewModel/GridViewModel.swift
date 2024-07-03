@@ -8,17 +8,18 @@
 import SwiftUI
 
 class GridViewModel: ObservableObject, @unchecked Sendable {
-    @Published var items = [UnsplashModel]()
+    @Published var items = [ImageModel]()
     @Published var error: ServerError?
     @Published var isSearch: Bool = false
     @Published var currentDataItem: SideBarItem
+    let dataBaseService = DataBaseService()
 
     private unowned let coordinator: GridViewCoordinator
     private let imagesService: ImagesService
     
-    @AppStorage("favoriteItems") var favoriteItems: [UnsplashModel] = []
-    @AppStorage("favoriteItems2") var favoriteItems2: [UnsplashModel] = []
-    @AppStorage("favoriteItems3") var favoriteItems3: [UnsplashModel] = []
+    @AppStorage("favoriteItems") var favoriteItems: [ImageModel] = []
+    @AppStorage("favoriteItems2") var favoriteItems2: [ImageModel] = []
+    @AppStorage("favoriteItems3") var favoriteItems3: [ImageModel] = []
 
     // MARK: 1 Configuration
     private let itemsFromEndThreshold = 5
@@ -39,15 +40,15 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         currentDataItem = .list
     }
     
-    func open(model:UnsplashModel, downloadManager: DownloadManager) {
+    func open(model:ImageModel, downloadManager: DownloadManager) {
         coordinator.open(model, downloadManager: downloadManager)
     }
     
-    func indexOfModel(index: Int) -> UnsplashModel {
+    func indexOfModel(index: Int) -> ImageModel {
         return items[index]
     }
     
-    func getItems() -> [UnsplashModel] {
+    func getItems() -> [ImageModel] {
         return items
     }
     
@@ -97,22 +98,22 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         }
     }
     
+    @MainActor
     func loadSaveUnsplashData() async {
-        DispatchQueue.main.async {
-            self.items.append(contentsOf: self.favoriteItems)
-        }
+        self.favoriteItems = await fetchSaveModel(keyword: "unsplash")
+        self.items.append(contentsOf: self.favoriteItems)
     }
     
+    @MainActor
     func loadSaveYandeData() async {
-        DispatchQueue.main.async {
-            self.items.append(contentsOf: self.favoriteItems2)
-        }
+        self.favoriteItems2 = await fetchSaveModel(keyword: "yande")
+        self.items.append(contentsOf: self.favoriteItems2)
     }
     
+    @MainActor
     func loadSaveDanbooru() async {
-        DispatchQueue.main.async {
-            self.items.append(contentsOf: self.favoriteItems3)
-        }
+        self.favoriteItems3 = await fetchSaveModel(keyword: "danbooru")
+        self.items.append(contentsOf: self.favoriteItems3)
     }
     
     func loadDanbooru() async {
@@ -203,7 +204,7 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
                 DispatchQueue.main.async {
                     self.items.append(contentsOf: models)
                     
-                    var matchingImages: [UnsplashModel] = []
+                    var matchingImages: [ImageModel] = []
 
                     self.items.forEach { model in
                         let searchContent = model.tags
@@ -230,7 +231,7 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         isSearch = true
     }
     
-    func removeAll() {
+    @MainActor func removeAll() {
         items.removeAll()
     }
     
@@ -280,5 +281,18 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
 
     private func moreItemsRemaining(_ itemsLoadedCount: Int, _ totalItemsAvailable: Int) -> Bool {
         return itemsLoadedCount < totalItemsAvailable
+    }
+    
+    private func fetchSaveModel(keyword: String) async -> [ImageModel] {
+        
+        let items = await dataBaseService.fetchModel()
+        
+        return items.compactMap {
+            if $0.service == keyword {
+                return $0
+            } else {
+                return nil
+            }
+        }
     }
 }

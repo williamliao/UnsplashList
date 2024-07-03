@@ -18,7 +18,7 @@ public typealias PasteboardRepresentable = NSPasteboard
 struct PhotoView: View {
     
     @State var i: Int
-    @State var imageModel: UnsplashModel
+    @State var imageModel: ImageModel
     @Binding var currentItem: SideBarItem
     @Binding var navigationPath: [Route]
     @EnvironmentObject var viewModel: GridViewModel

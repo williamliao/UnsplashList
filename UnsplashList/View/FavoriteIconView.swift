@@ -11,11 +11,11 @@ import SwiftUI
 struct FavoriteIconView: View {
 
     @Binding var currentSideBarItem: SideBarItem
-    @State var item: UnsplashModel
+    @State var item: ImageModel
     @StateObject private var favoriteVM = FavoriteIconViewModel()
-    @AppStorage("favoriteItems") var favoriteItems: [UnsplashModel] = []
-    @AppStorage("favoriteItems2") var favoriteItems2: [UnsplashModel] = []
-    @AppStorage("favoriteItems3") var favoriteItems3: [UnsplashModel] = []
+    @AppStorage("favoriteItems") var favoriteItems: [ImageModel] = []
+    @AppStorage("favoriteItems2") var favoriteItems2: [ImageModel] = []
+    @AppStorage("favoriteItems3") var favoriteItems3: [ImageModel] = []
     
     var body: some View {
         Image(systemName: item.isFavorite ? "heart.fill" : "heart")

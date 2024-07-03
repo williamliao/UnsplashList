@@ -8,7 +8,7 @@
 import Foundation
 
 struct UnsplashModel: Identifiable, Codable, @unchecked Sendable {
-    let id: Int
+    let id: String
     let user: User?
     let exif: Exif?
     let location: Location?
@@ -38,7 +38,7 @@ struct UnsplashModel: Identifiable, Codable, @unchecked Sendable {
         case fileExtension
     }
     
-    init(id: Int, user: User?, exif: Exif?, location: Location?, isFavorite: Bool = false, preview_url: String? = nil, raw: String?, full: String?, regular: String?, small: String?, thumb: String?, tags: String?, fileExtension: String?) {
+    init(id: String, user: User?, exif: Exif?, location: Location?, isFavorite: Bool = false, preview_url: String? = nil, raw: String?, full: String?, regular: String?, small: String?, thumb: String?, tags: String?, fileExtension: String?) {
         self.id = id
         self.user = user
         self.exif = exif

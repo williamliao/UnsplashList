@@ -40,7 +40,7 @@ class GridViewCoordinator: ObservableObject {
         self.gridViewModel = GridViewModel(imagesService: imagesService, coordinator: self)
     }
 
-    func open(_ item: UnsplashModel, downloadManager: DownloadManager) {
+    func open(_ item: ImageModel, downloadManager: DownloadManager) {
         self.detailViewModel = DetailViewModel(items:gridViewModel.items, item: item, downloadManager: downloadManager, coordinator: self)
         self.detailViewCoordinator = DetailViewCoordinator(imagesService: imagesService, detailViewModel: detailViewModel!)
     }

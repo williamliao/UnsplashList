@@ -13,6 +13,7 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
     @Published var isDownloading = false
     @Published var isDownloaded = false
     private var loadingTask: Task<Void, Error>?
+    let dataBaseService = DataBaseService()
     
     override init(endPoint: NetworkManager.NetworkEndpoint = .random, withSession session: Networking = URLSession.shared) {
         super.init(withSession: session)
@@ -22,7 +23,7 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
         loadingTask?.cancel()
     }
     
-    func downloadFile(for item: UnsplashModel) {
+    func downloadFile(for item: ImageModel) {
         isDownloading = true
         
         guard let url = URL(string: item.raw!) else {
@@ -103,7 +104,7 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
         }
     }
     
-    func startDownload(at url: URL, destinationUrl: URL?, for item: UnsplashModel) {
+    func startDownload(at url: URL, destinationUrl: URL?, for item: ImageModel) {
         guard let destinationUrl = destinationUrl else {
             return
         }
@@ -138,6 +139,13 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
                             let saveImageItem = ImageItem(id: id, imageData: imageData)
                             let saveImageData = saveImageItem.imageData
                         
+                        
+                        
+                        Task {
+                            
+                            await self.dataBaseService.saveModel(item: item)
+                        }
+                        
                             if let saveImageData  = saveImageData, let saveURL = saveURL {
                                 do {
                                    // try saveImageData.write(to: fileURLwithName)
@@ -164,7 +172,7 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
         loadingTask = nil
     }
     
-    func deleteFile(for item: UnsplashModel) {
+    func deleteFile(for item: ImageModel) {
         
         guard let url = URL(string: item.raw!) else {
             return
@@ -187,7 +195,7 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
         }
     }
     
-    func checkFileExists(for item: UnsplashModel) -> Bool {
+    func checkFileExists(for item: ImageModel) -> Bool {
         guard let url = URL(string: item.raw!) else {
             isDownloaded = false
             return isDownloaded

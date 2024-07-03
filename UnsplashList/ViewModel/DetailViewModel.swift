@@ -9,12 +9,12 @@ import SwiftUI
 
 class DetailViewModel: ObservableObject {
     
-    @Published var items: [UnsplashModel]
-    @Published var item: UnsplashModel
+    @Published var items: [ImageModel]
+    @Published var item: ImageModel
     @Published var downloadManager: DownloadManager
     private unowned let coordinator: GridViewCoordinator
     
-    init(items: [UnsplashModel], item: UnsplashModel, downloadManager: DownloadManager, coordinator: GridViewCoordinator) {
+    init(items: [ImageModel], item: ImageModel, downloadManager: DownloadManager, coordinator: GridViewCoordinator) {
         self.item = item
         self.downloadManager = downloadManager
         self.coordinator = coordinator

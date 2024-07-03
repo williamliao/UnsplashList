@@ -40,7 +40,7 @@ extension ImagesService {
 //    }
 
     func fetchUnsplash<K, R>(for endpoint: Endpoint<K, R>,
-                                                 using requestData: K.RequestData, completion: @escaping (APIResult<[UnsplashModel], ServerError>) -> Void) async {
+                                                 using requestData: K.RequestData, completion: @escaping (APIResult<[ImageModel], ServerError>) -> Void) async {
         
         switch endpoint.dataSource {
             
@@ -51,13 +51,14 @@ extension ImagesService {
                     switch result {
                         case .success(let models):
                             
-                            var newModels = [UnsplashModel]()
+                            var newModels = [ImageModel]()
                             
                             for res in models {
                                 
                                 let tags: String = res.tags?.title ?? ""
                                 
-                                let model = UnsplashModel(id: Int(res.id) ?? 0, user: res.user, exif: res.exif, location: res.location, raw: res.urls.raw, full: res.urls.full, regular: res.urls.regular, small: res.urls.small, thumb: res.urls.thumb, tags: tags, fileExtension: "jpg")
+                                let model = ImageModel(id: res.id, create_at: res.user?.updated_at, updated_at: res.user?.updated_at, name: res.user?.name, bio: res.user?.bio, location: res.user?.location,likes: res.user?.total_likes, isFavorite: false, raw: res.urls.raw, full: res.urls.full, regular: res.urls.regular, small: res.urls.small, thumb: res.urls.thumb, tags: tags, fileExtension: "jpg", service: "unsplash")
+                              
                                 newModels.append(model)
                             }
                             
@@ -77,10 +78,13 @@ extension ImagesService {
                 switch result {
                 case .success(let models):
                     
-                    var newModels = [UnsplashModel]()
+                    var newModels = [ImageModel]()
                     
                     for res in models.results {
-                        let model = UnsplashModel(id: Int(res.id) ?? 0, user: res.user, exif: nil, location: nil, raw: res.urls?.raw, full: res.urls?.full, regular: res.urls?.regular, small: res.urls?.small, thumb: res.urls?.thumb, tags: "", fileExtension: "jpg")
+                        let tags: String = res.tags?.first?.type ?? ""
+                        
+                        let model = ImageModel(id: res.id, create_at: res.user?.updated_at, updated_at: res.user?.updated_at, name: res.user?.name, bio: res.user?.bio, location: res.user?.location,likes: res.user?.total_likes, isFavorite: false, raw: res.urls?.raw, full: res.urls?.full, regular: res.urls?.regular, small: res.urls?.small, thumb: res.urls?.thumb, tags: tags, fileExtension: "jpg", service: "unsplash")
+                        
                         newModels.append(model)
                     }
                     
@@ -100,7 +104,7 @@ extension ImagesService {
     }
     
     func fetchYande<K, R>(for endpoint: Endpoint<K, R>,
-                             using requestData: K.RequestData, completion: @escaping (APIResult<[UnsplashModel], ServerError>) -> Void) async {
+                             using requestData: K.RequestData, completion: @escaping (APIResult<[ImageModel], ServerError>) -> Void) async {
         
         switch endpoint.dataSource {
             
@@ -111,10 +115,13 @@ extension ImagesService {
                 switch result {
                 case .success(let models):
                     
-                    var newModels = [UnsplashModel]()
+                    var newModels = [ImageModel]()
                     
                     for res in models.posts {
-                        let model = UnsplashModel(id: Int(res.id), user: nil, exif: nil, location: nil, raw: res.file_url, full: res.file_url, regular: res.jpeg_url, small: res.jpeg_url, thumb: res.preview_url, tags: "", fileExtension: res.file_ext)
+                        let tags: String = res.tags
+                        
+                        let model = ImageModel(id: String(res.id), create_at: String(res.created_at), updated_at: String(res.updated_at), name: res.author, bio: "", location: "", likes: res.score, isFavorite: false, raw: res.file_url, full: res.file_url, regular: res.sample_url, small: res.preview_url, thumb: res.preview_url, tags: tags, fileExtension: "jpg", service: "yande")
+                        
                         newModels.append(model)
                     }
                  
@@ -135,7 +142,7 @@ extension ImagesService {
     }
     
     func fetchDanbooru<K, R>(for endpoint: Endpoint<K, R>,
-                             using requestData: K.RequestData, completion: @escaping (APIResult<[UnsplashModel], ServerError>) -> Void) async {
+                             using requestData: K.RequestData, completion: @escaping (APIResult<[ImageModel], ServerError>) -> Void) async {
         
         do {
             let result = try await self.data(for: endpoint, using: requestData, decodingType: [Danbooru].self)
@@ -143,10 +150,13 @@ extension ImagesService {
             switch result {
             case .success(let models):
                 
-                var newModels = [UnsplashModel]()
-                
+                var newModels = [ImageModel]()
+                 
                 for res in models {
-                    let model = UnsplashModel(id: Int(res.id), user: nil, exif: nil, location: nil, raw: res.file_url, full: res.file_url, regular: res.large_file_url, small: res.large_file_url, thumb: res.preview_file_url, tags: res.tag_string, fileExtension: res.file_ext)
+                    let tags: String = res.tag_string
+                    
+                    let model = ImageModel(id: String(res.id), create_at: "", updated_at: "", name: "", bio: "", location: "", likes: res.score, isFavorite: false, raw: res.large_file_url, full: res.large_file_url, regular: res.file_url, small: res.preview_file_url, thumb: res.preview_file_url, tags: tags, fileExtension: res.file_ext, service: "danbooru")
+                    
                     newModels.append(model)
                 }
              
