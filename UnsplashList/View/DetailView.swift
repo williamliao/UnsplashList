@@ -28,7 +28,7 @@ struct DetailView: View {
                 LazyHStack(spacing: 0) {
                     ForEach(0 ..< viewModel.items.count, id: \.self) { i in
                     
-                        DetailPhotoView(i:i, imageModel: viewModel.indexOfModel(index: i), navigationPath: $navigationPath)
+                        DetailPhotoView(i:i, imageModel: viewModel.item, navigationPath: $navigationPath)
                             .environmentObject(viewModel.downloadManager)
                     }
                 }
