@@ -10,24 +10,25 @@ import Kingfisher
 
 struct DetailPhotoView: View {
     
-    @State var url: URL?
-    @State var lowResolutionURL: URL?
-    @State var fullResolutionURL: URL?
+    @State var i: Int
+    @State var imageModel: ImageModel
     @Binding var navigationPath: [Route]
     @State var id = UUID()
     @EnvironmentObject var downloadManager: DownloadManager
     
     var body: some View {
-       
-        KFImage(url)
-            .placeholder {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: Color.red))
+        let lowResolutionURL = URL(string: imageModel.thumb ?? "")
+        let fullResolutionURL = URL(string: imageModel.raw ?? "")
+        
+        KFImage(fullResolutionURL)
+            .placeholder { progress in
+                CircularProgressView(progress: progress)
             }
             .memoryCacheAccessExtending(ExpirationExtending.cacheTime)
             .memoryCacheExpiration(StorageExpiration.seconds(600))
             .diskCacheExpiration(StorageExpiration.days(30))
             .cancelOnDisappear(true)
+            .resizable()
             .diskStoreWriteOptions(.atomic)
             //.retry(maxCount: 3, interval: .seconds(5))
             .onSuccess { r in
@@ -43,8 +44,8 @@ struct DetailPhotoView: View {
             .loadDiskFileSynchronously()
             .fade(duration: 0.25)
             .resizable()
-            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-            .aspectRatio(1, contentMode: .fit)
+            //.frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
+            .aspectRatio(contentMode: .fit)
            .clipShape(RoundedRectangle(cornerRadius: 25.0))
            .padding(.horizontal, 20)
         

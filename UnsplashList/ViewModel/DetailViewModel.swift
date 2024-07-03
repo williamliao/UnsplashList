@@ -21,5 +21,7 @@ class DetailViewModel: ObservableObject {
         self.items = items
     }
     
-    
+    func indexOfModel(index: Int) -> ImageModel {
+        return items[index]
+    }
 }

@@ -28,14 +28,11 @@ struct DetailView: View {
                 LazyHStack(spacing: 0) {
                     ForEach(0 ..< viewModel.items.count, id: \.self) { i in
                     
-                        let url = URL(string: viewModel.items[i].regular!)
-                        let lowResolutionURL = URL(string: viewModel.items[i].thumb ?? "")
-                        let fullResolutionURL = URL(string: viewModel.items[i].raw ?? "")
-                        
-                        DetailPhotoView(url: url!, lowResolutionURL: lowResolutionURL, fullResolutionURL: fullResolutionURL, navigationPath: $navigationPath)
+                        DetailPhotoView(i:i, imageModel: viewModel.indexOfModel(index: i), navigationPath: $navigationPath)
                             .environmentObject(viewModel.downloadManager)
                     }
-                }.padding(.all, 10)
+                }
+                //.padding(.all, 10)
             }
             .modify {
                 if #available(iOS 17.0, *) {
@@ -43,20 +40,21 @@ struct DetailView: View {
                 }
             }
         }
+
         
-//        .toolbar {
-//            ToolbarItem {
-//                Button("Open in WebView") {
-//                    
-//                    guard let path = viewModel.item.full, let url = URL(string: path) else {
-//                        return
-//                    }
-//                    
-//                    navigationPath.append(.url(url: url))
-//                }
-//            }
-//        }
-        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem {
+                Button("Open in WebView") {
+                    
+                    guard let path = viewModel.item.full, let url = URL(string: path) else {
+                        return
+                    }
+                    
+                    navigationPath.append(.webView(url: url))
+                }
+            }
+        }
+       // .navigationBarBackButtonHidden(true)
         
         #if canImport(UIKit)
         .navigationBarItems(leading: Button(action : {
