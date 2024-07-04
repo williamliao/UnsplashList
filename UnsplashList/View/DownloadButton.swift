@@ -12,7 +12,7 @@ struct DownloadButton: View {
     @Environment(\.colorScheme) var colorScheme
     let item: ImageModel
     
-    @State var isDownloaded = false
+    @Binding var isDownloaded: Bool
     
     var body: some View {
         let colors: Array<Color> = isDownloaded ? (colorScheme == .dark ? [Color(#colorLiteral(red: 0.6196078431, green: 0.6784313725, blue: 1, alpha: 1)), Color(#colorLiteral(red: 1, green: 0.5607843137, blue: 0.9803921569, alpha: 1))] : [Color(#colorLiteral(red: 0.262745098, green: 0.0862745098, blue: 0.8588235294, alpha: 1))]) : [Color.primary]
@@ -52,6 +52,7 @@ struct DownloadButton: View {
         .cornerRadius(20)
         .onTapGesture {
             isDownloaded ? downloadManager.deleteFile(for: item) : downloadManager.downloadFile(for: item)
+            self.isDownloaded = downloadManager.isDownloaded
         }
         .onAppear(perform: {
             isDownloaded = downloadManager.checkFileExists(for: item)

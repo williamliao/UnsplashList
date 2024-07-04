@@ -20,24 +20,24 @@ struct GridView: View {
             ScrollView {
                 ScrollViewReader { scrollViewProxy in
                     LazyVGrid(columns: [.init(.adaptive(minimum: 200, maximum: .infinity), spacing: 3)], spacing: 3) {
-                        showGridView(viewModel.getItems())
+     
+                        if viewModel.getItems().count > 0 {
+                            ForEach(viewModel.items.indices , id: \.self) { index in
+                                
+                                let imageModel = $viewModel.items[index]
+                                
+                                PhotoView(i:index, imageModel: imageModel, currentItem: $currentItem, navigationPath: $navigationPath, progress: 0.5)
+                                    .environmentObject(viewModel)
+                                    .id(imageModel.id)
+                            }
+                            .animation(.interactiveSpring(), value: 3)
+                        }
                     }
                     .aspectRatio(1.0 , contentMode: .fill)
                     .padding(.all, 10)
                 }
             }
         }
-    }
-
-    func showGridView(_ array: Array<Any>) -> some View {
-        
-        return ForEach(0 ..< array.count, id: \.self) { i in
-            
-            PhotoView(i:i, imageModel: viewModel.indexOfModel(index: i), currentItem: $currentItem, navigationPath: $navigationPath, progress: 0.5)
-                .environmentObject(viewModel)
-                .id(viewModel.indexOfModel(index: i).id)
-        }
-        .animation(.interactiveSpring(), value: 3)
     }
 }
 

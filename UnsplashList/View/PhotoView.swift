@@ -18,11 +18,12 @@ public typealias PasteboardRepresentable = NSPasteboard
 struct PhotoView: View {
     
     @State var i: Int
-    @State var imageModel: ImageModel
+    @Binding var imageModel: ImageModel
     @Binding var currentItem: SideBarItem
     @Binding var navigationPath: [Route]
     @EnvironmentObject var viewModel: GridViewModel
     @State var id = UUID()
+    @State var isDownloaded = false
 
     @State var progress:Float
     
@@ -90,13 +91,25 @@ struct PhotoView: View {
                     Task {
                         await viewModel.requestMoreItemsIfNeeded(index: i)
                     }
+                    
+                    isDownloaded = downloadManager.isDownloaded
                 }
             
-            DownloadButton(item: imageModel)
+            DownloadButton(item: imageModel, isDownloaded: $isDownloaded)
                 .environmentObject(downloadManager)
                 .padding(.top)
                 .padding(.bottom)
+                .onChange(of: isDownloaded) { oldValue, newValue in
+                    if newValue == false {
+                        viewModel.items.removeAll { oldModel in
+                            return oldModel.id == imageModel.id
+                        }
+                        print("delete item at \(i)")
+                    }
+                }
+                
         }
+
         .frame(minWidth: 0, maxWidth: .infinity)
         .frame(minHeight: 0, maxHeight: .infinity)
         .clipped()

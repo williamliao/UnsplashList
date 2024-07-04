@@ -181,6 +181,10 @@ final class DownloadManager: NetworkManager, ObservableObject, @unchecked Sendab
         let docsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         let fileExtension = item.fileExtension
         let fileName = url.lastPathComponent
+        
+        Task {
+            await self.dataBaseService.removeModel(item: item)
+        }
        
         let destinationUrl = docsUrl?.appendingPathComponent("\(fileName).\(fileExtension ?? "jpg")")
         if let destinationUrl = destinationUrl {

@@ -94,11 +94,11 @@ class DataBaseService {
         
         let filename = url.lastPathComponent
         
-//        let storageClient = await DataBaseService.shared.storageClient()
-//        guard let uploadResponseData = try? await storageClient?.upload(
-//            path: "\(item.id)/\(filename)",
-//                file: Data()
-//            ) else { return }
+        let storageClient = await DataBaseService.shared.storageClient()
+        guard let uploadResponseData = try? await storageClient?.upload(
+            path: "\(item.id)/\(filename)",
+                file: Data()
+            ) else { return }
     }
     
     func downloadImage(item: UnsplashModel) async {
@@ -107,32 +107,28 @@ class DataBaseService {
             return
         }
 
-//        if let data = try? await DataBaseService.shared.storageClient()?.download(
-//            path: url
-//        ) {
-//            let image = ImageRepresentable(data: data)
-//        }
+        if let data = try? await DataBaseService.shared.storageClient()?.download(
+            path: url
+        ) {
+            let image = ImageRepresentable(data: data)
+        }
         
     }
 
     func saveModel(item: ImageModel) async {
-        
-        Task {
-              do {
+        do {
 
-                try await supabaseClient
-                  .from("saveimages")
-                  .insert(item)
-                  .execute()
+          try await supabaseClient
+            .from("saveimages")
+            .insert(item)
+            .execute()
 
-              } catch {
-                debugPrint(error)
-              }
+        } catch {
+            debugPrint("saveModel \(error)")
         }
     }
     
     func fetchModel() async -> [ImageModel] {
-       
         do {
             
             items = try await supabaseClient
@@ -141,20 +137,24 @@ class DataBaseService {
                    .execute()
                    .value
 
-//            let itemsData = try await supabaseClient.database
-//                .from("Images")
-//                .select()
-//                .execute()
-//                .data
-//            let decoder = JSONDecoder()
-//            items = try decoder.decode([UnsplashModel].self, from: itemsData)
-            
             return items
           
         } catch {
-            debugPrint(error)
+            debugPrint("fetchModel \(error)")
             
             return items
+        }
+    }
+    
+    func removeModel(item: ImageModel) async {
+        do {
+            try await supabaseClient
+                .from("saveimages")
+                .delete()
+                .eq("id", value: item.id)
+                .execute()
+        } catch  {
+            debugPrint("removeModel \(error)")
         }
     }
 }
