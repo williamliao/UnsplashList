@@ -19,7 +19,8 @@ struct FavoriteIconView: View {
     
     var body: some View {
         Image(systemName: item.isFavorite ? "heart.fill" : "heart")
-            .background(.ultraThinMaterial)
+            .inverseMask(Image(systemName: item.isFavorite ? "heart.fill" : "heart"))
+            .shadow(color: Color.black, radius: 1, x: 0, y: 1)
             .font(.system(size: 20))
             .onTapGesture {
                 updateFavorite()
@@ -57,5 +58,17 @@ struct FavoriteIconView: View {
                 }
             }
         }
+    }
+}
+
+extension View {
+    // https://www.raywenderlich.com/7589178-how-to-create-a-neumorphic-design-with-swiftui
+    func inverseMask<Mask>(_ mask: Mask) -> some View where Mask: View {
+        self.mask(mask
+            .foregroundColor(.white)
+            .background(Color.black)
+            .compositingGroup()
+            .luminanceToAlpha()
+        )
     }
 }

@@ -54,6 +54,7 @@ struct PhotoView: View {
                     // e: KingfisherError
                     print("failure: \(e)")
                 }
+                .cornerRadius(20)
                 .onTapGesture {
                     viewModel.open(model: imageModel, downloadManager: downloadManager)
                     navigationPath.append(.detail)
@@ -81,6 +82,8 @@ struct PhotoView: View {
                     HStack(alignment: .top) {
                         FavoriteIconView(currentSideBarItem: $currentItem, item: imageModel)
                     }
+                    .padding(.trailing, 5)
+                    .padding(.top, 5)
                     
                 })
                 .onAppear {
