@@ -54,12 +54,6 @@ struct PhotoView: View {
                     // e: KingfisherError
                     print("failure: \(e)")
                 }
-                .cacheOriginalImage()
-                .resizable()
-                .loadDiskFileSynchronously()
-                .fade(duration: 0.25)
-                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
-                .aspectRatio(contentMode: .fit)
                 .onTapGesture {
                     viewModel.open(model: imageModel, downloadManager: downloadManager)
                     navigationPath.append(.detail)
@@ -100,6 +94,9 @@ struct PhotoView: View {
                 .padding(.top)
                 .padding(.bottom)
         }
+        .frame(minWidth: 0, maxWidth: .infinity)
+        .frame(minHeight: 0, maxHeight: .infinity)
+        .clipped()
     }
    
     private func cacheImage(image: ImageRepresentable, url: URL) {
