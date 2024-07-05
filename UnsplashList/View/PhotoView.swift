@@ -33,7 +33,7 @@ struct PhotoView: View {
     var body: some View {
         let url = imageModel.thumb!
         let downloadManager = DownloadManager()
-
+   
         VStack {
             KFImage(URL(string: url)!)
                 //.placeholder {
@@ -55,7 +55,10 @@ struct PhotoView: View {
                     // e: KingfisherError
                     print("failure: \(e)")
                 }
-                .cornerRadius(20)
+                .resizing(referenceSize: CGSize(width: 200, height: 200), mode: .aspectFit)
+                .clipShape(RoundedRectangle(cornerRadius: 25))
+                .frame(alignment: .topLeading)
+                .clipped()
                 .onTapGesture {
                     viewModel.open(model: imageModel, downloadManager: downloadManager)
                     navigationPath.append(.detail)
@@ -109,10 +112,7 @@ struct PhotoView: View {
                 }
                 
         }
-
-        .frame(minWidth: 0, maxWidth: .infinity)
-        .frame(minHeight: 0, maxHeight: .infinity)
-        .clipped()
+        .padding()
     }
    
     private func cacheImage(image: ImageRepresentable, url: URL) {
