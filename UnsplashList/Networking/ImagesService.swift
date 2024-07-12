@@ -40,7 +40,7 @@ extension ImagesService {
 //    }
 
     func fetchUnsplash<K, R>(for endpoint: Endpoint<K, R>,
-                                                 using requestData: K.RequestData) async -> APIResult<[ImageModel], ServerError> {
+                                                 using requestData: K.RequestData) async throws -> [ImageModel] {
         
         var newModels = [ImageModel]()
         
@@ -63,13 +63,13 @@ extension ImagesService {
                                 newModels.append(model)
                             }
                         
-                            return .success(newModels)
+                            return newModels
                         
                         case .failure(let error):
-                            return .failure(error as! ServerError)
+                            throw error
                     }
                 } catch {
-                    return .failure(error as! ServerError)
+                    throw error
                 }
             
             case .unsplashSearch:
@@ -90,24 +90,24 @@ extension ImagesService {
                         newModels.append(model)
                     }
                     
-                    return .success(newModels)
+                    return newModels
                     
                 case .failure(let error):
-                    return .failure(error as! ServerError)
+                    throw error
                 }
             } catch  {
-                return .failure(error as! ServerError)
+                throw error
             }
                
             default:
-                return .success(newModels)
+                return newModels
         }
         
         
     }
     
     func fetchYande<K, R>(for endpoint: Endpoint<K, R>,
-                             using requestData: K.RequestData) async -> APIResult<[ImageModel], ServerError>{
+                             using requestData: K.RequestData) async throws -> [ImageModel] {
         
         var newModels = [ImageModel]()
         switch endpoint.dataSource {
@@ -128,22 +128,23 @@ extension ImagesService {
                         newModels.append(model)
                     }
                     
-                    return .success(newModels)
-                 
+                    return newModels
+                    
                 case .failure(let error):
-                    return .failure(error as! ServerError)
+                    throw error
                 }
             } catch  {
-                return .failure(error as! ServerError)
+                throw error
             }
             
-            default:
-                return .success(newModels)
+        default:
+            return newModels
         }
+        
     }
     
     func fetchDanbooru<K, R>(for endpoint: Endpoint<K, R>,
-                             using requestData: K.RequestData) async -> APIResult<[ImageModel], ServerError> {
+                             using requestData: K.RequestData) async throws -> [ImageModel] {
         
         var newModels = [ImageModel]()
         do {
@@ -160,13 +161,13 @@ extension ImagesService {
                     newModels.append(model)
                 }
              
-                return .success(newModels)
+                return newModels
                 
             case .failure(let error):
-                return .failure(error as! ServerError)
+                throw error
             }
         } catch {
-            return .failure(error as! ServerError)
+            throw error
         }
     }
 }

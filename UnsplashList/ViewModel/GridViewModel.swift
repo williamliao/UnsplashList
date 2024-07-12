@@ -82,23 +82,16 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         self.dataIsLoading = true
         
         Task.detached { @MainActor in
-            
-            let result = await self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ())
-            
-            switch result {
-            case .success(let models):
-             
-                self.items.append(contentsOf: models)
+            do {
+                let result = try await self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ())
+                self.items.append(contentsOf: result)
 
                 self.itemsLoadedCount = self.items.count
                 self.dataIsLoading = false
-
-            case .failure(let error):
-                self.error = error
+            } catch {
+                self.error = error as? ServerError
             }
         }
-        
-        
     }
     
     func loadSaveUnsplashData() {
@@ -125,24 +118,16 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
     func loadDanbooru() {
         
         Task.detached { @MainActor in
-            let result = await self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10", page: self.currentPage), using: ())
-            
-            switch result {
-            case .success(let models):
+            do {
+                let models = try await self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10", page: self.currentPage), using: ())
+                self.items.append(contentsOf: models)
                 
-                DispatchQueue.main.async {
-                    self.items.append(contentsOf: models)
-                    
-                    self.itemsLoadedCount = self.items.count
-                    self.dataIsLoading = false
-                }
-                
-            case .failure(let error):
-                self.error = error
+                self.itemsLoadedCount = self.items.count
+                self.dataIsLoading = false
+            } catch {
+                self.error = error as? ServerError
             }
         }
-      
-        
     }
     
     func loadDanbooruSearch(tag: String, page: String) {
@@ -151,22 +136,16 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
     
         Task.detached { @MainActor in
             
-            let result = await self.imagesService.fetchDanbooru(for: .danbooruWithTag(with: tag, page: page), using: ())
-            
-            switch result {
-            case .success(let models):
+            do {
+                let models = try await self.imagesService.fetchDanbooru(for: .danbooruWithTag(with: tag, page: page), using: ())
+                self.items.append(contentsOf: models)
                 
-                DispatchQueue.main.async {
-                    self.items.append(contentsOf: models)
-                    
-                    self.currentPage = self.currentPage + 1
-                    
-                    self.itemsLoadedCount = self.items.count
-                    self.dataIsLoading = false
-                }
+                self.currentPage = self.currentPage + 1
                 
-            case .failure(let error):
-                self.error = error
+                self.itemsLoadedCount = self.items.count
+                self.dataIsLoading = false
+            } catch {
+                self.error = error as? ServerError
             }
         }
     }
@@ -176,24 +155,19 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         dataIsLoading = true
         
         Task.detached { @MainActor in
-            let result = await self.imagesService.fetchYande(for: .yande(with: "10", page: self.currentPage), using: ())
             
-            switch result {
-            case .success(let models):
-                
-                DispatchQueue.main.async {
-             
-                    self.items.append(contentsOf: models)
-                   
-                    self.currentPage = self.currentPage + 1
+            do {
+                let result = try await self.imagesService.fetchYande(for: .yande(with: "10", page: self.currentPage), using: ())
+                self.items.append(contentsOf: result)
+               
+                self.currentPage = self.currentPage + 1
 
-                    self.itemsLoadedCount = self.items.count
-                    self.dataIsLoading = false
-                }
-                
-            case .failure(let error):
-                self.error = error
+                self.itemsLoadedCount = self.items.count
+                self.dataIsLoading = false
+            } catch {
+                self.error = error as? ServerError
             }
+            
         }
     }
     
@@ -210,33 +184,29 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         let lowercasedSearchText = query.lowercased()
 
         Task {
-            let result = await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: currentPage), using: ())
             
-            switch result {
-            case .success(let models):
+            do {
+                let result = try await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: currentPage), using: ())
                 
-                DispatchQueue.main.async {
-                    self.items.append(contentsOf: models)
-                    
-                    var matchingImages: [ImageModel] = []
+                self.items.append(contentsOf: result)
+                
+                var matchingImages: [ImageModel] = []
 
-                    self.items.forEach { model in
-                        let searchContent = model.tags
-                        if searchContent?.lowercased().range(of: lowercasedSearchText, options: .caseInsensitive) != nil {
-                           matchingImages.append(model)
-                        }
+                self.items.forEach { model in
+                    let searchContent = model.tags
+                    if searchContent?.lowercased().range(of: lowercasedSearchText, options: .caseInsensitive) != nil {
+                       matchingImages.append(model)
                     }
-                    
-                    if matchingImages.count > 0 {
-                        self.items.append(contentsOf: matchingImages)
-                    }
-                    
-                    self.itemsLoadedCount = self.items.count
-                    self.dataIsLoading = false
                 }
                 
-            case .failure(let error):
-                self.error = error
+                if matchingImages.count > 0 {
+                    self.items.append(contentsOf: matchingImages)
+                }
+                self.currentPage = self.currentPage + 1
+                self.itemsLoadedCount = self.items.count
+                self.dataIsLoading = false
+            } catch {
+                
             }
         }
     }
@@ -270,22 +240,19 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
             // Request next page
             if currentDataItem.id == SideBarItemType.unsplashList.rawValue {
                 if isSearch {
-                    currentPage += currentPage
-                    await loadSearchData(query, "10", String(currentPage))
+                    loadSearchData(query, "10", String(currentPage))
                 } else {
-                    await loadData()
+                    loadData()
                 }
             } else if currentDataItem.id == SideBarItemType.yandeList.rawValue {
-                await loadYandeData()
+                loadYandeData()
             } else if currentDataItem.id == SideBarItemType.danbooruList.rawValue {
                 if isSearch {
-                    currentPage += currentPage
-                    await loadDanbooruSearch(tag: query, page: String(currentPage))
+                    loadDanbooruSearch(tag: query, page: String(currentPage))
                 } else {
-                    await loadDanbooru()
+                    loadDanbooru()
                 }
             }
-        
         }
     }
 

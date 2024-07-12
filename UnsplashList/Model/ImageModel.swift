@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ImageModel: Identifiable, Codable, @unchecked Sendable {
+struct ImageModel: Identifiable, Codable, Sendable {
     let id: String
     let create_at: String?
     let updated_at: String?
