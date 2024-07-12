@@ -95,22 +95,22 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
     }
     
     func loadSaveUnsplashData() {
-        Task {
-            self.favoriteItems = await fetchSaveModel(keyword: "unsplash")
+        Task.detached { @MainActor in
+            self.favoriteItems = await self.fetchSaveModel(keyword: "unsplash")
             self.items.append(contentsOf: self.favoriteItems)
         }
     }
     
     func loadSaveYandeData() {
-        Task {
-            self.favoriteItems2 = await fetchSaveModel(keyword: "yande")
+        Task.detached { @MainActor in
+            self.favoriteItems2 = await self.fetchSaveModel(keyword: "yande")
             self.items.append(contentsOf: self.favoriteItems2)
         }
     }
     
     func loadSaveDanbooru() {
-        Task {
-            self.favoriteItems3 = await fetchSaveModel(keyword: "danbooru")
+        Task.detached { @MainActor in
+            self.favoriteItems3 = await self.fetchSaveModel(keyword: "danbooru")
             self.items.append(contentsOf: self.favoriteItems3)
         }
     }
