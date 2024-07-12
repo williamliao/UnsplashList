@@ -64,18 +64,17 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         
         if item.id == SideBarItemType.unsplashList.rawValue {
              loadData()
+        } else if item.id == SideBarItemType.unsplashFavorite.rawValue  {
+            loadSaveUnsplashData()
+        } else if item.id == SideBarItemType.yandeList.rawValue {
+            loadYandeData()
+        } else if item.id == SideBarItemType.yandeFavorite.rawValue {
+            loadSaveYandeData()
+        } else if item.id == SideBarItemType.danbooruList.rawValue {
+            loadDanbooru()
+        } else if item.id == SideBarItemType.danbooruFavorite.rawValue {
+            loadSaveDanbooru()
         }
-//        else if item.id == SideBarItemType.unsplashFavorite.rawValue  {
-//            await loadSaveUnsplashData()
-//        } else if item.id == SideBarItemType.yandeList.rawValue {
-//            await loadYandeData()
-//        } else if item.id == SideBarItemType.yandeFavorite.rawValue {
-//            await loadSaveYandeData()
-//        } else if item.id == SideBarItemType.danbooruList.rawValue {
-//            await loadDanbooru()
-//        } else if item.id == SideBarItemType.danbooruFavorite.rawValue {
-//            await loadSaveDanbooru()
-//        }
     }
     
     func loadData() {
@@ -102,25 +101,28 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         
     }
     
-    @MainActor
-    func loadSaveUnsplashData() async {
-        self.favoriteItems = await fetchSaveModel(keyword: "unsplash")
-        self.items.append(contentsOf: self.favoriteItems)
+    func loadSaveUnsplashData() {
+        Task {
+            self.favoriteItems = await fetchSaveModel(keyword: "unsplash")
+            self.items.append(contentsOf: self.favoriteItems)
+        }
     }
     
-    @MainActor
-    func loadSaveYandeData() async {
-        self.favoriteItems2 = await fetchSaveModel(keyword: "yande")
-        self.items.append(contentsOf: self.favoriteItems2)
+    func loadSaveYandeData() {
+        Task {
+            self.favoriteItems2 = await fetchSaveModel(keyword: "yande")
+            self.items.append(contentsOf: self.favoriteItems2)
+        }
     }
     
-    @MainActor
-    func loadSaveDanbooru() async {
-        self.favoriteItems3 = await fetchSaveModel(keyword: "danbooru")
-        self.items.append(contentsOf: self.favoriteItems3)
+    func loadSaveDanbooru() {
+        Task {
+            self.favoriteItems3 = await fetchSaveModel(keyword: "danbooru")
+            self.items.append(contentsOf: self.favoriteItems3)
+        }
     }
     
-    func loadDanbooru() async {
+    func loadDanbooru() {
         
         Task.detached { @MainActor in
             let result = await self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10", page: self.currentPage), using: ())
@@ -143,13 +145,14 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         
     }
     
-    func loadDanbooruSearch(tag: String, page: String) async {
+    func loadDanbooruSearch(tag: String, page: String) {
         
         query = tag
-        
-        let result = await self.imagesService.fetchDanbooru(for: .danbooruWithTag(with: tag, page: page), using: ())
-        
+    
         Task.detached { @MainActor in
+            
+            let result = await self.imagesService.fetchDanbooru(for: .danbooruWithTag(with: tag, page: page), using: ())
+            
             switch result {
             case .success(let models):
                 
@@ -168,7 +171,7 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         }
     }
     
-    func loadYandeData() async {
+    func loadYandeData() {
 
         dataIsLoading = true
         
@@ -194,7 +197,7 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         }
     }
     
-    func loadSearchData(_ query: String, _ perPage: String, _ page: String) async {
+    func loadSearchData(_ query: String, _ perPage: String, _ page: String) {
         
         if query.count == 0 {
             return
@@ -206,33 +209,35 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         
         let lowercasedSearchText = query.lowercased()
 
-        let result = await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: currentPage), using: ())
-        
-        switch result {
-        case .success(let models):
+        Task {
+            let result = await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: currentPage), using: ())
             
-            DispatchQueue.main.async {
-                self.items.append(contentsOf: models)
+            switch result {
+            case .success(let models):
                 
-                var matchingImages: [ImageModel] = []
+                DispatchQueue.main.async {
+                    self.items.append(contentsOf: models)
+                    
+                    var matchingImages: [ImageModel] = []
 
-                self.items.forEach { model in
-                    let searchContent = model.tags
-                    if searchContent?.lowercased().range(of: lowercasedSearchText, options: .caseInsensitive) != nil {
-                       matchingImages.append(model)
+                    self.items.forEach { model in
+                        let searchContent = model.tags
+                        if searchContent?.lowercased().range(of: lowercasedSearchText, options: .caseInsensitive) != nil {
+                           matchingImages.append(model)
+                        }
                     }
+                    
+                    if matchingImages.count > 0 {
+                        self.items.append(contentsOf: matchingImages)
+                    }
+                    
+                    self.itemsLoadedCount = self.items.count
+                    self.dataIsLoading = false
                 }
                 
-                if matchingImages.count > 0 {
-                    self.items.append(contentsOf: matchingImages)
-                }
-                
-                self.itemsLoadedCount = self.items.count
-                self.dataIsLoading = false
+            case .failure(let error):
+                self.error = error
             }
-            
-        case .failure(let error):
-            self.error = error
         }
     }
   
