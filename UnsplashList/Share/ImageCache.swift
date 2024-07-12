@@ -100,6 +100,14 @@ extension ImageCache {
         }
         return nil
     }
+    
+    func hasCacheImage(for url: URL) -> Bool {
+        if let image = imageCache.object(forKey: url as AnyObject) as? ImageRepresentable {
+            return true
+        } else {
+            return false
+        }
+    }
 }
 
 struct ImageCacheKey: EnvironmentKey {

@@ -79,6 +79,8 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
     }
     
     func loadData() async {
+        
+        dataIsLoading = true
 
         await self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ()) { result in
             
@@ -146,6 +148,8 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
                 DispatchQueue.main.async {
                     self.items.append(contentsOf: models)
                     
+                    self.currentPage = self.currentPage + 1
+                    
                     self.itemsLoadedCount = self.items.count
                     self.dataIsLoading = false
                 }
@@ -157,35 +161,25 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
     }
     
     func loadYandeData() async {
-        
-//        if dataIsLoading {
-//            return
-//        }
-        
+
         dataIsLoading = true
       
-        Task {
-            await self.imagesService.fetchYande(for: .yande(with: "10", page: currentPage), using: ()) { result in
-                switch result {
-                case .success(let models):
-                    
-                    DispatchQueue.main.async {
-                        
-                       //let fileId = models.map{ $0.id }
-                        
-                        //print("fileId \(fileId)")
-                        
-                        self.currentPage = self.currentPage + 1
+        await self.imagesService.fetchYande(for: .yande(with: "10", page: currentPage), using: ()) { result in
+            switch result {
+            case .success(let models):
+                
+                DispatchQueue.main.async {
+             
+                    self.items.append(contentsOf: models)
+                   
+                    self.currentPage = self.currentPage + 1
 
-                        self.items.append(contentsOf: models)
-                        
-                        self.itemsLoadedCount = self.items.count
-                        self.dataIsLoading = false
-                    }
-                    
-                case .failure(let error):
-                    self.error = error
+                    self.itemsLoadedCount = self.items.count
+                    self.dataIsLoading = false
                 }
+                
+            case .failure(let error):
+                self.error = error
             }
         }
     }

@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 
 struct GridView: View {
     
-    @StateObject var viewModel: GridViewModel
+    @ObservedObject var viewModel: GridViewModel
     @Binding var navigationPath: [Route]
     @Binding var currentItem: SideBarItem
     
@@ -22,7 +22,8 @@ struct GridView: View {
                     LazyVGrid(columns: [.init(.adaptive(minimum: 200, maximum: .infinity), spacing: 3)], spacing: 3) {
      
                         if viewModel.getItems().count > 0 {
-                            ForEach(viewModel.items.indices , id: \.self) { index in
+                            
+                            ForEach($viewModel.items.indices , id: \.self) { index in
                                 
                                 let imageModel = $viewModel.items[index]
                                 

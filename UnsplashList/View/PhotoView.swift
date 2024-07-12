@@ -31,87 +31,93 @@ struct PhotoView: View {
     let imageCacheKey: NSString = "CachedImage"
    
     var body: some View {
-        let url = imageModel.thumb!
+        let urlStr = imageModel.thumb
+        let url = URL(string: urlStr ?? "")
         let downloadManager = DownloadManager()
    
         VStack {
-            KFImage(URL(string: url)!)
-                //.placeholder {
-                    //
-                //}
-                .placeholder { progress in
-                    CircularProgressView(progress: progress)
-                }
-                .cancelOnDisappear(true)
-                //.retry(maxCount: 3, interval: .seconds(5))
-                .onProgress { receivedSize, totalSize in
-                    progress = (Float(receivedSize) / Float(totalSize))
-                }
-                .onSuccess { r in
-                    // r: RetrieveImageResult
-                    cacheImage(image: r.image, url: r.source.url!)
-                }
-                .onFailure { e in
-                    // e: KingfisherError
-                    print("failure: \(e)")
-                }
-                .resizing(referenceSize: CGSize(width: 200, height: 200), mode: .aspectFit)
-                .clipShape(RoundedRectangle(cornerRadius: 25))
-                .frame(alignment: .topLeading)
-                .clipped()
-                .onTapGesture {
-                    viewModel.open(model: imageModel, downloadManager: downloadManager)
-                    navigationPath.append(.detail)
-                }
-                .contextMenu {
-                    
-                    Button("Copy URL") {
-                        PasteboardRepresentable.general.setString("", forType: .string)
-                        PasteboardRepresentable.general.setString(imageModel.raw ?? "", forType: .string)
+            if hasCachedImage(url: url) {
+                Image(cachedImage(url: url) ?? getPlaceHolderImage())
+            } else {
+                KFImage(url)
+                    //.placeholder {
+                        //
+                    //}
+                    .placeholder { progress in
+                        CircularProgressView(progress: progress)
                     }
-                    
-                    if currentItem.id == SideBarItemType.yandeList.rawValue ||
-                        currentItem.id == SideBarItemType.yandeFavorite.rawValue {
-                       
-                        Button("Copy Tags") {
+                    .cancelOnDisappear(true)
+                    //.retry(maxCount: 3, interval: .seconds(5))
+                    .onProgress { receivedSize, totalSize in
+                        progress = (Float(receivedSize) / Float(totalSize))
+                    }
+                    .onSuccess { r in
+                        // r: RetrieveImageResult
+                        cacheImage(image: r.image, url: r.source.url!)
+                    }
+                    .onFailure { e in
+                        // e: KingfisherError
+                        print("failure: \(e)")
+                    }
+                    .resizing(referenceSize: CGSize(width: 200, height: 200), mode: .aspectFit)
+                    .clipShape(RoundedRectangle(cornerRadius: 25))
+                    .frame(alignment: .topLeading)
+                    .clipped()
+                    .onTapGesture {
+                        viewModel.open(model: imageModel, downloadManager: downloadManager)
+                        navigationPath.append(.detail)
+                    }
+                    .contextMenu {
+                        
+                        Button("Copy URL") {
                             PasteboardRepresentable.general.setString("", forType: .string)
-                            let tags = imageModel.tags ?? ""
-                            PasteboardRepresentable.general.setString(tags, forType: .string)
+                            PasteboardRepresentable.general.setString(imageModel.raw ?? "", forType: .string)
+                        }
+                        
+                        if currentItem.id == SideBarItemType.yandeList.rawValue ||
+                            currentItem.id == SideBarItemType.yandeFavorite.rawValue {
+                           
+                            Button("Copy Tags") {
+                                PasteboardRepresentable.general.setString("", forType: .string)
+                                let tags = imageModel.tags ?? ""
+                                PasteboardRepresentable.general.setString(tags, forType: .string)
+                            }
+                        }
+                        
+                    }
+                    .overlay(alignment: .topTrailing, content: {
+              
+                        HStack(alignment: .top) {
+                            FavoriteIconView(currentSideBarItem: $currentItem, item: imageModel)
+                        }
+                        .padding(.trailing, 5)
+                        .padding(.top, 5)
+                        
+                    })
+                    .onAppear {
+                        Task {
+                            await viewModel.requestMoreItemsIfNeeded(index: i)
+                        }
+                        
+                        isDownloaded = downloadManager.isDownloaded
+                    }
+                
+                DownloadButton(item: imageModel, isDownloaded: $isDownloaded)
+                    .environmentObject(downloadManager)
+                    .padding(.top)
+                    .padding(.bottom)
+                    .onChange(of: isDownloaded) { oldValue, newValue in
+                        if newValue == false {
+                            viewModel.items.removeAll { oldModel in
+                                return oldModel.id == imageModel.id
+                            }
+                            print("delete item at \(i)")
                         }
                     }
-                    
-                }
-                .overlay(alignment: .topTrailing, content: {
-          
-                    HStack(alignment: .top) {
-                        FavoriteIconView(currentSideBarItem: $currentItem, item: imageModel)
-                    }
-                    .padding(.trailing, 5)
-                    .padding(.top, 5)
-                    
-                })
-                .onAppear {
-                    Task {
-                        await viewModel.requestMoreItemsIfNeeded(index: i)
-                    }
-                    
-                    isDownloaded = downloadManager.isDownloaded
-                }
-            
-            DownloadButton(item: imageModel, isDownloaded: $isDownloaded)
-                .environmentObject(downloadManager)
-                .padding(.top)
-                .padding(.bottom)
-                .onChange(of: isDownloaded) { oldValue, newValue in
-                    if newValue == false {
-                        viewModel.items.removeAll { oldModel in
-                            return oldModel.id == imageModel.id
-                        }
-                        print("delete item at \(i)")
-                    }
-                }
+            }
                 
         }
+        .shadow(radius: 2)
         .padding()
     }
    
@@ -119,8 +125,30 @@ struct PhotoView: View {
         imageCache.insertImage(image, for: url)
     }
 
-    private func cachedImage(url: URL) -> ImageRepresentable? {
+    private func cachedImage(url: URL?) -> ImageRepresentable? {
+        
+        guard let url = url else {
+            return nil
+        }
+        
         return imageCache.image(for: url)
+    }
+    
+    private func hasCachedImage(url: URL?) -> Bool {
+        
+        guard let imageUrl = url else {
+            return false
+        }
+        
+        return imageCache.hasCacheImage(for: imageUrl)
+    }
+                      
+    private func getPlaceHolderImage() -> ImageRepresentable {
+        #if canImport(UIKit)
+          return Image(systemName: "photo")
+        #elseif canImport(Cocoa)
+          return NSImage(systemSymbolName: "photo", accessibilityDescription: nil)!
+        #endif
     }
 }
 
