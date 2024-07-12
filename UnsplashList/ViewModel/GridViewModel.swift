@@ -52,8 +52,7 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         return items
     }
     
-    @MainActor
-    func change(_ item: SideBarItem) async {
+    func change(_ item: SideBarItem) {
         
         self.removeAll()
         
@@ -64,40 +63,43 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         currentDataItem = item
         
         if item.id == SideBarItemType.unsplashList.rawValue {
-            await loadData()
-        } else if item.id == SideBarItemType.unsplashFavorite.rawValue  {
-            await loadSaveUnsplashData()
-        } else if item.id == SideBarItemType.yandeList.rawValue {
-            await loadYandeData()
-        } else if item.id == SideBarItemType.yandeFavorite.rawValue {
-            await loadSaveYandeData()
-        } else if item.id == SideBarItemType.danbooruList.rawValue {
-            await loadDanbooru()
-        } else if item.id == SideBarItemType.danbooruFavorite.rawValue {
-            await loadSaveDanbooru()
+             loadData()
         }
+//        else if item.id == SideBarItemType.unsplashFavorite.rawValue  {
+//            await loadSaveUnsplashData()
+//        } else if item.id == SideBarItemType.yandeList.rawValue {
+//            await loadYandeData()
+//        } else if item.id == SideBarItemType.yandeFavorite.rawValue {
+//            await loadSaveYandeData()
+//        } else if item.id == SideBarItemType.danbooruList.rawValue {
+//            await loadDanbooru()
+//        } else if item.id == SideBarItemType.danbooruFavorite.rawValue {
+//            await loadSaveDanbooru()
+//        }
     }
     
-    func loadData() async {
+    func loadData() {
         
-        dataIsLoading = true
-
-        await self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ()) { result in
+        self.dataIsLoading = true
+        
+        Task.detached { @MainActor in
+            
+            let result = await self.imagesService.fetchUnsplash(for: .random(with: "10"), using: ())
             
             switch result {
             case .success(let models):
+             
+                self.items.append(contentsOf: models)
 
-                DispatchQueue.main.async {
-                    self.items.append(contentsOf: models)
-
-                    self.itemsLoadedCount = self.items.count
-                    self.dataIsLoading = false
-                }
+                self.itemsLoadedCount = self.items.count
+                self.dataIsLoading = false
 
             case .failure(let error):
                 self.error = error
             }
         }
+        
+        
     }
     
     @MainActor
@@ -119,8 +121,10 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
     }
     
     func loadDanbooru() async {
-      
-        await self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10", page: currentPage), using: ()) { result in
+        
+        Task.detached { @MainActor in
+            let result = await self.imagesService.fetchDanbooru(for: .danbooruRandom(with: "10", page: self.currentPage), using: ())
+            
             switch result {
             case .success(let models):
                 
@@ -135,13 +139,17 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
                 self.error = error
             }
         }
+      
+        
     }
     
     func loadDanbooruSearch(tag: String, page: String) async {
         
         query = tag
         
-        await self.imagesService.fetchDanbooru(for: .danbooruWithTag(with: tag, page: page), using: ()) { result in
+        let result = await self.imagesService.fetchDanbooru(for: .danbooruWithTag(with: tag, page: page), using: ())
+        
+        Task.detached { @MainActor in
             switch result {
             case .success(let models):
                 
@@ -163,8 +171,10 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
     func loadYandeData() async {
 
         dataIsLoading = true
-      
-        await self.imagesService.fetchYande(for: .yande(with: "10", page: currentPage), using: ()) { result in
+        
+        Task.detached { @MainActor in
+            let result = await self.imagesService.fetchYande(for: .yande(with: "10", page: self.currentPage), using: ())
+            
             switch result {
             case .success(let models):
                 
@@ -196,34 +206,33 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         
         let lowercasedSearchText = query.lowercased()
 
-        await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: currentPage), using: ()) { result in
+        let result = await self.imagesService.fetchUnsplash(for: .search(for: lowercasedSearchText, perPage: "10", page: currentPage), using: ())
+        
+        switch result {
+        case .success(let models):
             
-            switch result {
-            case .success(let models):
+            DispatchQueue.main.async {
+                self.items.append(contentsOf: models)
                 
-                DispatchQueue.main.async {
-                    self.items.append(contentsOf: models)
-                    
-                    var matchingImages: [ImageModel] = []
+                var matchingImages: [ImageModel] = []
 
-                    self.items.forEach { model in
-                        let searchContent = model.tags
-                        if searchContent?.lowercased().range(of: lowercasedSearchText, options: .caseInsensitive) != nil {
-                           matchingImages.append(model)
-                        }
+                self.items.forEach { model in
+                    let searchContent = model.tags
+                    if searchContent?.lowercased().range(of: lowercasedSearchText, options: .caseInsensitive) != nil {
+                       matchingImages.append(model)
                     }
-                    
-                    if matchingImages.count > 0 {
-                        self.items.append(contentsOf: matchingImages)
-                    }
-                    
-                    self.itemsLoadedCount = self.items.count
-                    self.dataIsLoading = false
                 }
                 
-            case .failure(let error):
-                self.error = error
+                if matchingImages.count > 0 {
+                    self.items.append(contentsOf: matchingImages)
+                }
+                
+                self.itemsLoadedCount = self.items.count
+                self.dataIsLoading = false
             }
+            
+        case .failure(let error):
+            self.error = error
         }
     }
   
@@ -231,7 +240,7 @@ class GridViewModel: ObservableObject, @unchecked Sendable {
         isSearch = true
     }
     
-    @MainActor func removeAll() {
+    func removeAll() {
         items.removeAll()
     }
     

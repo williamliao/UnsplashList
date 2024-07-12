@@ -36,6 +36,7 @@ struct GridView: View {
                     }
                     .aspectRatio(1.0 , contentMode: .fill)
                     .padding(.all, 10)
+  
                 }
             }
         }

@@ -12,7 +12,7 @@ import UIKit
 import Cocoa
 #endif
 
-public enum APIResult<T, U> where U: Error  {
+enum APIResult<T, U> where U: Error {
     case success(T)
     case failure(U)
 }

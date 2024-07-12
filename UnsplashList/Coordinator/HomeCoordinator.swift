@@ -104,9 +104,7 @@ struct HomeCoordinatorView: View {
                         }
                     
                         if currentItem!.id != 1 {
-                            Task {
-                                await coordinator.gridCoordinator.gridViewModel.change(currentItem!)
-                            }
+                            coordinator.gridCoordinator.gridViewModel.change(currentItem!)
                         }
                     }
                 } else {
